@@ -36,6 +36,13 @@ class AdUserForm(Frame):
         second_entry = Entry(form_left, font=('Time new roman', 10))
         second_entry.grid(row=0, column=3, sticky='w', padx=(8, 16), pady=12)
 
+        # Giới tính và entry
+        label5 = Label(form_left, text="Giới tính:")
+        label5.grid(row=0, column=4, sticky='w')
+        fifth_entry = Combobox(form_left, font=('Time new roman', 10), state='readonly')
+        fifth_entry['values'] = ('Nam', 'Nữ')
+        fifth_entry.grid(row=0, column=5, sticky='w', padx=(8, 16), pady=12)
+        
         # Địa chỉ và entry
         label3 = Label(form_left, text="Địa chỉ:")
         label3.grid(row=1, column=0, sticky='w')
@@ -47,6 +54,12 @@ class AdUserForm(Frame):
         label4.grid(row=1, column=2, sticky='w')
         fourth_entry = Entry(form_left, font=('Time new roman', 10))
         fourth_entry.grid(row=1, column=3, sticky='w', padx=(8, 16), pady=12)
+
+        # Điểm thành viên và entry
+        label6 = Label(form_left, text="Điểm thành viên:")
+        label6.grid(row=1, column=4, sticky='w')
+        six_entry = Entry(form_left, font=('Time new roman', 10))
+        six_entry.grid(row=1, column=5, sticky='w', padx=(8, 16), pady=12)
 
         # Tạo form bên phải
         list_info_frame = LabelFrame(self, text="Danh sách khách hàng")

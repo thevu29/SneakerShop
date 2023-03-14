@@ -50,10 +50,10 @@ class AdAccountForm(Frame):
         entry3 = Entry(FrameGrid1, width=20)
         entry3.grid(row=1, column=1, sticky='w', padx=(8, 16), pady=12)
 
-        lb4 = Label(FrameGrid1, text='Mã quyền truy cập:')
+        lb4 = Label(FrameGrid1, text='Quyền truy cập:')
         lb4.grid(row=1, column=2, sticky='w')
 
-        cbb = Combobox(FrameGrid1, width=17)
+        cbb = Combobox(FrameGrid1, width=17, state='readonly')
         cbb['values'] = ('Admin', 'Nhân viên')
         cbb.grid(row=1, column=3, sticky='w', padx=(8, 16), pady=12)
 
