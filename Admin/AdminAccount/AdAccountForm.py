@@ -3,6 +3,10 @@ import tkinter.ttk as ttk
 from tkinter.ttk import *
 from tkinter import Tk, Text, TOP, BOTH, X, N, LEFT
 
+try:
+    from .GetAdAccountData import *
+except:
+    from GetAdAccountData import *
 class AdAccountForm(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
@@ -36,12 +40,17 @@ class AdAccountForm(Frame):
         entry2 = Entry(FrameGrid1, width=20)
         entry2.grid(row=0, column=3, sticky='w', padx=(8, 16), pady=12)
 
+        txtCusId = Label(FrameGrid1, text='Mã khách hàng:')
+        txtCusId.grid(row=0 ,column=4, sticky='w')
+        cusIdEntry = Entry(FrameGrid1, width=20)
+        cusIdEntry.grid(row=0 ,column=5, padx=(8, 16), pady=12)
+        
         lb3 = Label(FrameGrid1, text='Mật khẩu:')
         lb3.grid(row=1, column=0, sticky='w')
         entry3 = Entry(FrameGrid1, width=20)
         entry3.grid(row=1, column=1, sticky='w', padx=(8, 16), pady=12)
 
-        lb4 = Label(FrameGrid1, text='Quyền:')
+        lb4 = Label(FrameGrid1, text='Mã quyền truy cập:')
         lb4.grid(row=1, column=2, sticky='w')
 
         cbb = Combobox(FrameGrid1, width=17)
@@ -58,8 +67,7 @@ class AdAccountForm(Frame):
         RightPack = Frame(labelFrame2, padding=4)
         RightPack.pack(fill=BOTH)
 
-        # FrameGrid2.configure(borderwidth=1,relief='solid')
-        col = ('1', '2', '3', '4')
+        col = ('1', '2', '3', '4', '5')
 
         tr = Treeview(RightPack, columns=col, show='headings')
         tr.pack(side=LEFT)
@@ -69,25 +77,17 @@ class AdAccountForm(Frame):
         tr.configure(yscrollcommand=scrollbar.set)
 
         for column in col:
-            tr.column(column, anchor='c')
+            tr.column(column, anchor='c', width=180)
         
-        tr.heading('1', text='ID')
+        tr.heading('1', text='Mã tài khoản')
         tr.heading('2', text='Tên đăng nhập')
         tr.heading('3', text='Mật khẩu')
-        tr.heading('4', text='Quyền')
+        tr.heading('4', text='Mã quyền truy cập')
+        tr.heading('5', text='Mã khách hàng')
 
-        tr.insert('', END, values=('TK001', 'admin', '123', 'Admin'))
-        tr.insert('', END, values=('TK002', 'nhanvien1', '456', 'Nhân viên'))
-        tr.insert('', END, values=('TK003', 'nhanvien2', '456', 'Nhân Viên'))
-        tr.insert('', END, values=('TK004', 'nhanvien3', '456', 'Nhân viên'))
-        tr.insert('', END, values=('TK005', 'nhanvien4', '456', 'Nhân viên'))
-        tr.insert('', END, values=('TK006', 'nhanvien5', '456', 'Nhân viên'))
-        tr.insert('', END, values=('TK007', 'nhanvien6', '456', 'Nhân viên'))
-        tr.insert('', END, values=('TK008', 'nhanvien7', '456', 'Nhân viên'))
-        tr.insert('', END, values=('TK009', 'nhanvien8', '456', 'Nhân viên'))
-        tr.insert('', END, values=('TK010', 'nhanvien9', '456', 'Nhân viên'))
-        tr.insert('', END, values=('TK011', 'nhanvien10', '456', 'Nhân viên'))
-
+        self.initAccountData(tr)
+    
+        # frame 3
         labelFrame3 = LabelFrame(Right, text='Chức năng')
         labelFrame3.pack(pady=12)
 
@@ -117,3 +117,9 @@ class AdAccountForm(Frame):
 
         btnRefresh = Button(FrameGrid3, text='Refresh')
         btnRefresh.grid(column=5, row=0, padx=(0, 50))
+        
+    def initAccountData(self, accountList):
+        account = AdAccountData()
+        accountDataList = account.getAccountList()
+        for data in accountDataList:
+            accountList.insert('', 'end', values=data)
