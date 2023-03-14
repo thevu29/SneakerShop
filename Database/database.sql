@@ -33,7 +33,7 @@ create table CustomerOrder
 (
 	OrderID varchar(8) primary key,
 	CustomerID varchar(8),
-	OrderDate datetime, 
+	OrderDate date, 
 	TotalPrice float, 
 	OrderStatus nvarchar(10),
 	foreign key (CustomerID) references Customer(CustomerID)
@@ -97,11 +97,11 @@ INSERT INTO Customer VALUES
 ('CUS005', N'Đào Đức Thắng', N'Hồ Chí Minh', '0123456789', N'Nam', 10, 'ACC006')
 
 INSERT INTO CustomerOrder VALUES
-('HD001', 'CUS001', '2023-1-1', 12, 'Đã xử lí'),
-('HD002', 'CUS002', '2023-1-2', 11, 'Chưa xử lí'),
-('HD003', 'CUS003', '2023-1-3', 10, 'Đã xử lí'),
-('HD004', 'CUS004', '2023-1-4', 9, 'Đã xử lí'),
-('HD005', 'CUS005', '2023-1-5', 5, 'Chưa xử lí')
+('HD001', 'CUS001', '2023-1-1', 2000000, N'Đã xử lí'),
+('HD002', 'CUS002', '2023-1-2', 2000000, N'Chưa xử lí'),
+('HD003', 'CUS003', '2023-1-3', 2000000, N'Đã xử lí'),
+('HD004', 'CUS004', '2023-1-4', 2000000, N'Đã xử lí'),
+('HD005', 'CUS005', '2023-1-5', 2000000, N'Chưa xử lí')
 
 INSERT INTO Supplier VALUES
 ('SPL001', 'NIKE', N'Hồ Chí Minh', '0123456789', 'nike@gmail.com'),

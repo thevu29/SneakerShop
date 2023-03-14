@@ -1,6 +1,7 @@
 from tkinter import Tk, BOTH, LEFT, VERTICAL
 from tkinter.ttk import Label, Frame, Entry, Treeview, Scrollbar, Button, LabelFrame, Combobox
 from PIL import Image, ImageTk
+from .AdOrder import *
 
 class AdOrderForm(Frame):
     def __init__(self, parent):
@@ -75,15 +76,21 @@ class AdOrderForm(Frame):
         #     frame2.grid_columnconfigure(i, weight = 1)
         
     def initOrderList(self, frame3):
-        columns = ('orderID', 'orderDate', 'status', 'totalPrice')
+        columns = ('orderID', 'customerID', 'orderDate', 'totalPrice', 'status')
         orderList = Treeview(frame3, columns=columns, show='headings')
         orderList.grid(row=0, column=0, sticky='EW')
         
         orderList.heading('orderID', text='Mã đơn hàng')
-        orderList.heading('orderDate', text='Ngày đặt hàng')
+        orderList.heading('customerID', text='Mã khách hàng')
         orderList.heading('status', text='Tình trạng')
+        orderList.heading('orderDate', text='Ngày đặt hàng')
         orderList.heading('totalPrice', text='Tổng tiền')
         
+        orderList.column('orderID', width=150)
+        orderList.column('customerID', width=150)
+        for column in columns:
+            orderList.column(column, anchor='c')
+    
         self.initOrderData(orderList, columns)
         
         scrollbar = Scrollbar(frame3, orient=VERTICAL, command=orderList.yview)
@@ -94,11 +101,7 @@ class AdOrderForm(Frame):
             frame3.grid_columnconfigure(i, weight = 1)
         
     def initOrderData(self, orderList, columns):        
-        for column in columns:
-            orderList.column(column, anchor='c')
-        
-        testData = []
-        for n in range(1, 15):
-            testData.append((f'{n}', '3-4-2023', 'Đã xử lý', '200000'))
-        for data in testData:
+        order = AdOrder()
+        orderDataList = order.getOrderList()
+        for data in orderDataList:
             orderList.insert('', 'end', values=data)
