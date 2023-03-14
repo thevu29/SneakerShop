@@ -1,5 +1,9 @@
 from tkinter import Tk, N, E, W, S, NSEW, BOTH, LEFT, VERTICAL
 from tkinter.ttk import Label, Frame, Entry, Treeview, Scrollbar, Button, LabelFrame
+try:
+    from .GetAdOrderData import *
+except:
+    from GetAdOrderData import *
 
 class AdOrderDetailForm(Frame):
     def __init__(self, parent):
@@ -82,22 +86,23 @@ class AdOrderDetailForm(Frame):
             frame2.grid_columnconfigure(i, weight=1)
         
     def initFrame3Component(self, frame3):
-        columns = ('productID', 'productName', 'quantity', 'productPrice', 'discount', 'discountPrice')
-        orderProductList = Treeview(frame3, columns=columns, show='headings')
-        orderProductList.grid(row=0, column=0)
-        orderProductList.column('productID', width=100)
+        columns = ('productID', 'productName', 'quantity', 'productPrice', 'discountPrice')
+        orderDetailList = Treeview(frame3, columns=columns, show='headings')
+        orderDetailList.grid(row=0, column=0)
+                
+        orderDetailList.heading('productID', text='Mã sản phẩm')
+        orderDetailList.heading('productName', text='Tên sản phẩm')
+        orderDetailList.heading('quantity', text='Số lượng')
+        orderDetailList.heading('productPrice', text='Đơn giá')
+        orderDetailList.heading('discountPrice', text='Tổng tiền')
         
-        orderProductList.heading('productID', text='Mã sản phẩm')
-        orderProductList.heading('productName', text='Tên sản phẩm')
-        orderProductList.heading('quantity', text='Số lượng')
-        orderProductList.heading('productPrice', text='Đơn giá')
-        orderProductList.heading('discount', text='Giảm giá(%)')
-        orderProductList.heading('discountPrice', text='Tổng tiền')
+        for column in columns:
+            orderDetailList.column(column, anchor='c')
         
-        self.initOrderProductData(orderProductList, columns)
+        self.initOrderDetailData(orderDetailList)
         
-        scrollbar = Scrollbar(frame3, orient=VERTICAL, command=orderProductList.yview)
-        orderProductList.configure(yscroll=scrollbar.set)
+        scrollbar = Scrollbar(frame3, orient=VERTICAL, command=orderDetailList.yview)
+        orderDetailList.configure(yscroll=scrollbar.set)
         scrollbar.grid(row=0, column=1, sticky='NS')
         
         totalPriceContainer = Frame(frame3)
@@ -123,15 +128,11 @@ class AdOrderDetailForm(Frame):
         for i in range(0, 2):
             frame4.grid_columnconfigure(i, weight=1)
     
-    def initOrderProductData(self, orderProductList, columns):            
-        for column in columns:
-            orderProductList.column(column, anchor='c')
-                
-        testData = []
-        for n in range(1, 15):
-            testData.append((f'{n}', f'Air force {n}', f'{n}', '200000', '10', '300000'))
-        for data in testData:
-            orderProductList.insert('', 'end', values=data)
+    def initOrderDetailData(self, orderDetailList):                            
+        orderDetail = AdOrderDetaiData()
+        orderDetailDataList = orderDetail.getOrderList()
+        for data in orderDetailDataList:
+            orderDetailList.insert('', 'end', values=data)
           
 if __name__ == '__main__':
     root = Tk()

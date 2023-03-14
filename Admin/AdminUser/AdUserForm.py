@@ -1,6 +1,11 @@
 from tkinter import Tk, BOTH, LEFT, VERTICAL, E, W, S, NO, CENTER, X
 from tkinter.ttk import Frame, Label, Entry, Combobox, Treeview, Scrollbar, LabelFrame, Button
 
+try:
+    from .GetAdUserData import *
+except:
+    from GetAdUserData import *
+
 class AdUserForm(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
@@ -57,35 +62,20 @@ class AdUserForm(Frame):
         my_tree.configure(yscroll=scrollbar.set)
         scrollbar.grid(row=0, column=1, sticky='NS')
         
-        my_tree['columns'] = ("Mã khách hàng", "Tên khách hàng", "Địa chỉ", "Số điện thoại")
-        my_tree.column("Mã khách hàng", anchor=CENTER)
-        my_tree.column("Tên khách hàng", anchor=CENTER)
-        my_tree.column("Địa chỉ", anchor=CENTER)
-        my_tree.column("Số điện thoại", anchor=CENTER)
-
+        my_tree['columns'] = ("Mã khách hàng", "Tên khách hàng", "Địa chỉ", "Số điện thoại", "Giới tính", "Điểm thành viên")
+        for column in ("Mã khách hàng", "Tên khách hàng", "Địa chỉ", "Số điện thoại", "Giới tính", "Điểm thành viên"):
+            if (column != 'Tên khách hàng' and column != 'Địa chỉ'):
+                my_tree.column(column, anchor='c')
+            my_tree.column(column, width=150)
+            
         my_tree.heading("Mã khách hàng", text="Mã khách hàng", anchor=CENTER)
         my_tree.heading("Tên khách hàng", text="Tên khách hàng", anchor=CENTER)
         my_tree.heading("Địa chỉ", text="Địa chỉ", anchor=CENTER)
         my_tree.heading("Số điện thoại", text="Số điện thoại", anchor=CENTER)
+        my_tree.heading("Giới tính", text="Giới tính", anchor=CENTER)
+        my_tree.heading("Điểm thành viên", text="Điểm thành viên", anchor=CENTER)
 
-        data = [
-            ["3121410332", "Hải Nam", "Đồng Nai", 5],
-            ["3121410334", "Quỳnh Lan", "Hà Tĩnh", 20],
-            ["3121410333", "Thanh Tâm", "Đồng Nai", 23],
-            ["3121410332", "Thế Vũ", "HCM", 5],
-            ["3121410334", "Huy Hoàng", "HCM", 25],
-            ["3121410332", "Kim Phú", "HCM", 5],
-            ["3121410333", "Diễm Ly", "Phú Yên", 29],
-            ["3121410333", "Diễm Ly", "Phú Yên", 29],
-            ["3121410333", "Diễm Ly", "Phú Yên", 29],
-            ["3121410333", "Diễm Ly", "Phú Yên", 29],
-            ["3121410333", "Diễm Ly", "Phú Yên", 29]
-        ]
-
-        count = 0
-        for record in data:
-            my_tree.insert(parent="", index="end", iid=count, text="", values=(record[0], record[1], record[2], record[3]))
-            count += 1
+        self.initUserData(my_tree)
 
         # Tạo form bên phải, dưới là chức năng
         function_frame = LabelFrame(self, text="Chức năng")
@@ -105,3 +95,9 @@ class AdUserForm(Frame):
         button5.grid(row=0, column=4, pady=6, padx=16, ipady=4)
         button6 = Button(function_frame, text="Refresh")
         button6.grid(row=0, column=5, pady=6, padx=16, ipady=4)
+        
+    def initUserData(self, userList):
+        user = AdUserData()
+        userDataList = user.getUserList()
+        for data in userDataList:
+            userList.insert('', 'end', values=data)

@@ -8,15 +8,6 @@ create table Access
 	AccesssDescription nvarchar(30)
 )
 
-create table Account
-(
-	AccountID varchar(8) primary key,
-	Username varchar(12),
-	Password varchar(15),
-	AccessID varchar(8),
-	foreign key (AccessID) references Access(AccessID)
-)
-
 create table Customer
 (
 	CustomerID varchar(8) primary key,
@@ -24,9 +15,18 @@ create table Customer
 	CustomerAddress nvarchar(12),
 	Phone varchar(12),
 	Gender nvarchar(5),
-	Point int, 
-	AccountID varchar(8),
-	foreign key (AccountID) references Account(AccountID)
+	Point int
+)
+
+create table Account
+(
+	AccountID varchar(8) primary key,
+	Username varchar(12),
+	Password varchar(15),
+	AccessID varchar(8),
+	CustomerID varchar(8),
+	foreign key (AccessID) references Access(AccessID),
+	foreign key (CustomerID) references Customer(CustomerID)
 )
 
 create table CustomerOrder
@@ -45,7 +45,7 @@ create table Supplier
 	SupplierName nvarchar(50),
 	SupplierAddress nvarchar(20),
 	Phone varchar(12),
-	Email varchar(15)
+	Email varchar(50)
 )
 create table Category
 (
@@ -81,20 +81,20 @@ INSERT INTO Access VALUES
 ('ACS001', 'Admin', N'Người quản trị'),
 ('ACS002', 'User', N'Người dùng')
 
-INSERT INTO Account VALUES
-('ACC001', 'admin', 'admin', 'ACS001'),
-('ACC002', 'thevu', '123', 'ACS002'),
-('ACC003', 'huyhoang', '123', 'ACS002'),
-('ACC004', 'kimphu', '123', 'ACS002'),
-('ACC005', 'hainam', '123', 'ACS002'),
-('ACC006', 'ducthang', '123', 'ACS002')
-
 INSERT INTO Customer VALUES
-('CUS001', N'Nguyễn Thế Vũ', N'Hồ Chí Minh', '0123456789', 'Nam', 10, 'ACC002'),
-('CUS002', N'Vương Huy Hoàng', N'Hà Nội', '0123456789', N'Nữ', 10, 'ACC003'),
-('CUS003', N'Nguyễn Hoàng Hải Nam', N'Đồng Nai', '0123456789', N'Nữ', 10, 'ACC004'),
-('CUS004', N'Trần Kim Phú', N'Quảng Bình ', '0123456789', N'Nam', 10, 'ACC005'),
-('CUS005', N'Đào Đức Thắng', N'Hồ Chí Minh', '0123456789', N'Nam', 10, 'ACC006')
+('CUS001', N'Nguyễn Thế Vũ', N'Hồ Chí Minh', '0123456789', 'Nam', 0),
+('CUS002', N'Vương Huy Hoàng', N'Hà Nội', '0123456789', N'Nữ', 5),
+('CUS003', N'Nguyễn Hoàng Hải Nam', N'Đồng Nai', '0123456789', N'Nữ', 15),
+('CUS004', N'Trần Kim Phú', N'Quảng Bình ', '0123456789', N'Nam', 100),
+('CUS005', N'Đào Đức Thắng', N'Hồ Chí Minh', '0123456789', N'Nam', 20)
+
+INSERT INTO Account VALUES
+('ACC001', 'admin', 'admin', 'ACS001', 'CUS000'),
+('ACC002', 'thevu', '123', 'ACS002', 'CUS001'),
+('ACC003', 'huyhoang', '123', 'ACS002', 'CUS002'),
+('ACC004', 'kimphu', '123', 'ACS002', 'CUS004'),
+('ACC005', 'hainam', '123', 'ACS002', 'CUS003'),
+('ACC006', 'ducthang', '123', 'ACS002', 'CUS005')
 
 INSERT INTO CustomerOrder VALUES
 ('HD001', 'CUS001', '2023-1-1', 2000000, N'Đã xử lí'),

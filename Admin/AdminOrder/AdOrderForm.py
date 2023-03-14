@@ -1,8 +1,11 @@
 from tkinter import Tk, BOTH, LEFT, VERTICAL
 from tkinter.ttk import Label, Frame, Entry, Treeview, Scrollbar, Button, LabelFrame, Combobox
 from PIL import Image, ImageTk
-from .AdOrder import *
-
+try:
+    from .GetAdOrderData import *
+except:
+    from GetAdOrderData import *
+    
 class AdOrderForm(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
@@ -91,7 +94,7 @@ class AdOrderForm(Frame):
         for column in columns:
             orderList.column(column, anchor='c')
     
-        self.initOrderData(orderList, columns)
+        self.initOrderData(orderList)
         
         scrollbar = Scrollbar(frame3, orient=VERTICAL, command=orderList.yview)
         orderList.configure(yscroll=scrollbar.set)
@@ -100,8 +103,8 @@ class AdOrderForm(Frame):
         for i in range(0, 3):
             frame3.grid_columnconfigure(i, weight = 1)
         
-    def initOrderData(self, orderList, columns):        
-        order = AdOrder()
+    def initOrderData(self, orderList):        
+        order = AdOrderData()
         orderDataList = order.getOrderList()
         for data in orderDataList:
             orderList.insert('', 'end', values=data)
