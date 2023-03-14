@@ -39,14 +39,19 @@ class AdProductForm(Frame):
         self.input3.grid(row=0, column=5, padx=10)
 
         self.lb4 = Label(self.frameGrid2, text="Tên sản phẩm: ")
-        self.lb4.grid(row=1, column=0, pady=25, sticky='w')
+        self.lb4.grid(row=1, column=0, pady=(25, 0), sticky='w')
         self.input4 = Entry(self.frameGrid2, width=30)
-        self.input4.grid(row=1, column=1, padx=10, pady=25)
-
-        self.lb7 = Label(self.frameGrid2, text="Mã loại sản phẩm: ")
-        self.lb7.grid(row=1, column=2, sticky='w', padx=(20, 0))
-        self.input7 = Entry(self.frameGrid2, width=23)
-        self.input7.grid(row=1, column=3, padx=10)
+        self.input4.grid(row=1, column=1, padx=10, pady=(25, 0))
+        
+        self.lb5 = Label(self.frameGrid2, text="Mã loại sản phẩm: ")
+        self.lb5.grid(row=2, column=0, pady=(25, 0), sticky='w')
+        self.input5 = Entry(self.frameGrid2, width=30)
+        self.input5.grid(row=2, column=1, padx=10, pady=(25, 0))
+        
+        self.lb6 = Label(self.frameGrid2, text="Mã nhà cung cấp: ")
+        self.lb6.grid(row=1, column=2, sticky='w', padx=(20, 0), pady=(25, 0))
+        self.input6 = Entry(self.frameGrid2, width=23)
+        self.input6.grid(row=1, column=3, padx=10, pady=(25, 0))
 
         # Tạo frame3
         self.labelFrame3 = LabelFrame(self, text="Danh sách sản phẩm")
