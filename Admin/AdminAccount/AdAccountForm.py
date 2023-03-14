@@ -7,6 +7,7 @@ try:
     from .GetAdAccountData import *
 except:
     from GetAdAccountData import *
+    
 class AdAccountForm(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
