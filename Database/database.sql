@@ -57,7 +57,7 @@ create table Product
 (
 	ProductID varchar(8) primary key,
 	ProductName nvarchar(50),
-	Price money, 
+	Price float, 
 	Quantity int, 
 	SupplierID varchar(8),
 	CategoryID varchar(8),
@@ -135,7 +135,11 @@ INSERT INTO Product VALUES
 
 INSERT INTO OrderDetail VALUES
 ('HD001', 'SP001', 5, 1100000),
+('HD001', 'SP002', 1, 1200000),
+('HD001', 'SP008', 3, 1700000),
+('HD001', 'SP010', 2, 1700000),
 ('HD002', 'SP002', 1, 1200000),
+('HD002', 'SP005', 1, 1500000),
 ('HD003', 'SP003', 2, 1300000),
 ('HD004', 'SP004', 10, 1400000),
 ('HD005', 'SP005', 5, 1500000)

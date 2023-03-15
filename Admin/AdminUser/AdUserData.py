@@ -8,9 +8,9 @@ def Convert(item):
     return array
 
 class AdUserData():
-    userList = []
-    
     def __init__(self):
+        self.userList = []
+        
         conn = pyodbc.connect('Driver={SQL Server};'
                       'Server=LAPTOP-P91166MQ\\THEVU_SQL;'
                       'Database=py_ql;'

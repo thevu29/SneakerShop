@@ -2,9 +2,9 @@ from tkinter import Tk, BOTH, LEFT, VERTICAL, E, W, S, NO, CENTER, X
 from tkinter.ttk import Frame, Label, Entry, Combobox, Treeview, Scrollbar, LabelFrame, Button
 
 try:
-    from .GetAdUserData import *
+    from .AdUserData import *
 except:
-    from GetAdUserData import *
+    from AdUserData import *
 
 class AdUserForm(Frame):
     def __init__(self, parent):

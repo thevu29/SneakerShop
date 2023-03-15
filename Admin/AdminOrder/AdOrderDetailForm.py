@@ -1,17 +1,27 @@
-from tkinter import Tk, N, E, W, S, NSEW, BOTH, LEFT, VERTICAL
+from tkinter import Tk, N, E, W, S, NSEW, BOTH, LEFT, VERTICAL, StringVar
 from tkinter.ttk import Label, Frame, Entry, Treeview, Scrollbar, Button, LabelFrame
-try:
-    from .GetAdOrderData import *
-except:
-    from GetAdOrderData import *
 
-class AdOrderDetailForm(Frame):
-    def __init__(self, parent):
+try:
+    from .AdOrder import *
+except:
+    from AdOrder import *
+
+class AdOrderDetailForm(Frame):    
+    def __init__(self, parent, orderID):
         Frame.__init__(self, parent)
         self.parent = parent
+        self.orderID = str(orderID)
+        self.orderDate = ''
+        self.customerID = ''
+        self.orderDetail = AdOrderDetailData()
+        self.orderDetailDataList = self.orderDetail.getOrderList()
+        self.totalPrice = 0
+        
+        self.getDataFromOrder()
+        
         self.pack(fill=BOTH)
         self.initUI()    
-        
+       
     def initUI(self):   
         # header
         frame1 = Frame(self)
@@ -44,11 +54,13 @@ class AdOrderDetailForm(Frame):
         txtOrderID = Label(frame2, text='Mã hóa đơn:')
         txtOrderID.grid(row=0, column=0, padx=(20, 0), sticky=W)
         orderID = Entry(frame2)
+        orderID.insert('0', self.orderID)
         orderID.grid(row=0, column=1, padx=10, pady=10)
         
-        txtOrderDate = Label(frame2, text='Ngày mua hàng:')
+        txtOrderDate = Label(frame2, text='Ngày đặt hàng:')
         txtOrderDate.grid(row=0, column=2, padx=(20, 0), sticky=W)
         orderDate = Entry(frame2)
+        orderDate.insert('0', self.orderDate)
         orderDate.grid(row=0, column=3, padx=10, pady=10)
         
         txtEmployeeID = Label(frame2, text='Mã nhân viên:')
@@ -65,6 +77,7 @@ class AdOrderDetailForm(Frame):
         txtUserID = Label(frame2, text='Mã khách hàng:')
         txtUserID.grid(row=1, column=0, padx=(20, 0), sticky=W)
         userID = Entry(frame2)
+        userID.insert('0', self.customerID)
         userID.grid(row=1, column=1, padx=10, pady=10)
         
         txtUserName = Label(frame2, text='Tên khách hàng:')
@@ -88,13 +101,13 @@ class AdOrderDetailForm(Frame):
     def initFrame3Component(self, frame3):
         columns = ('productID', 'productName', 'quantity', 'productPrice', 'discountPrice')
         orderDetailList = Treeview(frame3, columns=columns, show='headings')
-        orderDetailList.grid(row=0, column=0)
+        orderDetailList.grid(row=0, column=0, padx=(40, 0))
                 
         orderDetailList.heading('productID', text='Mã sản phẩm')
         orderDetailList.heading('productName', text='Tên sản phẩm')
         orderDetailList.heading('quantity', text='Số lượng')
         orderDetailList.heading('productPrice', text='Đơn giá')
-        orderDetailList.heading('discountPrice', text='Tổng tiền')
+        orderDetailList.heading('discountPrice', text='Thành tiền')
         
         for column in columns:
             orderDetailList.column(column, anchor='c')
@@ -111,12 +124,13 @@ class AdOrderDetailForm(Frame):
         txtTotalPrice = Label(totalPriceContainer, text='Tổng tiền:', font=('', 10, 'bold'))
         txtTotalPrice.grid(row=0, column=0, sticky=E, padx=(0, 10))
         
-        totalPrice = Entry(totalPriceContainer)
+        self.totalPriceText = StringVar()
+        self.totalPriceText.set('{0:.2f}'.format(self.totalPrice).rstrip('0').rstrip('.'))
+        totalPrice = Entry(totalPriceContainer, state='readonly', textvariable=self.totalPriceText)
         totalPrice.grid(row=0, column=1, sticky=E, ipady=2)
-        totalPrice.insert(0, '3000000')
         
-        for i in range(0, 2):
-            frame3.grid_columnconfigure(i, weight=1)
+        # for i in range(0, 2):
+        #     frame3.grid_columnconfigure(i, weight=1)
     
     def initFrame4Component(self, frame4):
         btnUpdate = Button(frame4, text='Lưu thông tin')
@@ -129,14 +143,40 @@ class AdOrderDetailForm(Frame):
             frame4.grid_columnconfigure(i, weight=1)
     
     def initOrderDetailData(self, orderDetailList):                            
-        orderDetail = AdOrderDetaiData()
-        orderDetailDataList = orderDetail.getOrderList()
-        for data in orderDetailDataList:
-            orderDetailList.insert('', 'end', values=data)
-          
+        productList = self.orderDetail.getProductData()
+         
+        for data in self.orderDetailDataList:
+            if data[0] == self.orderID:
+                newData = [data[i] for i in range(1, 4)]
+                quantity = float(data[2])
+                price = float(data[3])
+                
+                productName = ''
+                for product in productList:
+                    if product[0] == data[1]:
+                        productName = str(product[1])
+                        break
+                
+                total = quantity * price
+                self.totalPrice += total
+                
+                newData.insert(1, productName)
+                newData.append('{0:.2f}'.format(total).rstrip('0').rstrip('.'))
+                
+                orderDetailList.insert('', 'end', values=newData)
+    
+    def getDataFromOrder(self):
+        order = AdOrderData()
+        orderList = order.getOrderList()
+        
+        for data in orderList:
+            if self.orderID == data[0]:
+                self.orderDate = str(data[2])
+                self.customerID = str(data[1])
+         
 if __name__ == '__main__':
     root = Tk()
-    mainFrame = AdOrderDetailForm(root) 
+    mainFrame = AdOrderDetailForm(root, 'HD001') 
     root.geometry('1200x600+180+100')
     root.title('Chi tiết đơn hàng')
     root.mainloop()

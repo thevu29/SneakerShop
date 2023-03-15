@@ -1,5 +1,12 @@
 import pyodbc
-   
+import sys
+import os
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+
+from AdminProduct import AdProduct
+
 def Convert(item):
     array = []
     for i in range(0, len(item)):
@@ -8,9 +15,9 @@ def Convert(item):
     return array
 
 class AdOrderData():
-    orderList = []
-    
     def __init__(self):
+        self.orderList = []
+        
         conn = pyodbc.connect('Driver={SQL Server};'
                       'Server=LAPTOP-P91166MQ\\THEVU_SQL;'
                       'Database=py_ql;'
@@ -27,10 +34,10 @@ class AdOrderData():
     def getOrderList(self):
         return self.orderList
     
-class AdOrderDetaiData():
-    orderDetailList = []
-    
+class AdOrderDetailData():
     def __init__(self):
+        self.orderDetailList = []
+        
         conn = pyodbc.connect('Driver={SQL Server};'
                       'Server=LAPTOP-P91166MQ\\THEVU_SQL;'
                       'Database=py_ql;'
@@ -47,3 +54,8 @@ class AdOrderDetaiData():
     
     def getOrderList(self):
         return self.orderDetailList
+    
+    def getProductData(self):
+        product = AdProduct.AdProductData()
+        productList = product.getProductList()
+        return productList        

@@ -1,10 +1,11 @@
 from tkinter import Tk, BOTH, LEFT, VERTICAL
 from tkinter.ttk import Label, Frame, Entry, Treeview, Scrollbar, Button, LabelFrame, Combobox
+
 from PIL import Image, ImageTk
 try:
-    from .GetAdOrderData import *
+    from .AdOrder import *
 except:
-    from GetAdOrderData import *
+    from AdOrder import *
     
 class AdOrderForm(Frame):
     def __init__(self, parent):

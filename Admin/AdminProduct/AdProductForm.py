@@ -3,9 +3,9 @@ from tkinter import Tk, Text, TOP, BOTH, X, N, LEFT, RIGHT, StringVar
 from tkinter.ttk import Frame, Label, Entry, Combobox, Treeview, Scrollbar, LabelFrame, Button
 
 try:
-    from .GetAdProductData import *
+    from .AdProduct import *
 except:
-    from GetAdProductData import *
+    from AdProduct import *
 
 class AdProductForm(Frame):
     def __init__(self, parent):
@@ -78,13 +78,6 @@ class AdProductForm(Frame):
 
         for column in ("1", "2", "3", "4", "5", "6", "7"):
             self.tree.column(column, anchor='c', width=130)
-        
-        # self.tree.column("1", width=100, anchor='c')
-        # self.tree.column("2", width=150, anchor='c')
-        # self.tree.column("3", width=120, anchor='c')
-        # self.tree.column("4", width=80, anchor='c')
-        # self.tree.column("5", width=100, anchor='c')
-        # self.tree.column("6", width=180, anchor='c')
 
         self.tree.heading("1", text="Mã sản phẩm")
         self.tree.heading("2", text="Tên sản phẩm")

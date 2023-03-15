@@ -4,9 +4,9 @@ from tkinter.ttk import *
 from tkinter import Tk, Text, TOP, BOTH, X, N, LEFT
 
 try:
-    from .GetAdAccountData import *
+    from .AdAccount import *
 except:
-    from GetAdAccountData import *
+    from AdAccount import *
     
 class AdAccountForm(Frame):
     def __init__(self, parent):

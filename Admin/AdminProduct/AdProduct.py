@@ -7,21 +7,22 @@ def Convert(item):
         array.append(item[i])
     return array
 
-class AdAccountData():
-    accountList = []
-    
+class AdProductData():
     def __init__(self):
+        self.productList = []
+        
         conn = pyodbc.connect('Driver={SQL Server};'
                       'Server=LAPTOP-P91166MQ\\THEVU_SQL;'
                       'Database=py_ql;'
                       'Trusted_Connection=yes;')
 
         data = conn.cursor()
-        data.execute('select * from dbo.Account')
+        data.execute('select * from dbo.Product')
         
         for item in data:
+            item[2] = '{0:.2f}'.format(item[2]).rstrip('0').rstrip('.')
             item = Convert(item)
-            self.accountList.append(item)
+            self.productList.append(item)
             
-    def getAccountList(self):
-        return self.accountList
+    def getProductList(self):
+        return self.productList
