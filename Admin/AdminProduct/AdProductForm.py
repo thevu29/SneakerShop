@@ -77,7 +77,9 @@ class AdProductForm(Frame):
         self.tree['show'] = 'headings'
 
         for column in ("1", "2", "3", "4", "5", "6", "7"):
-            self.tree.column(column, anchor='c', width=130)
+            self.tree.column(column, width=150)
+            if column != "2":
+                self.tree.column(column, anchor='c', width=120)
 
         self.tree.heading("1", text="Mã sản phẩm")
         self.tree.heading("2", text="Tên sản phẩm")

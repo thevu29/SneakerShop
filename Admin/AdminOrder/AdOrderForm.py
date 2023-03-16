@@ -1,16 +1,20 @@
-from tkinter import Tk, BOTH, LEFT, VERTICAL
+from tkinter import Tk, BOTH, LEFT, VERTICAL, Toplevel
 from tkinter.ttk import Label, Frame, Entry, Treeview, Scrollbar, Button, LabelFrame, Combobox
-
 from PIL import Image, ImageTk
+
 try:
     from .AdOrder import *
+    from .AdOrderDetailForm import *
 except:
     from AdOrder import *
+    from AdOrderDetailForm import *
     
 class AdOrderForm(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
         self.parent = parent
+        self.order = AdOrderData()
+        self.orderDataList = self.order.getOrderList()
         
         self.initUI()
         
@@ -104,8 +108,18 @@ class AdOrderForm(Frame):
         for i in range(0, 3):
             frame3.grid_columnconfigure(i, weight = 1)
         
+        orderList.bind('<Double-1>', lambda x: self.showOrderDetail(orderList))
+       
     def initOrderData(self, orderList):        
-        order = AdOrderData()
-        orderDataList = order.getOrderList()
-        for data in orderDataList:
+        for data in self.orderDataList:
             orderList.insert('', 'end', values=data)
+            
+    def showOrderDetail(self, orderList):
+        selectedOrder = orderList.focus()
+        selectedOrderId = orderList.item(selectedOrder)['values'][0]
+        
+        for order in self.orderDataList:
+            if order[0] == selectedOrderId:
+                orderDetailForm = AdOrderDetailForm(self, order[0])
+                orderDetailForm.geometry('1200x600+150+70')
+                break

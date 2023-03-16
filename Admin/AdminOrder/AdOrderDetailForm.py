@@ -1,4 +1,4 @@
-from tkinter import Tk, N, E, W, S, NSEW, BOTH, LEFT, VERTICAL, StringVar
+from tkinter import Tk, N, E, W, S, NSEW, BOTH, LEFT, VERTICAL, StringVar, Toplevel
 from tkinter.ttk import Label, Frame, Entry, Treeview, Scrollbar, Button, LabelFrame
 
 try:
@@ -6,9 +6,9 @@ try:
 except:
     from AdOrder import *
 
-class AdOrderDetailForm(Frame):    
+class AdOrderDetailForm(Toplevel):    
     def __init__(self, parent, orderID):
-        Frame.__init__(self, parent)
+        Toplevel.__init__(self, parent)
         self.parent = parent
         self.orderID = str(orderID)
         self.orderDate = ''
@@ -19,7 +19,7 @@ class AdOrderDetailForm(Frame):
         
         self.getDataFromOrder()
         
-        self.pack(fill=BOTH)
+        # self.pack(fill=BOTH)
         self.initUI()    
        
     def initUI(self):   
@@ -174,9 +174,9 @@ class AdOrderDetailForm(Frame):
                 self.orderDate = str(data[2])
                 self.customerID = str(data[1])
          
-if __name__ == '__main__':
-    root = Tk()
-    mainFrame = AdOrderDetailForm(root, 'HD001') 
-    root.geometry('1200x600+180+100')
-    root.title('Chi tiết đơn hàng')
-    root.mainloop()
+# if __name__ == '__main__':
+#     root = Tk()
+#     mainFrame = AdOrderDetailForm(root, 'HD001') 
+#     root.geometry('1200x600+180+100')
+#     root.title('Chi tiết đơn hàng')
+#     root.mainloop()
