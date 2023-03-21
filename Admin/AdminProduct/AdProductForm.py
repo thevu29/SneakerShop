@@ -107,17 +107,14 @@ class AdProductForm(Frame):
         self.frameGrid4 = Frame(self.frame4)
         self.frameGrid4.grid(column=6, row=1)
 
-        self.btnAdd = Button(self.frameGrid4, text="Thêm sản phẩm", width=20)
+        self.btnAdd = Button(self.frameGrid4, text="Thêm sản phẩm", width=20, command=self.addProduct)
         self.btnAdd.grid(row=0, column=0, padx=10, ipady=3)
-        self.btnAdd.bind('<Button-1>', lambda x: self.addProduct())
         
-        self.btnSave = Button(self.frameGrid4, text="Lưu thông tin", width=20)
+        self.btnSave = Button(self.frameGrid4, text="Lưu thông tin", width=20, command=self.saveProductInfo)
         self.btnSave.grid(row=0, column=1, padx=10, ipady=3)
-        self.btnSave.bind('<Button-1>', lambda x: self.saveProductInfo())
         
-        self.btnDelete = Button(self.frameGrid4, text="Xóa sản phẩm", width=20)
+        self.btnDelete = Button(self.frameGrid4, text="Xóa sản phẩm", width=20, command=self.deleteProduct)
         self.btnDelete.grid(row=0, column=2, padx=10, ipady=3)
-        self.btnDelete.bind('<Button-1>', lambda x: self.deleteProduct())
 
         self.btnReset = Button(self.frameGrid4, text="Reset", width=20)
         self.btnReset.grid(row=0, column=3, padx=10, ipady=3)
