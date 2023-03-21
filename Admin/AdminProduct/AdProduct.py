@@ -19,10 +19,24 @@ class AdProductData():
         data = conn.cursor()
         data.execute('select * from dbo.Product')
         
+        str = '1'
+        cnt = int(str)
         for item in data:
             item[2] = '{0:.2f}'.format(item[2]).rstrip('0').rstrip('.')
+            
+            id = self.getID(cnt)
+            cnt += 1
+            imagePath = f'./img/product/SP{id}.png'
             item = Convert(item)
+            item.append(imagePath)
+            
             self.productList.append(item)
             
     def getProductList(self):
         return self.productList
+    
+    def getID(self, cnt):
+        id = str(cnt)
+        while len(id) != 3:
+            id = '0' + id
+        return id
