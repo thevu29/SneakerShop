@@ -96,18 +96,17 @@ class AdUserForm(Frame):
         function_frame.config(borderwidth=10, relief='solid')
 
         # Tạo button
-        button1 = Button(function_frame, text="Add new")
-        button1.grid(row=0, column=0, pady=6, padx=16, ipady=4)
-        button2 = Button(function_frame, text="Save")
-        button2.grid(row=0, column=1, pady=6, padx=16, ipady=4)
-        button3 = Button(function_frame, text="Delete")
-        button3.grid(row=0, column=2, pady=6, padx=16, ipady=4)
-        button4 = Button(function_frame, text="Update")
-        button4.grid(row=0, column=3, pady=6, padx=16, ipady=4)
-        button5 = Button(function_frame, text="View data")
-        button5.grid(row=0, column=4, pady=6, padx=16, ipady=4)
-        button6 = Button(function_frame, text="Refresh")
-        button6.grid(row=0, column=5, pady=6, padx=16, ipady=4)
+        btnAdd = Button(function_frame, text="Thêm khách hàng", width=20)
+        btnAdd.grid(row=0, column=0, pady=6, padx=10, ipady=3)
+        
+        btnSave = Button(function_frame, text="Lưu thông tin", width=20)
+        btnSave.grid(row=0, column=1, pady=6, padx=10, ipady=3)
+        
+        btnDelete = Button(function_frame, text="Xóa khách hàng", width=20)
+        btnDelete.grid(row=0, column=2, pady=6, padx=10, ipady=3)
+
+        btnReset = Button(function_frame, text="Reset", width=20)
+        btnReset.grid(row=0, column=5, pady=6, padx=10, ipady=3)
         
     def initUserData(self, userList):
         user = AdUserData()

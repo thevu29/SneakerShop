@@ -101,23 +101,17 @@ class AdAccountForm(Frame):
         FrameGrid3.rowconfigure(0, weight=1)
         FrameGrid3.columnconfigure(0, weight=1)
 
-        btnAdd = Button(FrameGrid3, text='Add new')
-        btnAdd.grid(column=0, row=0, padx=(30, 50))
+        btnAdd = Button(FrameGrid3, text='Thêm tài khoản', width=20)
+        btnAdd.grid(column=0, row=0, padx=10, ipady=3)
 
-        btnSave = Button(FrameGrid3, text='Save')
-        btnSave.grid(column=1, row=0, padx=(0, 50))
+        btnSave = Button(FrameGrid3, text='Lưu thông tin', width=20)
+        btnSave.grid(column=1, row=0, padx=10, ipady=3)
 
-        btnDelete = Button(FrameGrid3, text='Delete')
-        btnDelete.grid(column=2, row=0, padx=(0, 50))
+        btnDelete = Button(FrameGrid3, text='Xóa tài khoản', width=20)
+        btnDelete.grid(column=2, row=0, padx=10, ipady=3)
 
-        btnUpdate = Button(FrameGrid3, text='Update')
-        btnUpdate.grid(column=3, row=0, padx=(0, 50))
-
-        btnViewData = Button(FrameGrid3, text='View data')
-        btnViewData.grid(column=4, row=0, padx=(0, 50))
-
-        btnRefresh = Button(FrameGrid3, text='Refresh')
-        btnRefresh.grid(column=5, row=0, padx=(0, 50))
+        btnRefresh = Button(FrameGrid3, text='Reset', width=20)
+        btnRefresh.grid(column=5, row=0, padx=10, ipady=3)
         
     def initAccountData(self, accountList):
         account = AdAccountData()

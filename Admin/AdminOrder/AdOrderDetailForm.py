@@ -101,7 +101,7 @@ class AdOrderDetailForm(Toplevel):
     def initFrame3Component(self, frame3):
         columns = ('productID', 'productName', 'quantity', 'productPrice', 'discountPrice')
         orderDetailList = Treeview(frame3, columns=columns, show='headings')
-        orderDetailList.grid(row=0, column=0, padx=(40, 0))
+        orderDetailList.grid(row=0, column=0)
                 
         orderDetailList.heading('productID', text='Mã sản phẩm')
         orderDetailList.heading('productName', text='Tên sản phẩm')
@@ -110,7 +110,7 @@ class AdOrderDetailForm(Toplevel):
         orderDetailList.heading('discountPrice', text='Thành tiền')
         
         for column in columns:
-            orderDetailList.column(column, anchor='c')
+            orderDetailList.column(column, anchor='c', width=180)
         
         self.initOrderDetailData(orderDetailList)
         
@@ -173,10 +173,3 @@ class AdOrderDetailForm(Toplevel):
             if self.orderID == data[0]:
                 self.orderDate = str(data[2])
                 self.customerID = str(data[1])
-         
-# if __name__ == '__main__':
-#     root = Tk()
-#     mainFrame = AdOrderDetailForm(root, 'HD001') 
-#     root.geometry('1200x600+180+100')
-#     root.title('Chi tiết đơn hàng')
-#     root.mainloop()

@@ -11,12 +11,12 @@ class AdProductData():
     def __init__(self):
         self.productList = []
         
-        conn = pyodbc.connect('Driver={SQL Server};'
+        self.conn = pyodbc.connect('Driver={SQL Server};'
                       'Server=LAPTOP-P91166MQ\\THEVU_SQL;'
                       'Database=py_ql;'
                       'Trusted_Connection=yes;')
 
-        data = conn.cursor()
+        data = self.conn.cursor()
         data.execute('select * from dbo.Product')
         
         str = '1'
@@ -40,3 +40,38 @@ class AdProductData():
         while len(id) != 3:
             id = '0' + id
         return id
+    
+    def addProduct(self, product):
+        self.productList.append(product)
+        
+        add = self.conn.cursor()
+        add.execute(f"""insert into dbo.Product values
+                        ('{product[0]}', '{product[1]}', {product[2]}, {product[3]}, '{product[4]}', '{product[5]}')
+                    """)
+        
+        self.conn.commit()
+        
+    def deleteProduct(self, product):
+        self.productList.remove(product)
+        
+        delete = self.conn.cursor()
+        delete.execute(f"delete from dbo.Product where ProductID = '{product[0]}'")
+        
+        self.conn.commit()
+        
+    def updateProductInfo(self, newProduct):
+        for product in self.productList:
+            if product[0] == newProduct[0]:
+                self.productList.remove(product)
+                self.productList.append(newProduct)
+        
+        self.productList.sort(key=lambda x: x[0])
+        
+        update = self.conn.cursor()
+        update.execute(f""" update dbo.Product
+                            set ProductName = '{newProduct[1]}', Price = '{newProduct[2]}', Quantity = '{newProduct[3]}', SupplierID = '{newProduct[4]}',
+                                            CategoryID = '{newProduct[5]}'
+                            where ProductID = '{newProduct[0]}'
+                       """)
+        
+        self.conn.commit()

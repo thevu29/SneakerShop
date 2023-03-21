@@ -1,5 +1,6 @@
 from tkinter import Tk, Text, TOP, BOTH, X, N, LEFT, RIGHT, StringVar
-from tkinter.ttk import Frame, Label, Entry, Combobox, Treeview, Scrollbar, LabelFrame, Button
+from tkinter.ttk import Frame, Label, Entry, Combobox, Treeview, Scrollbar, LabelFrame, Button, Style
+from tkinter import messagebox
 from PIL import Image, ImageTk
 
 try:
@@ -13,7 +14,7 @@ class AdProductForm(Frame):
         self.parent = parent
         self.product = AdProductData()
         self.productDataList = self.product.getProductList()
-
+                
         # Tạo frame1
         self.frame1 = Frame(self)
         self.frame1.pack(fill=BOTH)
@@ -37,15 +38,13 @@ class AdProductForm(Frame):
 
         self.productImage = Label(self.frameGrid2, text="Hình ảnh: ")
         self.productImage.grid(row=0, column=4, padx=(30, 0), sticky='w', rowspan=3)
-        # self.txtProductImage = Entry(self.frameGrid2)
-        # self.txtProductImage.grid(row=0, column=5, padx=10)
 
         self.productName = Label(self.frameGrid2, text="Tên sản phẩm: ")
         self.productName.grid(row=1, column=0, pady=(25, 0), sticky='w')
         self.txtProductName = Entry(self.frameGrid2, width=30)
         self.txtProductName.grid(row=1, column=1, padx=10, pady=(25, 0))
         
-        self.productPrice = Label(self.frameGrid2, text="Giá: ")
+        self.productPrice = Label(self.frameGrid2, text="Đơn giá: ")
         self.productPrice.grid(row=1, column=2, padx=(20, 0), pady=(25, 0), sticky='w')
         self.txtProductPrice = Entry(self.frameGrid2, width=23)
         self.txtProductPrice.grid(row=1, column=3, padx=10, pady=(25, 0))
@@ -95,7 +94,7 @@ class AdProductForm(Frame):
         self.tree.heading("5", text="Mã nhà cung cấp")
         self.tree.heading("6", text="Mã loại sản phẩm")
 
-        self.initProductData(self.tree)
+        self.initProductData()
         self.tree.bind('<<TreeviewSelect>>', lambda x: self.showProductInfo())
         
         # Tạo frame4
@@ -108,31 +107,34 @@ class AdProductForm(Frame):
         self.frameGrid4 = Frame(self.frame4)
         self.frameGrid4.grid(column=6, row=1)
 
-        self.btn1 = Button(self.frameGrid4, text="Add new", width=12)
-        self.btn1.grid(row=0, column=0, padx=10)
-
-        self.btn2 = Button(self.frameGrid4, text="Save", width=12)
-        self.btn2.grid(row=0, column=1, padx=10)
-
-        self.btn3 = Button(self.frameGrid4, text="Delete", width=12)
-        self.btn3.grid(row=0, column=2, padx=10)
-
-        self.btn4 = Button(self.frameGrid4, text="Update", width=12)
-        self.btn4.grid(row=0, column=3, padx=10)
-
-        self.btn5 = Button(self.frameGrid4, text="View data", width=12)
-        self.btn5.grid(row=0, column=4, padx=10)
-
-        self.btn6 = Button(self.frameGrid4, text="Refresh", width=12)
-        self.btn6.grid(row=0, column=5, padx=10)
-
-    def initProductData(self, productList):
-        for data in self.productDataList:
-            productList.insert('', 'end', values=data)
+        self.btnAdd = Button(self.frameGrid4, text="Thêm sản phẩm", width=20)
+        self.btnAdd.grid(row=0, column=0, padx=10, ipady=3)
+        self.btnAdd.bind('<Button-1>', lambda x: self.addProduct())
         
-    def showProductInfo(self):
-        selectedRow = self.tree.focus()
-        selectedRowId = self.tree.item(selectedRow)['values'][0]
+        self.btnSave = Button(self.frameGrid4, text="Lưu thông tin", width=20)
+        self.btnSave.grid(row=0, column=1, padx=10, ipady=3)
+        self.btnSave.bind('<Button-1>', lambda x: self.saveProductInfo())
+        
+        self.btnDelete = Button(self.frameGrid4, text="Xóa sản phẩm", width=20)
+        self.btnDelete.grid(row=0, column=2, padx=10, ipady=3)
+        self.btnDelete.bind('<Button-1>', lambda x: self.deleteProduct())
+
+        self.btnReset = Button(self.frameGrid4, text="Reset", width=20)
+        self.btnReset.grid(row=0, column=3, padx=10, ipady=3)
+        
+    def initProductData(self):          
+        for row in self.tree.get_children():
+            self.tree.delete(row)
+          
+        for data in self.productDataList:
+            self.tree.insert('', 'end', values=data)
+        
+    def showProductInfo(self):        
+        try:
+            selectedRow = self.tree.focus()
+            selectedRowId = self.tree.item(selectedRow)['values'][0]
+        except:
+            return
         
         self.txtProductId.delete('0', 'end')
         self.txtProductName.delete('0', 'end')
@@ -150,6 +152,115 @@ class AdProductForm(Frame):
                 self.txtProductSupplier.insert('0', product[4])
                 self.txtProductCategory.insert('0', product[5])
                 
-                self.productImage = ImageTk.PhotoImage(Image.open(product[6]).resize((100, 100)))
-                self.txtProductImage = Label(self.frameGrid2, image=self.productImage)
-                self.txtProductImage.grid(row=0, column=5, padx=10, rowspan=3)
+                try:
+                    self.imageBorder = Frame(self.frameGrid2, borderwidth=2, relief='solid')
+                    self.imageBorder.grid(row=0, column=5, padx=10, rowspan=3)
+                    
+                    self.productImage = ImageTk.PhotoImage(Image.open(product[6]).resize((100, 100)))
+                    self.txtProductImage = Label(self.imageBorder, image=self.productImage)
+                    self.txtProductImage.grid(row=0, column=0)
+                except:
+                    self.productImage = ImageTk.PhotoImage(Image.open('./img/fallback_img.png').resize((100, 100)))
+                    self.txtProductImage = Label(self.imageBorder, image=self.productImage)
+                    self.txtProductImage.grid(row=0, column=0)
+            
+    def validate(self):
+        productId = self.txtProductId.get()
+        productName = self.txtProductName.get()
+        productPrice = self.txtProductPrice.get()
+        productQuantity = self.txtProductQuantity.get()
+        productCategory = self.txtProductCategory.get()
+        productSupplier = self.txtProductSupplier.get()
+        
+        s = ''
+        if (productId == ''):
+            s += 'Mã sản phẩm không được để trống \n'
+        if (productName == ''):
+            s += 'Tên sản phẩm không được để trống \n'
+        if (productPrice == ''):
+            s += 'Giá sản phẩm không được để trống \n'
+        if (productQuantity == ''):
+            s += 'Số lượng sản phẩm không được để trống \n'
+        if (productCategory == ''):
+            s += 'Loại sản phẩm không được để trống \n'
+        if (productSupplier == ''):
+            s += 'Mã nhà cung cấp sản phẩm không được để trống \n' 
+            
+        if (len(s) > 0):
+            messagebox.showwarning('Warning', s)
+            return False
+        return True
+                    
+    def addProduct(self):
+        if (self.validate() == False):
+            return
+        
+        productId = self.txtProductId.get()
+        productName = self.txtProductName.get()
+        productPrice = self.txtProductPrice.get()
+        productQuantity = self.txtProductQuantity.get()
+        productCategory = self.txtProductCategory.get()
+        productSupplier = self.txtProductSupplier.get()
+        
+        for product in self.productDataList:
+            if productId == product[0]:
+                messagebox.showwarning('Warning', 'Mã sản phẩm đã tồn tại')
+                return
+        
+        newProduct = [productId, productName, productPrice, productQuantity, productSupplier, productCategory]
+        
+        self.product.addProduct(newProduct)
+        messagebox.showinfo('Thành công', 'Thêm sản phẩm thành công')
+        
+        self.initProductData()
+        self.reset()
+    
+    def deleteProduct(self):
+        if (self.validate() == False):
+            return
+
+        productId = self.txtProductId.get()
+        
+        for product in self.productDataList:
+            if productId == product[0]:
+                self.product.deleteProduct(product)
+                messagebox.showinfo('Thành công', f'Xóa thành công sản phẩm có mã {productId}')
+                self.initProductData()
+                self.reset()
+                return
+            
+        messagebox.showwarning('Warning', 'Mã sản phẩm không tồn tại')
+    
+    def saveProductInfo(self):
+        if (self.validate() == False):
+            return
+        
+        productId = self.txtProductId.get()
+        productName = self.txtProductName.get()
+        productPrice = self.txtProductPrice.get()
+        productQuantity = self.txtProductQuantity.get()
+        productCategory = self.txtProductCategory.get()
+        productSupplier = self.txtProductSupplier.get()
+        
+        newProduct = [productId, productName, productPrice, productQuantity, productSupplier, productCategory]
+        
+        for product in self.productDataList:
+            if productId == product[0]:
+                self.product.updateProductInfo(newProduct)
+                messagebox.showinfo('Thành công', f'Sửa thành công thông tin sản phẩm có mã {productId}')
+                self.initProductData()
+                self.reset()
+                return
+            
+        messagebox.showwarning('Warning', 'Mã sản phẩm không tồn tại')
+        
+    def reset(self):
+        self.txtProductId.delete('0', 'end')
+        self.txtProductName.delete('0', 'end')
+        self.txtProductQuantity.delete('0', 'end')
+        self.txtProductPrice.delete('0', 'end')
+        self.txtProductCategory.delete('0', 'end')
+        self.txtProductSupplier.delete('0', 'end')
+        
+        self.imageBorder.grid_remove()
+        self.txtProductImage.grid_remove()
