@@ -133,4 +133,3 @@ class SignUpForm(Frame):
 if __name__ == '__main__':
     root = StartForm()
     root.mainloop()
-    

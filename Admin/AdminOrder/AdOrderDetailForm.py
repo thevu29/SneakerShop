@@ -110,7 +110,7 @@ class AdOrderDetailForm(Toplevel):
         orderDetailList.heading('discountPrice', text='Thành tiền')
         
         for column in columns:
-            orderDetailList.column(column, anchor='c', width=180)
+            orderDetailList.column(column, anchor='c')
         
         self.initOrderDetailData(orderDetailList)
         

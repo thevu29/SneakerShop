@@ -131,5 +131,5 @@ class AdOrderForm(Frame):
         for order in self.orderDataList:
             if order[0] == selectedOrderId:
                 orderDetailForm = AdOrderDetailForm(self, order[0])
-                orderDetailForm.geometry('1000x600+250+100')
+                orderDetailForm.geometry('1100x600+250+100')
                 break

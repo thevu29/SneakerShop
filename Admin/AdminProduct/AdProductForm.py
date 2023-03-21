@@ -116,7 +116,7 @@ class AdProductForm(Frame):
         self.btnDelete = Button(self.frameGrid4, text="Xóa sản phẩm", width=20, command=self.deleteProduct)
         self.btnDelete.grid(row=0, column=2, padx=10, ipady=3)
 
-        self.btnReset = Button(self.frameGrid4, text="Reset", width=20)
+        self.btnReset = Button(self.frameGrid4, text="Reset", width=20, command=self.reset)
         self.btnReset.grid(row=0, column=3, padx=10, ipady=3)
         
     def initProductData(self):          

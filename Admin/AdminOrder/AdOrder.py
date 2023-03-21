@@ -27,6 +27,7 @@ class AdOrderData():
         data.execute('select * from dbo.CustomerOrder')
         
         for item in data:
+            item[2] = "-".join(str(item[2]).split('-')[::-1])
             item[3] = '{0:.2f}'.format(item[3]).rstrip('0').rstrip('.')
             item = Convert(item)
             self.orderList.append(item)

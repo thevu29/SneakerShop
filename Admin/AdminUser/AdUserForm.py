@@ -1,15 +1,18 @@
 from tkinter import Tk, BOTH, LEFT, VERTICAL, E, W, S, NO, CENTER, X
 from tkinter.ttk import Frame, Label, Entry, Combobox, Treeview, Scrollbar, LabelFrame, Button
+from tkinter import messagebox
 
 try:
-    from .AdUserData import *
+    from .AdUser import *
 except:
-    from AdUserData import *
+    from AdUser import *
 
 class AdUserForm(Frame):
     def __init__(self, parent):
         Frame.__init__(self, parent)
         self.parent = parent
+        self.user = AdUserData()
+        self.userDataList = self.user.getUserList()
         
         self.main_title()
         self.create_form()
@@ -20,96 +23,223 @@ class AdUserForm(Frame):
 
     def create_form(self):
         # Tạo form bên trái
-        form_left = LabelFrame(self, text="Thông tin khách hàng")
-        form_left.pack(fill=BOTH, pady=12)
-        form_left.configure(borderwidth=10, relief='solid')
+        self.form_left = LabelFrame(self, text="Thông tin khách hàng")
+        self.form_left.pack(fill=BOTH, pady=12)
+        self.form_left.configure(borderwidth=10, relief='solid')
 
         # Mã khách hàng và entry
-        label1 = Label(form_left, text="Mã khách hàng:")
-        label1.grid(row=0, column=0, sticky='w')
-        first_entry = Entry(form_left, font=('Time new roman', 10))
-        first_entry.grid(row=0, column=1, sticky='w', padx=(8, 16), pady=12)
+        self.userId = Label(self.form_left, text="Mã khách hàng:")
+        self.userId.grid(row=0, column=0, sticky='w')
+        self.txtUserId = Entry(self.form_left)
+        self.txtUserId.grid(row=0, column=1, sticky='w', padx=(8, 16), pady=12)
 
         # Tên khách hàng và entry
-        label2 = Label(form_left, text="Tên khách hàng:")
-        label2.grid(row=0, column=2, sticky='w')
-        second_entry = Entry(form_left, font=('Time new roman', 10))
-        second_entry.grid(row=0, column=3, sticky='w', padx=(8, 16), pady=12)
+        self.userName = Label(self.form_left, text="Tên khách hàng:")
+        self.userName.grid(row=0, column=2, sticky='w')
+        self.txtUserName = Entry(self.form_left)
+        self.txtUserName.grid(row=0, column=3, sticky='w', padx=(8, 16), pady=12)
 
         # Giới tính và entry
-        label5 = Label(form_left, text="Giới tính:")
-        label5.grid(row=0, column=4, sticky='w')
-        fifth_entry = Combobox(form_left, font=('Time new roman', 10), state='readonly')
-        fifth_entry['values'] = ('Nam', 'Nữ')
-        fifth_entry.grid(row=0, column=5, sticky='w', padx=(8, 16), pady=12)
+        self.gender = Label(self.form_left, text="Giới tính:")
+        self.gender.grid(row=0, column=4, sticky='w')
+        self.cbxGender = Combobox(self.form_left, state='readonly', values=('Nam', 'Nữ'))
+        self.cbxGender.grid(row=0, column=5, sticky='w', padx=(8, 16), pady=12)
         
         # Địa chỉ và entry
-        label3 = Label(form_left, text="Địa chỉ:")
-        label3.grid(row=1, column=0, sticky='w')
-        third_entry = Entry(form_left, font=('Time new roman', 10))
-        third_entry.grid(row=1, column=1, sticky='w', padx=(8, 16), pady=12)
+        self.address = Label(self.form_left, text="Địa chỉ:")
+        self.address.grid(row=1, column=0, sticky='w')
+        self.txtAddress = Entry(self.form_left)
+        self.txtAddress.grid(row=1, column=1, sticky='w', padx=(8, 16), pady=12)
 
         # Số điện thoại và entry
-        label4 = Label(form_left, text="Số điện thoại:")
-        label4.grid(row=1, column=2, sticky='w')
-        fourth_entry = Entry(form_left, font=('Time new roman', 10))
-        fourth_entry.grid(row=1, column=3, sticky='w', padx=(8, 16), pady=12)
+        self.phone = Label(self.form_left, text="Số điện thoại:")
+        self.phone.grid(row=1, column=2, sticky='w')
+        self.txtPhone = Entry(self.form_left)
+        self.txtPhone.grid(row=1, column=3, sticky='w', padx=(8, 16), pady=12)
 
         # Điểm thành viên và entry
-        label6 = Label(form_left, text="Điểm thành viên:")
-        label6.grid(row=1, column=4, sticky='w')
-        six_entry = Entry(form_left, font=('Time new roman', 10))
-        six_entry.grid(row=1, column=5, sticky='w', padx=(8, 16), pady=12)
+        self.point = Label(self.form_left, text="Điểm thành viên:")
+        self.point.grid(row=1, column=4, sticky='w')
+        self.txtPoint = Entry(self.form_left)
+        self.txtPoint.grid(row=1, column=5, sticky='w', padx=(8, 16), pady=12)
 
         # Tạo form bên phải
-        list_info_frame = LabelFrame(self, text="Danh sách khách hàng")
-        list_info_frame.pack(fill=BOTH)
-        list_info_frame.config(borderwidth=10, relief='solid')
+        self.list_info_frame = LabelFrame(self, text="Danh sách khách hàng")
+        self.list_info_frame.pack(fill=BOTH)
+        self.list_info_frame.config(borderwidth=10, relief='solid')
 
         # Tạo Tree view
-        my_tree = Treeview(list_info_frame, show='headings')
-        my_tree.grid(row=0, column=0, sticky='EW')
+        self.my_tree = Treeview(self.list_info_frame, show='headings')
+        self.my_tree.grid(row=0, column=0, sticky='EW')
 
-        # Create scroll in list_info_frame
-        scrollbar = Scrollbar(list_info_frame, orient=VERTICAL, command=my_tree.yview)
-        my_tree.configure(yscroll=scrollbar.set)
+        # Create scroll in self.list_info_frame
+        scrollbar = Scrollbar(self.list_info_frame, orient=VERTICAL, command=self.my_tree.yview)
+        self.my_tree.configure(yscroll=scrollbar.set)
         scrollbar.grid(row=0, column=1, sticky='NS')
         
-        my_tree['columns'] = ("Mã khách hàng", "Tên khách hàng", "Địa chỉ", "Số điện thoại", "Giới tính", "Điểm thành viên")
+        self.my_tree['columns'] = ("Mã khách hàng", "Tên khách hàng", "Địa chỉ", "Số điện thoại", "Giới tính", "Điểm thành viên")
         for column in ("Mã khách hàng", "Tên khách hàng", "Địa chỉ", "Số điện thoại", "Giới tính", "Điểm thành viên"):
             if (column != 'Tên khách hàng' and column != 'Địa chỉ'):
-                my_tree.column(column, anchor='c')
-            my_tree.column(column, width=150)
+                self.my_tree.column(column, anchor='c')
+            self.my_tree.column(column, width=150)
             
-        my_tree.heading("Mã khách hàng", text="Mã khách hàng", anchor=CENTER)
-        my_tree.heading("Tên khách hàng", text="Tên khách hàng", anchor=CENTER)
-        my_tree.heading("Địa chỉ", text="Địa chỉ", anchor=CENTER)
-        my_tree.heading("Số điện thoại", text="Số điện thoại", anchor=CENTER)
-        my_tree.heading("Giới tính", text="Giới tính", anchor=CENTER)
-        my_tree.heading("Điểm thành viên", text="Điểm thành viên", anchor=CENTER)
+        self.my_tree.heading("Mã khách hàng", text="Mã khách hàng", anchor=CENTER)
+        self.my_tree.heading("Tên khách hàng", text="Tên khách hàng", anchor=CENTER)
+        self.my_tree.heading("Địa chỉ", text="Địa chỉ", anchor=CENTER)
+        self.my_tree.heading("Số điện thoại", text="Số điện thoại", anchor=CENTER)
+        self.my_tree.heading("Giới tính", text="Giới tính", anchor=CENTER)
+        self.my_tree.heading("Điểm thành viên", text="Điểm thành viên", anchor=CENTER)
 
-        self.initUserData(my_tree)
+        self.initUserData()
 
+        self.my_tree.bind('<<TreeviewSelect>>', lambda x: self.showUserInfo())
+        
         # Tạo form bên phải, dưới là chức năng
-        function_frame = LabelFrame(self, text="Chức năng")
-        function_frame.pack(pady=12)
-        function_frame.config(borderwidth=10, relief='solid')
+        self.function_frame = LabelFrame(self, text="Chức năng")
+        self.function_frame.pack(pady=12)
+        self.function_frame.config(borderwidth=10, relief='solid')
 
         # Tạo button
-        btnAdd = Button(function_frame, text="Thêm khách hàng", width=20)
-        btnAdd.grid(row=0, column=0, pady=6, padx=10, ipady=3)
+        self.btnAdd = Button(self.function_frame, text="Thêm khách hàng", width=20, command=self.addUser)
+        self.btnAdd.grid(row=0, column=0, pady=6, padx=10, ipady=3)
         
-        btnSave = Button(function_frame, text="Lưu thông tin", width=20)
-        btnSave.grid(row=0, column=1, pady=6, padx=10, ipady=3)
+        self.btnSave = Button(self.function_frame, text="Lưu thông tin", width=20, command=self.saveUserInfo)
+        self.btnSave.grid(row=0, column=1, pady=6, padx=10, ipady=3)
         
-        btnDelete = Button(function_frame, text="Xóa khách hàng", width=20)
-        btnDelete.grid(row=0, column=2, pady=6, padx=10, ipady=3)
+        self.btnDelete = Button(self.function_frame, text="Xóa khách hàng", width=20, command=self.deleteUser)
+        self.btnDelete.grid(row=0, column=2, pady=6, padx=10, ipady=3)
 
-        btnReset = Button(function_frame, text="Reset", width=20)
-        btnReset.grid(row=0, column=5, pady=6, padx=10, ipady=3)
+        self.btnReset = Button(self.function_frame, text="Reset", width=20, command=self.reset)
+        self.btnReset.grid(row=0, column=5, pady=6, padx=10, ipady=3)
         
-    def initUserData(self, userList):
-        user = AdUserData()
-        userDataList = user.getUserList()
-        for data in userDataList:
-            userList.insert('', 'end', values=data)
+    def initUserData(self):
+        for row in self.my_tree.get_children():
+            self.my_tree.delete(row)
+        
+        for data in self.userDataList:
+            self.my_tree.insert('', 'end', values=data)
+            
+    def showUserInfo(self):
+        try:
+            selectedRow = self.my_tree.focus()
+            selectedRowId = self.my_tree.item(selectedRow)['values'][0]
+        except:
+            return
+        
+        self.txtUserId.delete('0', 'end')
+        self.txtUserName.delete('0', 'end')
+        self.txtAddress.delete('0', 'end')
+        self.txtPhone.delete('0', 'end')
+        self.cbxGender.delete('0', 'end')
+        self.txtPoint.delete('0', 'end')
+        
+        for user in self.userDataList:
+            if user[0] == selectedRowId:
+                self.txtUserId.insert('0', user[0])   
+                self.txtUserName.insert('0', user[1])
+                self.txtAddress.insert('0', user[2])
+                self.txtPhone.insert('0', user[3])
+                self.txtPoint.insert('0', user[5])
+                
+                if (user[4] == 'Nam'):
+                    self.cbxGender.current(0)
+                else:
+                    self.cbxGender.current(1)
+    
+    def validate(self):
+        userId = self.txtUserId.get()
+        userName = self.txtUserName.get()
+        address = self.txtAddress.get()
+        phone = self.txtPhone.get()
+        point = self.txtPoint.get()
+        gender = self.cbxGender.get()
+        
+        s = ''
+        if (userId == ''):
+            s += 'Mã khách hàng không được để trống \n'
+        if (userName == ''):
+            s += 'Tên khách hàng không được để trống \n'
+        if (address == ''):
+            s += 'Địa chỉ không được để trống \n'
+        if (phone == ''):
+            s += 'Số điện thoại không được để trống \n'
+        if (point == ''):
+            s += 'Điểm thành viên không được để trống \n'
+        if (gender == ''):
+            s += 'Giới tính không được để trống \n' 
+            
+        if (len(s) > 0):
+            messagebox.showwarning('Warning', s)
+            return False
+        return True
+                    
+    def addUser(self):
+        if (self.validate() == False):
+            return
+        
+        userId = self.txtUserId.get()
+        userName = self.txtUserName.get()
+        address = self.txtAddress.get()
+        phone = self.txtPhone.get()
+        gender = self.cbxGender.get()
+        point = self.txtPoint.get()
+        
+        for user in self.userDataList:
+            if userId == user[0]:
+                messagebox.showwarning('Warning', 'Mã khách hàng đã tồn tại')
+                return
+            
+        newUser = [userId, userName, address, phone, gender, point]
+        
+        self.user.addUser(newUser)
+        messagebox.showinfo('Thành công', 'Thêm khách hàng thành công')
+        
+        self.initUserData()
+        self.reset()
+    
+    def deleteUser(self):
+        if (self.validate() == False):
+            return
+
+        userId = self.txtUserId.get()
+        
+        for user in self.userDataList:
+            if userId == user[0]:
+                self.user.deleteUser(user)
+                messagebox.showinfo('Thành công', f'Xóa thành công khách hàng có mã {userId}')
+                self.initUserData()
+                self.reset()
+                return
+            
+        messagebox.showwarning('Warning', 'Mã khách hàng không tồn tại')
+    
+    def saveUserInfo(self):
+        if (self.validate() == False):
+            return
+        
+        userId = self.txtUserId.get()
+        userName = self.txtUserName.get()
+        address = self.txtAddress.get()
+        phone = self.txtPhone.get()
+        gender = self.cbxGender.get()
+        point = self.txtPoint.get()
+        
+        newUser = [userId, userName, address, phone, gender, point]
+        
+        for user in self.userDataList:
+            if userId == user[0]:
+                self.user.updateUserInfo(newUser)
+                messagebox.showinfo('Thành công', f'Sửa thành công thông tin khách hàng có mã {userId}')
+                self.initUserData()
+                self.reset()
+                return
+            
+        messagebox.showwarning('Warning', 'Mã khách hàng không tồn tại')
+       
+    def reset(self):
+        self.txtUserId.delete('0', 'end')
+        self.txtUserName.delete('0', 'end')
+        self.txtAddress.delete('0', 'end')
+        self.txtPhone.delete('0', 'end')
+        self.cbxGender.delete('0', 'end')
+        self.txtPoint.delete('0', 'end')
