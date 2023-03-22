@@ -35,7 +35,7 @@ class AdUserForm(Frame):
         # Tên khách hàng và entry
         self.userName = Label(self.form_left, text="Tên khách hàng:")
         self.userName.grid(row=0, column=2, sticky='w')
-        self.txtUserName = Entry(self.form_left)
+        self.txtUserName = Entry(self.form_left, width=40)
         self.txtUserName.grid(row=0, column=3, sticky='w', padx=(8, 16), pady=12)
 
         # Giới tính và entry
@@ -44,17 +44,17 @@ class AdUserForm(Frame):
         self.cbxGender = Combobox(self.form_left, state='readonly', values=('Nam', 'Nữ'))
         self.cbxGender.grid(row=0, column=5, sticky='w', padx=(8, 16), pady=12)
         
-        # Địa chỉ và entry
-        self.address = Label(self.form_left, text="Địa chỉ:")
-        self.address.grid(row=1, column=0, sticky='w')
-        self.txtAddress = Entry(self.form_left)
-        self.txtAddress.grid(row=1, column=1, sticky='w', padx=(8, 16), pady=12)
-
         # Số điện thoại và entry
         self.phone = Label(self.form_left, text="Số điện thoại:")
-        self.phone.grid(row=1, column=2, sticky='w')
+        self.phone.grid(row=1, column=0, sticky='w')
         self.txtPhone = Entry(self.form_left)
-        self.txtPhone.grid(row=1, column=3, sticky='w', padx=(8, 16), pady=12)
+        self.txtPhone.grid(row=1, column=1, sticky='w', padx=(8, 16), pady=12)
+        
+        # Địa chỉ và entry
+        self.address = Label(self.form_left, text="Địa chỉ:")
+        self.address.grid(row=1, column=2, sticky='w')
+        self.txtAddress = Entry(self.form_left, width=40)
+        self.txtAddress.grid(row=1, column=3, sticky='w', padx=(8, 16), pady=12)
 
         # Điểm thành viên và entry
         self.point = Label(self.form_left, text="Điểm thành viên:")
