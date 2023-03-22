@@ -1,6 +1,5 @@
-from tkinter import Tk, BOTH, LEFT, VERTICAL, E, W, S, NO, CENTER, X
+from tkinter import Tk, BOTH, LEFT, VERTICAL, E, W, S, NO, CENTER, X, messagebox
 from tkinter.ttk import Frame, Label, Entry, Combobox, Treeview, Scrollbar, LabelFrame, Button
-from tkinter import messagebox
 
 try:
     from .AdUser import *
@@ -69,30 +68,30 @@ class AdUserForm(Frame):
         self.list_info_frame.config(borderwidth=10, relief='solid')
 
         # Tạo Tree view
-        self.my_tree = Treeview(self.list_info_frame, show='headings')
-        self.my_tree.grid(row=0, column=0, sticky='EW')
+        self.tblUser = Treeview(self.list_info_frame, show='headings')
+        self.tblUser.grid(row=0, column=0, sticky='EW')
 
         # Create scroll in self.list_info_frame
-        scrollbar = Scrollbar(self.list_info_frame, orient=VERTICAL, command=self.my_tree.yview)
-        self.my_tree.configure(yscroll=scrollbar.set)
+        scrollbar = Scrollbar(self.list_info_frame, orient=VERTICAL, command=self.tblUser.yview)
+        self.tblUser.configure(yscroll=scrollbar.set)
         scrollbar.grid(row=0, column=1, sticky='NS')
         
-        self.my_tree['columns'] = ("Mã khách hàng", "Tên khách hàng", "Địa chỉ", "Số điện thoại", "Giới tính", "Điểm thành viên")
+        self.tblUser['columns'] = ("Mã khách hàng", "Tên khách hàng", "Địa chỉ", "Số điện thoại", "Giới tính", "Điểm thành viên")
         for column in ("Mã khách hàng", "Tên khách hàng", "Địa chỉ", "Số điện thoại", "Giới tính", "Điểm thành viên"):
             if (column != 'Tên khách hàng' and column != 'Địa chỉ'):
-                self.my_tree.column(column, anchor='c')
-            self.my_tree.column(column, width=150)
+                self.tblUser.column(column, anchor='c')
+            self.tblUser.column(column, width=150)
             
-        self.my_tree.heading("Mã khách hàng", text="Mã khách hàng", anchor=CENTER)
-        self.my_tree.heading("Tên khách hàng", text="Tên khách hàng", anchor=CENTER)
-        self.my_tree.heading("Địa chỉ", text="Địa chỉ", anchor=CENTER)
-        self.my_tree.heading("Số điện thoại", text="Số điện thoại", anchor=CENTER)
-        self.my_tree.heading("Giới tính", text="Giới tính", anchor=CENTER)
-        self.my_tree.heading("Điểm thành viên", text="Điểm thành viên", anchor=CENTER)
+        self.tblUser.heading("Mã khách hàng", text="Mã khách hàng", anchor=CENTER)
+        self.tblUser.heading("Tên khách hàng", text="Tên khách hàng", anchor=CENTER)
+        self.tblUser.heading("Địa chỉ", text="Địa chỉ", anchor=CENTER)
+        self.tblUser.heading("Số điện thoại", text="Số điện thoại", anchor=CENTER)
+        self.tblUser.heading("Giới tính", text="Giới tính", anchor=CENTER)
+        self.tblUser.heading("Điểm thành viên", text="Điểm thành viên", anchor=CENTER)
 
         self.initUserData()
 
-        self.my_tree.bind('<<TreeviewSelect>>', lambda x: self.showUserInfo())
+        self.tblUser.bind('<<TreeviewSelect>>', lambda x: self.showUserInfo())
         
         # Tạo form bên phải, dưới là chức năng
         self.function_frame = LabelFrame(self, text="Chức năng")
@@ -109,29 +108,24 @@ class AdUserForm(Frame):
         self.btnDelete = Button(self.function_frame, text="Xóa khách hàng", width=20, command=self.deleteUser)
         self.btnDelete.grid(row=0, column=2, pady=6, padx=10, ipady=3)
 
-        self.btnReset = Button(self.function_frame, text="Reset", width=20, command=self.reset)
-        self.btnReset.grid(row=0, column=5, pady=6, padx=10, ipady=3)
+        self.btnresetValue = Button(self.function_frame, text="Reset", width=20, command=self.reset)
+        self.btnresetValue.grid(row=0, column=5, pady=6, padx=10, ipady=3)
         
     def initUserData(self):
-        for row in self.my_tree.get_children():
-            self.my_tree.delete(row)
+        for row in self.tblUser.get_children():
+            self.tblUser.delete(row)
         
         for data in self.userDataList:
-            self.my_tree.insert('', 'end', values=data)
+            self.tblUser.insert('', 'end', values=data)
             
     def showUserInfo(self):
         try:
-            selectedRow = self.my_tree.focus()
-            selectedRowId = self.my_tree.item(selectedRow)['values'][0]
+            selectedRow = self.tblUser.focus()
+            selectedRowId = self.tblUser.item(selectedRow)['values'][0]
         except:
             return
         
-        self.txtUserId.delete('0', 'end')
-        self.txtUserName.delete('0', 'end')
-        self.txtAddress.delete('0', 'end')
-        self.txtPhone.delete('0', 'end')
-        self.cbxGender.delete('0', 'end')
-        self.txtPoint.delete('0', 'end')
+        self.resetValue()
         
         for user in self.userDataList:
             if user[0] == selectedRowId:
@@ -193,8 +187,6 @@ class AdUserForm(Frame):
         
         self.user.addUser(newUser)
         messagebox.showinfo('Thành công', 'Thêm khách hàng thành công')
-        
-        self.initUserData()
         self.reset()
     
     def deleteUser(self):
@@ -207,7 +199,6 @@ class AdUserForm(Frame):
             if userId == user[0]:
                 self.user.deleteUser(user)
                 messagebox.showinfo('Thành công', f'Xóa thành công khách hàng có mã {userId}')
-                self.initUserData()
                 self.reset()
                 return
             
@@ -230,16 +221,19 @@ class AdUserForm(Frame):
             if userId == user[0]:
                 self.user.updateUserInfo(newUser)
                 messagebox.showinfo('Thành công', f'Sửa thành công thông tin khách hàng có mã {userId}')
-                self.initUserData()
                 self.reset()
                 return
             
         messagebox.showwarning('Warning', 'Mã khách hàng không tồn tại')
        
-    def reset(self):
+    def resetValue(self):
         self.txtUserId.delete('0', 'end')
         self.txtUserName.delete('0', 'end')
         self.txtAddress.delete('0', 'end')
         self.txtPhone.delete('0', 'end')
-        self.cbxGender.delete('0', 'end')
+        self.cbxGender.current(0)
         self.txtPoint.delete('0', 'end')
+        
+    def reset(self):
+        self.resetValue()
+        self.initUserData()

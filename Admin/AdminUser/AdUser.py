@@ -40,23 +40,23 @@ class AdUserData():
         self.userList.remove(user)
         
         delete = self.conn.cursor()
-        delete.execute(f"delete from dbo.Customer where CustomerID = '{user[0]}'")
+        delete.execute(f"delete from dbo.Customer where CustomerID='{user[0]}'")
         
         self.conn.commit()
         
     def updateUserInfo(self, newUser):
-        for product in self.userList:
-            if product[0] == newUser[0]:
-                self.userList.remove(product)
+        for user in self.userList:
+            if user[0] == newUser[0]:
+                self.userList.remove(user)
                 self.userList.append(newUser)
         
         self.userList.sort(key=lambda x: x[0])
         
         update = self.conn.cursor()
         update.execute(f""" update dbo.Customer
-                            set CustomerName = '{newUser[1]}', CustomerAddress = '{newUser[2]}', Phone = '{newUser[3]}', Gender = '{newUser[4]}',
-                                            Point = '{newUser[5]}'
-                            where CustomerID = '{newUser[0]}'
+                            set CustomerName='{newUser[1]}', CustomerAddress='{newUser[2]}', Phone='{newUser[3]}', Gender='{newUser[4]}',
+                                            Point='{newUser[5]}'
+                            where CustomerID='{newUser[0]}'
                        """)
         
         self.conn.commit()

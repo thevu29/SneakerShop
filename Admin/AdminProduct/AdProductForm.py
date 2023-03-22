@@ -1,6 +1,5 @@
-from tkinter import Tk, Text, TOP, BOTH, X, N, LEFT, RIGHT, StringVar
+from tkinter import Tk, Text, TOP, BOTH, X, N, LEFT, RIGHT, StringVar, messagebox
 from tkinter.ttk import Frame, Label, Entry, Combobox, Treeview, Scrollbar, LabelFrame, Button, Style
-from tkinter import messagebox
 from PIL import Image, ImageTk
 
 try:
@@ -69,33 +68,33 @@ class AdProductForm(Frame):
         self.framePack3 = Frame(self.frame3)
         self.framePack3.pack(fill=BOTH)
 
-        self.tree = Treeview(self.framePack3, selectmode='browse')
-        self.tree.pack(side=LEFT)
+        self.tblProduct = Treeview(self.framePack3, selectmode='browse')
+        self.tblProduct.pack(side=LEFT)
 
-        self.vsb = Scrollbar(self.framePack3, orient="vertical", command=self.tree.yview)
+        self.vsb = Scrollbar(self.framePack3, orient="vertical", command=self.tblProduct.yview)
 
         # self.vsb.pack(side=RIGHT,fill='y')
         self.vsb.pack(side=RIGHT, fill='y')
 
-        self.tree.configure(yscrollcommand=self.vsb.set)
+        self.tblProduct.configure(yscrollcommand=self.vsb.set)
 
-        self.tree["columns"] = ("1", "2", "3", "4", "5", "6")
-        self.tree['show'] = 'headings'
+        self.tblProduct["columns"] = ("1", "2", "3", "4", "5", "6")
+        self.tblProduct['show'] = 'headings'
 
         for column in ("1", "2", "3", "4", "5", "6"):
-            self.tree.column(column, width=180)
+            self.tblProduct.column(column, width=180)
             if column != "2":
-                self.tree.column(column, anchor='c', width=150)
+                self.tblProduct.column(column, anchor='c', width=150)
 
-        self.tree.heading("1", text="Mã sản phẩm")
-        self.tree.heading("2", text="Tên sản phẩm")
-        self.tree.heading("3", text="Đơn giá")
-        self.tree.heading("4", text="Số lượng")
-        self.tree.heading("5", text="Mã nhà cung cấp")
-        self.tree.heading("6", text="Mã loại sản phẩm")
+        self.tblProduct.heading("1", text="Mã sản phẩm")
+        self.tblProduct.heading("2", text="Tên sản phẩm")
+        self.tblProduct.heading("3", text="Đơn giá")
+        self.tblProduct.heading("4", text="Số lượng")
+        self.tblProduct.heading("5", text="Mã nhà cung cấp")
+        self.tblProduct.heading("6", text="Mã loại sản phẩm")
 
         self.initProductData()
-        self.tree.bind('<<TreeviewSelect>>', lambda x: self.showProductInfo())
+        self.tblProduct.bind('<<TreeviewSelect>>', lambda x: self.showProductInfo())
         
         # Tạo frame4
         self.labelFrame4 = LabelFrame(self, text="Chức năng", padding=10)
@@ -116,29 +115,24 @@ class AdProductForm(Frame):
         self.btnDelete = Button(self.frameGrid4, text="Xóa sản phẩm", width=20, command=self.deleteProduct)
         self.btnDelete.grid(row=0, column=2, padx=10, ipady=3)
 
-        self.btnReset = Button(self.frameGrid4, text="Reset", width=20, command=self.reset)
-        self.btnReset.grid(row=0, column=3, padx=10, ipady=3)
+        self.btnresetValue = Button(self.frameGrid4, text="Reset", width=20, command=self.reset)
+        self.btnresetValue.grid(row=0, column=3, padx=10, ipady=3)
         
     def initProductData(self):          
-        for row in self.tree.get_children():
-            self.tree.delete(row)
+        for row in self.tblProduct.get_children():
+            self.tblProduct.delete(row)
           
         for data in self.productDataList:
-            self.tree.insert('', 'end', values=data)
+            self.tblProduct.insert('', 'end', values=data)
         
     def showProductInfo(self):        
         try:
-            selectedRow = self.tree.focus()
-            selectedRowId = self.tree.item(selectedRow)['values'][0]
+            selectedRow = self.tblProduct.focus()
+            selectedRowId = self.tblProduct.item(selectedRow)['values'][0]
         except:
             return
         
-        self.txtProductId.delete('0', 'end')
-        self.txtProductName.delete('0', 'end')
-        self.txtProductQuantity.delete('0', 'end')
-        self.txtProductPrice.delete('0', 'end')
-        self.txtProductCategory.delete('0', 'end')
-        self.txtProductSupplier.delete('0', 'end')
+        self.resetValue()
         
         for product in self.productDataList:
             if product[0] == selectedRowId:
@@ -208,8 +202,6 @@ class AdProductForm(Frame):
         
         self.product.addProduct(newProduct)
         messagebox.showinfo('Thành công', 'Thêm sản phẩm thành công')
-        
-        self.initProductData()
         self.reset()
     
     def deleteProduct(self):
@@ -222,7 +214,6 @@ class AdProductForm(Frame):
             if productId == product[0]:
                 self.product.deleteProduct(product)
                 messagebox.showinfo('Thành công', f'Xóa thành công sản phẩm có mã {productId}')
-                self.initProductData()
                 self.reset()
                 return
             
@@ -245,13 +236,12 @@ class AdProductForm(Frame):
             if productId == product[0]:
                 self.product.updateProductInfo(newProduct)
                 messagebox.showinfo('Thành công', f'Sửa thành công thông tin sản phẩm có mã {productId}')
-                self.initProductData()
                 self.reset()
                 return
             
         messagebox.showwarning('Warning', 'Mã sản phẩm không tồn tại')
         
-    def reset(self):
+    def resetValue(self):
         self.txtProductId.delete('0', 'end')
         self.txtProductName.delete('0', 'end')
         self.txtProductQuantity.delete('0', 'end')
@@ -259,5 +249,10 @@ class AdProductForm(Frame):
         self.txtProductCategory.delete('0', 'end')
         self.txtProductSupplier.delete('0', 'end')
         
+    def reset(self):
+        self.resetValue()
+        
         self.imageBorder.grid_remove()
         self.txtProductImage.grid_remove()
+        
+        self.initProductData()
