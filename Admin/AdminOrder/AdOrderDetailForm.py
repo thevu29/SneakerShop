@@ -1,5 +1,6 @@
 from tkinter import Tk, N, E, W, S, NSEW, BOTH, LEFT, VERTICAL, StringVar, Toplevel
 from tkinter.ttk import Label, Frame, Entry, Treeview, Scrollbar, Button, LabelFrame
+import pyodbc
 
 try:
     from .AdOrder import *
@@ -10,16 +11,20 @@ class AdOrderDetailForm(Toplevel):
     def __init__(self, parent, orderID):
         Toplevel.__init__(self, parent)
         self.parent = parent
+        
+        self.orderDetail = AdOrderDetailData()
+        self.orderDetailDataList = self.orderDetail.getOrderDetailList()
         self.orderID = str(orderID)
         self.orderDate = ''
-        self.customerID = ''
-        self.orderDetail = AdOrderDetailData()
-        self.orderDetailDataList = self.orderDetail.getOrderList()
         self.totalPrice = 0
         
-        self.getDataFromOrder()
+        self.customerID = ''
+        self.customerName = ''
+        self.customerAddress = ''
+        self.customerPhone = ''
         
-        # self.pack(fill=BOTH)
+        self.getDataFromOrder()
+        self.getDataFromUser()
         self.initUI()    
        
     def initUI(self):   
@@ -51,78 +56,82 @@ class AdOrderDetailForm(Toplevel):
     
     def initFrame2Component(self, frame2):
         # Row 0
-        txtOrderID = Label(frame2, text='Mã hóa đơn:')
-        txtOrderID.grid(row=0, column=0, padx=(20, 0), sticky=W)
-        orderID = Entry(frame2)
-        orderID.insert('0', self.orderID)
-        orderID.grid(row=0, column=1, padx=10, pady=10)
+        self.lblOrderID = Label(frame2, text='Mã hóa đơn:')
+        self.lblOrderID.grid(row=0, column=0, padx=(20, 0), sticky=W)
+        self.txtOrderID = Entry(frame2)
+        self.txtOrderID.insert('0', self.orderID)
+        self.txtOrderID.grid(row=0, column=1, padx=(10, 18), pady=10)
         
-        txtOrderDate = Label(frame2, text='Ngày đặt hàng:')
-        txtOrderDate.grid(row=0, column=2, padx=(20, 0), sticky=W)
-        orderDate = Entry(frame2)
-        orderDate.insert('0', self.orderDate)
-        orderDate.grid(row=0, column=3, padx=10, pady=10)
+        self.lblorderDate = Label(frame2, text='Ngày đặt hàng:')
+        self.lblorderDate.grid(row=1, column=0, padx=(20, 0), sticky=W)
+        self.txtOrderDate = Entry(frame2)
+        self.txtOrderDate.insert('0', self.orderDate)
+        self.txtOrderDate.grid(row=1, column=1, padx=(10, 18), pady=10)
         
-        txtEmployeeID = Label(frame2, text='Mã nhân viên:')
-        txtEmployeeID.grid(row=0, column=4, padx=(20, 0), sticky=W)
-        employeeID = Entry(frame2)
-        employeeID.grid(row=0, column=5, padx=10, pady=10)
+        # self.employeeID = Label(frame2, text='Mã nhân viên:')
+        # self.employeeID.grid(row=0, column=4, padx=(20, 0), sticky=W)
+        # self.txtEmployeeID = Entry(frame2)
+        # self.txtEmployeeID.grid(row=0, column=5, padx=(10, 18), pady=10)
         
-        txtEmployeeName = Label(frame2, text='Tên nhân viên:')
-        txtEmployeeName.grid(row=0, column=6, padx=(20, 0), sticky=W)
-        employeeName = Entry(frame2)
-        employeeName.grid(row=0, column=7, padx=10, pady=10)
+        # self.employeeName = Label(frame2, text='Tên nhân viên:')
+        # self.employeeName.grid(row=0, column=6, padx=(20, 0), sticky=W)
+        # self.txtEmployeeName = Entry(frame2)
+        # self.txtEmployeeName.grid(row=0, column=7, padx=(10, 18), pady=10)
         
         # Row 1
-        txtUserID = Label(frame2, text='Mã khách hàng:')
-        txtUserID.grid(row=1, column=0, padx=(20, 0), sticky=W)
-        userID = Entry(frame2)
-        userID.insert('0', self.customerID)
-        userID.grid(row=1, column=1, padx=10, pady=10)
+        self.userID = Label(frame2, text='Mã khách hàng:')
+        self.userID.grid(row=0, column=2, padx=(20, 0), sticky=W)
+        self.txtUserID = Entry(frame2, width=30)
+        self.txtUserID.insert('0', self.customerID)
+        self.txtUserID.grid(row=0, column=3, padx=(10, 18), pady=10)
         
-        txtUserName = Label(frame2, text='Tên khách hàng:')
-        txtUserName.grid(row=1, column=2, padx=(20, 0), sticky=W)
-        userName = Entry(frame2)
-        userName.grid(row=1, column=3, padx=10, pady=10)
+        self.lblUserName = Label(frame2, text='Tên khách hàng:')
+        self.lblUserName.grid(row=1, column=2, padx=(20, 0), sticky=W)
+        self.txtUserName = Entry(frame2, width=30)
+        self.txtUserName.insert('0', self.customerName)
+        self.txtUserName.grid(row=1, column=3, padx=(10, 18), pady=10)
         
-        txtAddress = Label(frame2, text='Địa chỉ:')
-        txtAddress.grid(row=1, column=4, padx=(20, 0), sticky=W)
-        address = Entry(frame2)
-        address.grid(row=1, column=5, padx=10, pady=10)
+        self.lblAddress = Label(frame2, text='Địa chỉ:')
+        self.lblAddress.grid(row=0, column=4, padx=(20, 0), sticky=W)
+        self.txtAddress = Entry(frame2, width=40)
+        self.txtAddress.insert('0', self.customerAddress)
+        self.txtAddress.grid(row=0, column=5, padx=(10, 18), pady=10)
         
-        txtUserPhone = Label(frame2, text='Số điện thoại:')
-        txtUserPhone.grid(row=1, column=6, padx=(20, 0), sticky=W)
-        userPhone = Entry(frame2)
-        userPhone.grid(row=1, column=7, padx=10, pady=10)
+        self.userPhone = Label(frame2, text='Số điện thoại:')
+        self.userPhone.grid(row=1, column=4, padx=(20, 0), sticky=W)
+        self.txtUserPhone = Entry(frame2, width=40)
+        self.txtUserPhone.insert('0', self.customerPhone)
+        self.txtUserPhone.grid(row=1, column=5, padx=(10, 18), pady=10)
         
-        for i in range(0, 8):
-            frame2.grid_columnconfigure(i, weight=1)
+        # for i in range(0, 8):
+        #     frame2.grid_columnconfigure(i, weight=1)
         
     def initFrame3Component(self, frame3):
-        columns = ('productID', 'productName', 'quantity', 'productPrice', 'discountPrice')
-        orderDetailList = Treeview(frame3, columns=columns, show='headings')
-        orderDetailList.grid(row=0, column=0)
+        columns = ('productID', 'productName', 'quantity', 'productPrice', 'productSize', 'discountPrice')
+        self.tblOrderDetail = Treeview(frame3, columns=columns, show='headings')
+        self.tblOrderDetail.grid(row=0, column=0)
                 
-        orderDetailList.heading('productID', text='Mã sản phẩm')
-        orderDetailList.heading('productName', text='Tên sản phẩm')
-        orderDetailList.heading('quantity', text='Số lượng')
-        orderDetailList.heading('productPrice', text='Đơn giá')
-        orderDetailList.heading('discountPrice', text='Thành tiền')
+        self.tblOrderDetail.heading('productID', text='Mã sản phẩm')
+        self.tblOrderDetail.heading('productName', text='Tên sản phẩm')
+        self.tblOrderDetail.heading('quantity', text='Số lượng')
+        self.tblOrderDetail.heading('productPrice', text='Đơn giá')
+        self.tblOrderDetail.heading('productSize', text='Size')
+        self.tblOrderDetail.heading('discountPrice', text='Thành tiền')
         
         for column in columns:
-            orderDetailList.column(column, anchor='c')
+            self.tblOrderDetail.column(column, anchor='c', width=170)
         
-        self.initOrderDetailData(orderDetailList)
+        self.initOrderDetailData()
         
-        scrollbar = Scrollbar(frame3, orient=VERTICAL, command=orderDetailList.yview)
-        orderDetailList.configure(yscroll=scrollbar.set)
+        scrollbar = Scrollbar(frame3, orient=VERTICAL, command=self.tblOrderDetail.yview)
+        self.tblOrderDetail.configure(yscroll=scrollbar.set)
         scrollbar.grid(row=0, column=1, sticky='NS')
         
         totalPriceContainer = Frame(frame3)
         totalPriceContainer.grid(row=1, column=0, sticky=E, pady=(10, 0))
         
         txtTotalPrice = Label(totalPriceContainer, text='Tổng tiền:', font=('', 10, 'bold'))
-        txtTotalPrice.grid(row=0, column=0, sticky=E, padx=(0, 10))
+        txtTotalPrice.grid(row=0, column=0, sticky=E, padx=(10, 18))
         
         self.totalPriceText = StringVar()
         self.totalPriceText.set('{0:.2f}'.format(self.totalPrice).rstrip('0').rstrip('.'))
@@ -142,12 +151,12 @@ class AdOrderDetailForm(Toplevel):
         for i in range(0, 2):
             frame4.grid_columnconfigure(i, weight=1)
     
-    def initOrderDetailData(self, orderDetailList):                            
+    def initOrderDetailData(self):                            
         productList = self.orderDetail.getProductData()
          
         for data in self.orderDetailDataList:
             if data[0] == self.orderID:
-                newData = [data[i] for i in range(1, 4)]
+                newData = [data[i] for i in range(1, 5)]
                 quantity = float(data[2])
                 price = float(data[3])
                 
@@ -163,13 +172,35 @@ class AdOrderDetailForm(Toplevel):
                 newData.insert(1, productName)
                 newData.append('{0:.2f}'.format(total).rstrip('0').rstrip('.'))
                 
-                orderDetailList.insert('', 'end', values=newData)
+                self.tblOrderDetail.insert('', 'end', values=newData)
+                
+        conn = pyodbc.connect('Driver={SQL Server};'
+                      'Server=LAPTOP-P91166MQ\\THEVU_SQL;'
+                      'Database=py_ql;'
+                      'Trusted_Connection=yes;')
+
+        totalPrice = conn.cursor()
+        totalPrice.execute(f""" update dbo.CustomerOrder
+                               set TotalPrice = {self.totalPrice}
+                               where OrderID = '{self.orderID}'
+                           """)
+
+        conn.commit()
     
     def getDataFromOrder(self):
         order = AdOrderData()
         orderList = order.getOrderList()
         
-        for data in orderList:
-            if self.orderID == data[0]:
-                self.orderDate = str(data[2])
-                self.customerID = str(data[1])
+        for order in orderList:
+            if self.orderID == order[0]:
+                self.customerID = str(order[1])
+                self.orderDate = str(order[2])
+                
+    def getDataFromUser(self):
+        userList = self.orderDetail.getUserData()
+        
+        for user in userList:
+            if self.customerID == user[0]:
+                self.customerName = str(user[1])
+                self.customerAddress = str(user[2])
+                self.customerPhone = str(user[3])

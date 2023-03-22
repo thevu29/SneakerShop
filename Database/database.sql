@@ -45,6 +45,7 @@ create table OrderDetail
 	ProductID varchar(8),
 	Quantity int, 
     Price float, 
+	SizeNumber int,
 	primary key (OrderID,  ProductID),
 	foreign key (OrderID) references CustomerOrder(OrderID),
 	foreign key (ProductID) references Product(ProductID)
@@ -118,15 +119,15 @@ INSERT INTO CustomerOrder VALUES
 ('HD005', 'CUS005', '2023-1-5', 2000000, N'Chưa xử lí')
 
 INSERT INTO OrderDetail VALUES
-('HD001', 'SP001', 5, 1100000),
-('HD001', 'SP002', 1, 1200000),
-('HD001', 'SP008', 3, 1700000),
-('HD001', 'SP010', 2, 1700000),
-('HD002', 'SP002', 1, 1200000),
-('HD002', 'SP005', 1, 1500000),
-('HD003', 'SP003', 2, 1300000),
-('HD004', 'SP004', 10, 1400000),
-('HD005', 'SP005', 5, 1500000)
+('HD001', 'SP001', 5, 1100000, 39),
+('HD001', 'SP002', 1, 1200000, 41),
+('HD001', 'SP008', 3, 1700000, 42),
+('HD001', 'SP010', 2, 1700000, 43),
+('HD002', 'SP002', 1, 1200000, 40),
+('HD002', 'SP005', 1, 1500000, 42),
+('HD003', 'SP003', 2, 1300000, 43),
+('HD004', 'SP004', 10, 1400000, 41),
+('HD005', 'SP005', 5, 1500000, 39)
 
 INSERT INTO Supplier VALUES
 ('SPL001', 'NIKE', N'Hồ Chí Minh', '0123456789', 'nike@gmail.com'),

@@ -55,7 +55,7 @@ class AdProductData():
         self.productList.remove(product)
         
         delete = self.conn.cursor()
-        delete.execute(f"delete from dbo.Product where ProductID='{product[0]}'")
+        delete.execute(f"delete from dbo.Product where ProductID = '{product[0]}'")
         
         self.conn.commit()
         
@@ -69,9 +69,9 @@ class AdProductData():
         
         update = self.conn.cursor()
         update.execute(f""" update dbo.Product
-                            set ProductName='{newProduct[1]}', Price='{newProduct[2]}', Quantity='{newProduct[3]}', SupplierID='{newProduct[4]}',
-                                            CategoryID='{newProduct[5]}'
-                            where ProductID='{newProduct[0]}'
+                            set ProductName = '{newProduct[1]}', Price = '{newProduct[2]}', Quantity = '{newProduct[3]}', SupplierID = '{newProduct[4]}',
+                                            CategoryID = '{newProduct[5]}'
+                            where ProductID = '{newProduct[0]}'
                        """)
         
         self.conn.commit()

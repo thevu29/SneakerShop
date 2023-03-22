@@ -40,7 +40,7 @@ class AdAccountData():
         self.accountList.remove(account)
         
         delete = self.conn.cursor()
-        delete.execute(f"delete from dbo.Account where AccountID='{account[0]}'")
+        delete.execute(f"delete from dbo.Account where AccountID = '{account[0]}'")
         
         self.conn.commit()
         
@@ -54,8 +54,8 @@ class AdAccountData():
         
         update = self.conn.cursor()
         update.execute(f""" update dbo.Account
-                            set Username='{newAccount[1]}', Password='{newAccount[2]}', AccessID='{newAccount[3]}', CustomerID='{newAccount[4]}'
-                            where AccountID='{newAccount[0]}'
+                            set Username = '{newAccount[1]}', Password = '{newAccount[2]}', AccessID = '{newAccount[3]}', CustomerID = '{newAccount[4]}'
+                            where AccountID = '{newAccount[0]}'
                        """)
         
         self.conn.commit()
