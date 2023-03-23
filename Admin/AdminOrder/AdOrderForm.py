@@ -57,14 +57,14 @@ class AdOrderForm(Frame):
                 self.txtSearch.configure(foreground='gray')
         
         self.txtSearch = Entry(frame2, width=50)
-        self.txtSearch.insert(0, 'Nhập mã đơn hàng')
         self.txtSearch.grid(row=0, column=1, padx=(5, 10), ipady=4)  
         
+        self.txtSearch.insert(0, 'Nhập mã đơn hàng')
         self.txtSearch.config(foreground='gray')
         self.txtSearch.bind('<Button-1>', lambda x: FocIn())
         self.txtSearch.bind('<FocusOut>', lambda x: FocOut('Nhập mã đơn hàng'))
         
-        self.searchIcon = ImageTk.PhotoImage(Image.open('./Admin/AdminOrder/img/search_icon.png').resize((20, 20)))
+        self.searchIcon = ImageTk.PhotoImage(Image.open('./img/search_icon.png').resize((20, 20)))
         self.btnSearch = Button(frame2, image=self.searchIcon, cursor='hand2', command=self.searchOrderById)
         self.btnSearch.grid(row=0, column=2, padx=(0, 24))
         

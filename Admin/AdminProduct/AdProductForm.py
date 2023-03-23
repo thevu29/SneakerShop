@@ -13,18 +13,61 @@ class AdProductForm(Frame):
         self.parent = parent
         self.product = AdProductData()
         self.productDataList = self.product.getProductList()
-                
-        # Tạo frame1
+        
         self.frame1 = Frame(self)
         self.frame1.pack(fill=BOTH)
+        
+        self.searchFrame = Frame(self)
+        self.searchFrame.pack(fill=BOTH, pady=(18, 12))
+        
+        self.frameGrid2 = LabelFrame(self, text='Thông tin sản phẩm')
+        self.frameGrid2.pack(fill=BOTH)
+        self.frameGrid2.configure(border=10, borderwidth=20, relief="solid")
+        
+        self.labelFrame3 = LabelFrame(self, text="Danh sách sản phẩm")
+        self.labelFrame3.pack(fill=BOTH, pady=(10, 0))
+        
+        self.labelFrame4 = LabelFrame(self, text="Chức năng", padding=10)
+        self.labelFrame4.pack(pady=(12, 0))
+        
+        self.initHeader()
+        self.initProductInfo()
+        self.initProductTable()
+        self.initSearch()
+        self.initOperation()
+    
+    def initHeader(self):            
         self.title = Label(self.frame1, text="Quản lý sản phẩm", font=("Time News Roman", 22), foreground="black")
         self.title.pack()
 
-        # Tạo frame layout kiểu grid để chứa các widget
-        self.frameGrid2 = LabelFrame(self, text='Thông tin sản phẩm')
-        self.frameGrid2.pack(fill=BOTH, pady=12)
-        self.frameGrid2.configure(border=10, borderwidth=20, relief="solid")
+    def initSearch(self):        
+        self.lblSeatch = Label(self.searchFrame, text='Tìm kiếm:', font=('Arial', 12))
+        self.lblSeatch.grid(row=0, column=0)
+        
+        def FocIn():   
+            print(self.txtSearch['foreground'])
+            if self.txtSearch['foreground'] == 'gray':
+                self.txtSearch.configure(foreground='black')
+                self.txtSearch.delete(0, 'end')
 
+        def FocOut(placeholder):
+            if self.txtSearch.get() == '':
+                self.txtSearch.insert(0, placeholder)
+                self.txtSearch.configure(foreground='gray')
+        
+        self.txtSearch = Entry(self.searchFrame, width=50)
+        self.txtSearch.grid(row=0, column=1, padx=12, ipady=4)
+        
+        self.txtSearch.insert(0, 'Nhập mã/tên sản phẩm')
+        self.txtSearch.config(foreground='gray')
+        self.txtSearch.bind('<Button-1>', lambda x: FocIn())
+        self.txtSearch.bind('<FocusOut>', lambda x: FocOut('Nhập mã/tên sản phẩm'))
+        
+        self.searchIcon = ImageTk.PhotoImage(Image.open('./img/search_icon.png').resize((20, 20)))
+        self.btnSearch = Button(self.searchFrame, image=self.searchIcon, cursor='hand2', command=self.searchProduct)
+        self.btnSearch.grid(row=0, column=2)
+    
+    def initProductInfo(self):   
         self.productId = Label(self.frameGrid2, text="Mã sản phẩm: ")
         self.productId.grid(row=0, column=0, sticky='w')
         self.txtProductId = Entry(self.frameGrid2, width=30)
@@ -58,23 +101,19 @@ class AdProductForm(Frame):
         self.txtProductSupplier = Entry(self.frameGrid2, width=23)
         self.txtProductSupplier.grid(row=2, column=3, padx=10, pady=(25, 0))
 
-        # Tạo frame3
-        self.labelFrame3 = LabelFrame(self, text="Danh sách sản phẩm")
-        self.labelFrame3.pack(fill=BOTH)
-
+    def initProductTable(self):
         self.frame3 = Frame(self.labelFrame3, padding=4)
-        self.frame3.pack()
+        self.frame3.pack(fill=BOTH)
 
         self.framePack3 = Frame(self.frame3)
-        self.framePack3.pack(fill=BOTH)
+        self.framePack3.pack(fill=BOTH, pady=12)
 
-        self.tblProduct = Treeview(self.framePack3, selectmode='browse')
-        self.tblProduct.pack(side=LEFT)
+        self.tblProduct = Treeview(self.framePack3, selectmode='browse', height=7)
+        self.tblProduct.grid(row=0, column=0)
 
         self.vsb = Scrollbar(self.framePack3, orient="vertical", command=self.tblProduct.yview)
 
-        # self.vsb.pack(side=RIGHT,fill='y')
-        self.vsb.pack(side=RIGHT, fill='y')
+        self.vsb.grid(row=0, column=1, sticky='ns')
 
         self.tblProduct.configure(yscrollcommand=self.vsb.set)
 
@@ -95,16 +134,13 @@ class AdProductForm(Frame):
 
         self.initProductData()
         self.tblProduct.bind('<<TreeviewSelect>>', lambda x: self.showProductInfo())
-        
-        # Tạo frame4
-        self.labelFrame4 = LabelFrame(self, text="Chức năng", padding=10)
-        self.labelFrame4.pack(pady=12)
-
+    
+    def initOperation(self):   
         self.frame4 = Frame(self.labelFrame4)
-        self.frame4.pack()
+        self.frame4.pack(fill=BOTH)
 
         self.frameGrid4 = Frame(self.frame4)
-        self.frameGrid4.grid(column=6, row=1)
+        self.frameGrid4.pack(fill=BOTH)
 
         self.btnAdd = Button(self.frameGrid4, text="Thêm sản phẩm", width=20, command=self.addProduct)
         self.btnAdd.grid(row=0, column=0, padx=10, ipady=3)
@@ -240,6 +276,20 @@ class AdProductForm(Frame):
                 return
             
         messagebox.showwarning('Warning', 'Mã sản phẩm không tồn tại')
+    
+    def searchProduct(self):
+        self.initProductData()
+        searchInfo = self.txtSearch.get()
+        
+        if searchInfo == '' or searchInfo == 'Nhập mã/tên sản phẩm':
+            return
+        
+        for row in self.tblProduct.get_children():
+            productId = self.tblProduct.item(row)['values'][0]
+            productName = self.tblProduct.item(row)['values'][1]
+            
+            if searchInfo.lower() not in productId.lower() and searchInfo.lower() not in productName.lower():
+                self.tblProduct.detach(row)
         
     def resetValue(self):
         self.txtProductId.delete('0', 'end')
