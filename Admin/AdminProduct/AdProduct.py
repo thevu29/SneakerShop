@@ -10,6 +10,7 @@ def Convert(item):
 class AdProductData():
     def __init__(self):
         self.productList = []
+        self.imagePaths = []
         
         self.conn = pyodbc.connect('Driver={SQL Server};'
                       'Server=LAPTOP-P91166MQ\\THEVU_SQL;'
@@ -19,14 +20,13 @@ class AdProductData():
         data = self.conn.cursor()
         data.execute('select * from dbo.Product')
         
-        str = '1'
-        cnt = int(str)
+        id = 1
         for item in data:
             item[2] = '{0:.2f}'.format(item[2]).rstrip('0').rstrip('.')
             
-            id = self.getID(cnt)
-            cnt += 1
-            imagePath = f'./img/product/SP{id}.png'
+            imagePath = f'./img/product/SP{str(id).zfill(3)}.png'
+            id += 1
+            
             item = Convert(item)
             item.append(imagePath)
             
@@ -34,12 +34,6 @@ class AdProductData():
             
     def getProductList(self):
         return self.productList
-    
-    def getID(self, cnt):
-        id = str(cnt)
-        while len(id) != 3:
-            id = '0' + id
-        return id
     
     def addProduct(self, product):
         self.productList.append(product)

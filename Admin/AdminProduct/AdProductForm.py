@@ -1,4 +1,5 @@
 from tkinter import Tk, Text, TOP, BOTH, X, N, LEFT, RIGHT, StringVar, messagebox
+from tkinter import filedialog as fd
 from tkinter.ttk import Frame, Label, Entry, Combobox, Treeview, Scrollbar, LabelFrame, Button, Style
 from PIL import Image, ImageTk
 
@@ -78,9 +79,13 @@ class AdProductForm(Frame):
         self.txtProductQuantity = Entry(self.frameGrid2, width=23)
         self.txtProductQuantity.grid(row=0, column=3, padx=10)
 
-        self.productImage = Label(self.frameGrid2, text="Hình ảnh: ")
-        self.productImage.grid(row=0, column=4, padx=(30, 0), sticky='w', rowspan=3)
+        # Upload Image
+        self.btnUpload = Button(self.frameGrid2, text='Tải ảnh lên', cursor='hand2', command=self.uploadImage)
+        self.btnUpload.grid(row=0, column=4, rowspan=3, padx=(20, 0), ipady=3)
 
+        self.productImage = Label(self.frameGrid2, text="Hình ảnh: ")
+        self.productImage.grid(row=0, column=5, padx=(30, 0), sticky='w', rowspan=3)
+        
         self.productName = Label(self.frameGrid2, text="Tên sản phẩm: ")
         self.productName.grid(row=1, column=0, pady=(25, 0), sticky='w')
         self.txtProductName = Entry(self.frameGrid2, width=30)
@@ -142,16 +147,16 @@ class AdProductForm(Frame):
         self.frameGrid4 = Frame(self.frame4)
         self.frameGrid4.pack(fill=BOTH)
 
-        self.btnAdd = Button(self.frameGrid4, text="Thêm sản phẩm", width=20, command=self.addProduct)
+        self.btnAdd = Button(self.frameGrid4, text="Thêm sản phẩm", width=20, command=self.addProduct, cursor='hand2')
         self.btnAdd.grid(row=0, column=0, padx=10, ipady=3)
         
-        self.btnSave = Button(self.frameGrid4, text="Lưu thông tin", width=20, command=self.saveProductInfo)
+        self.btnSave = Button(self.frameGrid4, text="Lưu thông tin", width=20, command=self.saveProductInfo, cursor='hand2')
         self.btnSave.grid(row=0, column=1, padx=10, ipady=3)
         
-        self.btnDelete = Button(self.frameGrid4, text="Xóa sản phẩm", width=20, command=self.deleteProduct)
+        self.btnDelete = Button(self.frameGrid4, text="Xóa sản phẩm", width=20, command=self.deleteProduct, cursor='hand2')
         self.btnDelete.grid(row=0, column=2, padx=10, ipady=3)
 
-        self.btnresetValue = Button(self.frameGrid4, text="Reset", width=20, command=self.reset)
+        self.btnresetValue = Button(self.frameGrid4, text="Reset", width=20, command=self.reset, cursor='hand2')
         self.btnresetValue.grid(row=0, column=3, padx=10, ipady=3)
         
     def initProductData(self):          
@@ -160,7 +165,26 @@ class AdProductForm(Frame):
           
         for data in self.productDataList:
             self.tblProduct.insert('', 'end', values=data)
+    
+    def uploadImage(self):
+        filetypes = (
+            ('text files', '*.png'),
+            ('text files', '*.jpg'),
+            ('All files', '*Allfile*')
+        )
         
+        self.filename = fd.askopenfilename(title='open file', initialdir='/', filetypes=filetypes)
+        
+        try:
+            self.imageBorder = Frame(self.frameGrid2, borderwidth=2, relief='solid')
+            self.imageBorder.grid(row=0, column=6, padx=10, rowspan=3)
+            
+            self.productImage = ImageTk.PhotoImage(Image.open(self.filename).resize((100, 100)))
+            self.txtProductImage = Label(self.imageBorder, image=self.productImage)
+            self.txtProductImage.grid(row=0, column=0)
+        except:
+            return
+    
     def showProductInfo(self):        
         try:
             selectedRow = self.tblProduct.focus()
@@ -181,13 +205,15 @@ class AdProductForm(Frame):
                 
                 try:
                     self.imageBorder = Frame(self.frameGrid2, borderwidth=2, relief='solid')
-                    self.imageBorder.grid(row=0, column=5, padx=10, rowspan=3)
+                    self.imageBorder.grid(row=0, column=6, padx=10, rowspan=3)
                     
+                    self.productPath = product[6]
                     self.productImage = ImageTk.PhotoImage(Image.open(product[6]).resize((100, 100)))
                     self.txtProductImage = Label(self.imageBorder, image=self.productImage)
                     self.txtProductImage.grid(row=0, column=0)
                 except:
-                    self.productImage = ImageTk.PhotoImage(Image.open('./img/fallback_img.png').resize((100, 100)))
+                    self.productImagePath = Image.open('./img/fallback_img.png').resize((100, 100))
+                    self.productImage = ImageTk.PhotoImage(self.productImagePath)
                     self.txtProductImage = Label(self.imageBorder, image=self.productImage)
                     self.txtProductImage.grid(row=0, column=0)
             
@@ -228,13 +254,24 @@ class AdProductForm(Frame):
         productQuantity = self.txtProductQuantity.get()
         productCategory = self.txtProductCategory.get()
         productSupplier = self.txtProductSupplier.get()
+        productImagePath = ''
         
         for product in self.productDataList:
             if productId == product[0]:
                 messagebox.showwarning('Warning', 'Mã sản phẩm đã tồn tại')
                 return
+            
+        try:
+            productImagePath = self.filename
+            
+            # save image to img folder
+            length = int(len(self.productDataList)) + 1
+            self.saveImage = Image.open(self.filename)
+            self.saveImage.save(f'./img/product/SP{str(length).zfill(3)}.png')
+        except:
+            productImagePath = ''
         
-        newProduct = [productId, productName, productPrice, productQuantity, productSupplier, productCategory]
+        newProduct = [productId, productName, productPrice, productQuantity, productSupplier, productCategory, productImagePath]
         
         self.product.addProduct(newProduct)
         messagebox.showinfo('Thành công', 'Thêm sản phẩm thành công')

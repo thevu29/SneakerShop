@@ -136,6 +136,7 @@ class AdOrderForm(Frame):
         for order in self.orderDataList:
             if order[0] == selectedOrderId:
                 orderDetailForm = AdOrderDetailForm(self, order[0])
+                orderDetailForm.title('Chi tiết đơn hàng')
                 orderDetailForm.geometry('1100x600+250+100')
                 break
             

@@ -46,13 +46,13 @@ class AdOrderDetailForm(Toplevel):
         frame3.configure(borderwidth=10, relief='solid')
         
         # frame 4
-        frame4 = LabelFrame(self, text='Chức năng')
-        frame4.pack(padx=24, pady=10)
-        frame4.configure(border=10, relief='solid')
+        # frame4 = LabelFrame(self, text='Chức năng')
+        # frame4.pack(padx=24, pady=10)
+        # frame4.configure(border=10, relief='solid')
         
         self.initFrame2Component(frame2)
         self.initFrame3Component(frame3)
-        self.initFrame4Component(frame4)
+        # self.initFrame4Component(frame4)
     
     def initFrame2Component(self, frame2):
         # Row 0
@@ -142,11 +142,11 @@ class AdOrderDetailForm(Toplevel):
         #     frame3.grid_columnconfigure(i, weight=1)
     
     def initFrame4Component(self, frame4):
-        btnUpdate = Button(frame4, text='Lưu thông tin')
-        btnUpdate.grid(row=0, column=0, ipadx=6, ipady=2, padx=12)
+        self.btnUpdate = Button(frame4, text='Lưu thông tin')
+        self.btnUpdate.grid(row=0, column=0, ipadx=6, ipady=2, padx=12)
         
-        btnReset = Button(frame4, text='Reset')
-        btnReset.grid(row=0, column=1, ipadx=6, ipady=2)
+        self.btnReset = Button(frame4, text='Reset')
+        self.btnReset.grid(row=0, column=1, ipadx=6, ipady=2)
         
         for i in range(0, 2):
             frame4.grid_columnconfigure(i, weight=1)
