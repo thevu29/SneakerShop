@@ -31,7 +31,7 @@ class AdProductForm(Frame):
         self.labelFrame4.pack(pady=(12, 0))
         
         self.initHeader()
-        self.initProductInfo()
+        self.initProductInfoForm()
         self.initProductTable()
         self.initSearch()
         self.initOperation()
@@ -67,7 +67,7 @@ class AdProductForm(Frame):
         self.btnSearch = Button(self.searchFrame, image=self.searchIcon, cursor='hand2', command=self.searchProduct)
         self.btnSearch.grid(row=0, column=2)
     
-    def initProductInfo(self):   
+    def initProductInfoForm(self):   
         self.productId = Label(self.frameGrid2, text="Mã sản phẩm: ")
         self.productId.grid(row=0, column=0, sticky='w')
         self.txtProductId = Entry(self.frameGrid2, width=30)

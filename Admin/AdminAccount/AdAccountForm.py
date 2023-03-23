@@ -1,5 +1,6 @@
 from tkinter import Tk, Text, TOP, BOTH, X, N, LEFT, RIGHT, NSEW, messagebox
 from tkinter.ttk import Frame, Label, Entry, Combobox, Treeview, Scrollbar, LabelFrame, Button
+from PIL import Image, ImageTk
 
 try:
     from .AdAccount import *
@@ -18,15 +19,54 @@ class AdAccountForm(Frame):
     def initUI(self):
         title = Label(self, text='Quản lý tài khoản', font=("Time News Roman", 22), foreground="black")
         title.pack()
+        
+        self.searchFrame = Frame(self)
+        self.searchFrame.pack(fill=BOTH, pady=(18, 10))
+        
+        self.Left = Frame(self)
+        self.Left.pack(fill=BOTH)
+        
+        self.Right = Frame(self)
+        self.Right.pack(fill=BOTH, pady=(8, 0))
+        
+        self.labelFrame3 = LabelFrame(self, text='Chức năng')
+        self.labelFrame3.pack(pady=(12,0))
+        
+        self.initAccountInfo()
+        self.initAccountTable()
+        self.initSearchForm()
+        self.initOperation()
 
-        container = Frame(self)
-        container.pack(fill=BOTH, padx=5, pady=5)
+    def initSearchForm(self):
+        self.lblSeatch = Label(self.searchFrame, text='Tìm kiếm:', font=('Arial', 12))
+        self.lblSeatch.grid(row=0, column=0)
+        
+        def FocIn():   
+            print(self.txtSearch['foreground'])
+            if self.txtSearch['foreground'] == 'gray':
+                self.txtSearch.configure(foreground='black')
+                self.txtSearch.delete(0, 'end')
 
-        Left = Frame(container, width=50)
-        Left.pack(fill=BOTH)
-
-        labelFrame1 = LabelFrame(Left, text='Thông tin tài khoản')
-        labelFrame1.pack(fill=BOTH, pady=12)
+        def FocOut(placeholder):
+            if self.txtSearch.get() == '':
+                self.txtSearch.insert(0, placeholder)
+                self.txtSearch.configure(foreground='gray')
+        
+        self.txtSearch = Entry(self.searchFrame, width=50)
+        self.txtSearch.grid(row=0, column=1, padx=12, ipady=4)
+        
+        self.txtSearch.insert(0, 'Nhập mã/tên tài khoản')
+        self.txtSearch.config(foreground='gray')
+        self.txtSearch.bind('<Button-1>', lambda x: FocIn())
+        self.txtSearch.bind('<FocusOut>', lambda x: FocOut('Nhập mã/tên tài khoản'))
+        
+        self.searchIcon = ImageTk.PhotoImage(Image.open('./img/search_icon.png').resize((20, 20)))
+        self.btnSearch = Button(self.searchFrame, image=self.searchIcon, cursor='hand2', command=self.searchAccount)
+        self.btnSearch.grid(row=0, column=2)
+        
+    def initAccountInfo(self):
+        labelFrame1 = LabelFrame(self.Left, text='Thông tin tài khoản')
+        labelFrame1.pack(fill=BOTH)
         labelFrame1.config(borderwidth=10, relief='solid')
 
         FrameGrid1 = Frame(labelFrame1)
@@ -58,22 +98,20 @@ class AdAccountForm(Frame):
         self.cbxAccess = Combobox(FrameGrid1, width=17, state='readonly', values=('Admin', 'Nhân viên'))
         self.cbxAccess.grid(row=1, column=3, sticky='w', padx=(8, 16), pady=12)
 
-        Right = Frame(container)
-        Right.pack(fill=BOTH)
-
-        labelFrame2 = LabelFrame(Right, text='Danh sách')
+    def initAccountTable(self):
+        labelFrame2 = LabelFrame(self.Right, text='Danh sách')
         labelFrame2.pack(fill=BOTH)
         labelFrame2.config(borderwidth=10, relief='solid')
 
-        RightPack = Frame(labelFrame2, padding=4)
-        RightPack.pack(fill=BOTH)
+        self.RightPack = Frame(labelFrame2, padding=4)
+        self.RightPack.pack(fill=BOTH)
 
         col = ('1', '2', '3', '4', '5')
 
-        self.tblAccount = Treeview(RightPack, columns=col, show='headings')
+        self.tblAccount = Treeview(self.RightPack, columns=col, show='headings')
         self.tblAccount.pack(side=LEFT)
 
-        scrollbar = Scrollbar(RightPack, orient='vertical', command=self.tblAccount.yview)
+        scrollbar = Scrollbar(self.RightPack, orient='vertical', command=self.tblAccount.yview)
         scrollbar.pack(side=RIGHT, fill='y')
         self.tblAccount.configure(yscrollcommand=scrollbar.set)
 
@@ -89,14 +127,11 @@ class AdAccountForm(Frame):
         self.tblAccount.bind('<<TreeviewSelect>>', lambda x: self.showUserInfo())
         self.initAccountData()
 
-        # frame 3
-        labelFrame3 = LabelFrame(Right, text='Chức năng')
-        labelFrame3.pack(pady=12)
-
-        frame3 = Frame(labelFrame3)
+    def initOperation(self):
+        frame3 = Frame(self.labelFrame3)
         frame3.pack(fill=BOTH)
 
-        FrameGrid3 = Frame(frame3, padding=20)
+        FrameGrid3 = Frame(frame3, padding=10)
         FrameGrid3.grid(column=0, row=0, sticky=NSEW)
 
         FrameGrid3.rowconfigure(0, weight=1)
@@ -234,6 +269,20 @@ class AdAccountForm(Frame):
                 return
             
         messagebox.showwarning('Warning', 'Mã tài khoản không tồn tại')
+    
+    def searchAccount(self):
+        self.initAccountData()
+        searchInfo = self.txtSearch.get()
+        
+        if searchInfo == '' or searchInfo == 'Nhập mã/tên tài khoản':
+            return
+        
+        for row in self.tblAccount.get_children():
+            accountId = self.tblAccount.item(row)['values'][0]
+            accountName = self.tblAccount.item(row)['values'][1]
+            
+            if searchInfo.lower() not in accountId.lower() and searchInfo.lower() not in accountName.lower():
+                self.tblAccount.detach(row)
                     
     def resetValue(self):
         self.txtAccountId.delete('0', 'end')

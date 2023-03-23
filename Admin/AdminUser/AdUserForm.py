@@ -1,5 +1,6 @@
 from tkinter import Tk, BOTH, LEFT, VERTICAL, E, W, S, NO, CENTER, X, messagebox
 from tkinter.ttk import Frame, Label, Entry, Combobox, Treeview, Scrollbar, LabelFrame, Button
+from PIL import Image, ImageTk
 
 try:
     from .AdUser import *
@@ -14,59 +15,92 @@ class AdUserForm(Frame):
         self.userDataList = self.user.getUserList()
         
         self.main_title()
-        self.create_form()
+        
+        self.frame1 = Frame(self)
+        self.frame1.pack(fill=BOTH, pady=(18, 0))
+        
+        self.frame2 = LabelFrame(self, text="Thông tin khách hàng")
+        self.frame2.pack(fill=BOTH, pady=12)
+        self.frame2.configure(borderwidth=10, relief='solid')
+        
+        self.list_info_frame = LabelFrame(self, text="Danh sách khách hàng")
+        self.list_info_frame.pack(fill=BOTH)
+        self.list_info_frame.config(borderwidth=10, relief='solid')
+        
+        self.initUserInfoForm()
+        self.initSearchForm()
+        self.initUserTable()
+        self.initOperation()
 
     def main_title(self):
         main_frame = Label(self, text="Quản lý khách hàng", font=("Time News Roman", 22), foreground="black")
         main_frame.pack()
 
-    def create_form(self):
-        # Tạo form bên trái
-        self.form_left = LabelFrame(self, text="Thông tin khách hàng")
-        self.form_left.pack(fill=BOTH, pady=12)
-        self.form_left.configure(borderwidth=10, relief='solid')
+    def initSearchForm(self):
+        self.lblSeatch = Label(self.frame1, text='Tìm kiếm:', font=('Arial', 12))
+        self.lblSeatch.grid(row=0, column=0)
+        
+        def FocIn():   
+            print(self.txtSearch['foreground'])
+            if self.txtSearch['foreground'] == 'gray':
+                self.txtSearch.configure(foreground='black')
+                self.txtSearch.delete(0, 'end')
 
+        def FocOut(placeholder):
+            if self.txtSearch.get() == '':
+                self.txtSearch.insert(0, placeholder)
+                self.txtSearch.configure(foreground='gray')
+        
+        self.txtSearch = Entry(self.frame1, width=50)
+        self.txtSearch.grid(row=0, column=1, padx=12, ipady=4)
+        
+        self.txtSearch.insert(0, 'Nhập mã/tên khách hàng')
+        self.txtSearch.config(foreground='gray')
+        self.txtSearch.bind('<Button-1>', lambda x: FocIn())
+        self.txtSearch.bind('<FocusOut>', lambda x: FocOut('Nhập mã/tên khách hàng'))
+        
+        self.searchIcon = ImageTk.PhotoImage(Image.open('./img/search_icon.png').resize((20, 20)))
+        self.btnSearch = Button(self.frame1, image=self.searchIcon, cursor='hand2', command=self.searchUser)
+        self.btnSearch.grid(row=0, column=2)
+    
+    def initUserInfoForm(self):
         # Mã khách hàng và entry
-        self.userId = Label(self.form_left, text="Mã khách hàng:")
+        self.userId = Label(self.frame2, text="Mã khách hàng:")
         self.userId.grid(row=0, column=0, sticky='w')
-        self.txtUserId = Entry(self.form_left)
+        self.txtUserId = Entry(self.frame2)
         self.txtUserId.grid(row=0, column=1, sticky='w', padx=(8, 16), pady=12)
 
         # Tên khách hàng và entry
-        self.userName = Label(self.form_left, text="Tên khách hàng:")
+        self.userName = Label(self.frame2, text="Tên khách hàng:")
         self.userName.grid(row=0, column=2, sticky='w')
-        self.txtUserName = Entry(self.form_left, width=40)
+        self.txtUserName = Entry(self.frame2, width=40)
         self.txtUserName.grid(row=0, column=3, sticky='w', padx=(8, 16), pady=12)
 
         # Giới tính và entry
-        self.gender = Label(self.form_left, text="Giới tính:")
+        self.gender = Label(self.frame2, text="Giới tính:")
         self.gender.grid(row=0, column=4, sticky='w')
-        self.cbxGender = Combobox(self.form_left, state='readonly', values=('Nam', 'Nữ'))
+        self.cbxGender = Combobox(self.frame2, state='readonly', values=('Nam', 'Nữ'))
         self.cbxGender.grid(row=0, column=5, sticky='w', padx=(8, 16), pady=12)
         
         # Số điện thoại và entry
-        self.phone = Label(self.form_left, text="Số điện thoại:")
+        self.phone = Label(self.frame2, text="Số điện thoại:")
         self.phone.grid(row=1, column=0, sticky='w')
-        self.txtPhone = Entry(self.form_left)
+        self.txtPhone = Entry(self.frame2)
         self.txtPhone.grid(row=1, column=1, sticky='w', padx=(8, 16), pady=12)
         
         # Địa chỉ và entry
-        self.address = Label(self.form_left, text="Địa chỉ:")
+        self.address = Label(self.frame2, text="Địa chỉ:")
         self.address.grid(row=1, column=2, sticky='w')
-        self.txtAddress = Entry(self.form_left, width=40)
+        self.txtAddress = Entry(self.frame2, width=40)
         self.txtAddress.grid(row=1, column=3, sticky='w', padx=(8, 16), pady=12)
 
         # Điểm thành viên và entry
-        self.point = Label(self.form_left, text="Điểm thành viên:")
+        self.point = Label(self.frame2, text="Điểm thành viên:")
         self.point.grid(row=1, column=4, sticky='w')
-        self.txtPoint = Entry(self.form_left)
+        self.txtPoint = Entry(self.frame2)
         self.txtPoint.grid(row=1, column=5, sticky='w', padx=(8, 16), pady=12)
 
-        # Tạo form bên phải
-        self.list_info_frame = LabelFrame(self, text="Danh sách khách hàng")
-        self.list_info_frame.pack(fill=BOTH)
-        self.list_info_frame.config(borderwidth=10, relief='solid')
-
+    def initUserTable(self):
         # Tạo Tree view
         self.tblUser = Treeview(self.list_info_frame, show='headings')
         self.tblUser.grid(row=0, column=0, sticky='EW')
@@ -92,8 +126,8 @@ class AdUserForm(Frame):
         self.initUserData()
 
         self.tblUser.bind('<<TreeviewSelect>>', lambda x: self.showUserInfo())
-        
-        # Tạo form bên phải, dưới là chức năng
+    
+    def initOperation(self):   
         self.function_frame = LabelFrame(self, text="Chức năng")
         self.function_frame.pack(pady=12)
         self.function_frame.config(borderwidth=10, relief='solid')
@@ -225,6 +259,20 @@ class AdUserForm(Frame):
                 return
             
         messagebox.showwarning('Warning', 'Mã khách hàng không tồn tại')
+    
+    def searchUser(self):
+        self.initUserData()
+        searchInfo = self.txtSearch.get()
+        
+        if searchInfo == '' or searchInfo == 'Nhập mã/tên khách hàng':
+            return
+        
+        for row in self.tblUser.get_children():
+            userId = self.tblUser.item(row)['values'][0]
+            userName = self.tblUser.item(row)['values'][1]
+            
+            if searchInfo.lower() not in userId.lower() and searchInfo.lower() not in userName.lower():
+                self.tblUser.detach(row)
        
     def resetValue(self):
         self.txtUserId.delete('0', 'end')
