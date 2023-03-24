@@ -207,7 +207,6 @@ class AdProductForm(Frame):
                     self.imageBorder = Frame(self.frameGrid2, borderwidth=2, relief='solid')
                     self.imageBorder.grid(row=0, column=6, padx=10, rowspan=3)
                     
-                    self.productPath = product[6]
                     self.productImage = ImageTk.PhotoImage(Image.open(product[6]).resize((100, 100)))
                     self.txtProductImage = Label(self.imageBorder, image=self.productImage)
                     self.txtProductImage.grid(row=0, column=0)
@@ -303,11 +302,21 @@ class AdProductForm(Frame):
         productCategory = self.txtProductCategory.get()
         productSupplier = self.txtProductSupplier.get()
         
-        newProduct = [productId, productName, productPrice, productQuantity, productSupplier, productCategory]
         
         for product in self.productDataList:
             if productId == product[0]:
+                # ghi đè img 
+                try:
+                    self.saveImage = Image.open(self.filename)
+                    print(self.filename, product[6])
+                    self.saveImage.save(product[6])
+                except:
+                    pass
+                
+                productPath = product[6]
+                newProduct = [productId, productName, productPrice, productQuantity, productSupplier, productCategory, productPath]
                 self.product.updateProductInfo(newProduct)
+                
                 messagebox.showinfo('Thành công', f'Sửa thành công thông tin sản phẩm có mã {productId}')
                 self.reset()
                 return
