@@ -301,8 +301,7 @@ class AdProductForm(Frame):
         productQuantity = self.txtProductQuantity.get()
         productCategory = self.txtProductCategory.get()
         productSupplier = self.txtProductSupplier.get()
-        
-        
+         
         for product in self.productDataList:
             if productId == product[0]:
                 # ghi đè img 
