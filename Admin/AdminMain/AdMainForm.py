@@ -1,4 +1,4 @@
-from tkinter import Tk, BOTH, LEFT, VERTICAL
+from tkinter import Tk, BOTH, LEFT, VERTICAL, Toplevel
 from tkinter.ttk import Label, Frame, Entry, Treeview, Scrollbar, Button, LabelFrame, Combobox, Style
 from PIL import Image, ImageTk
 import sys
@@ -12,9 +12,9 @@ from AdminUser import AdUserForm
 from AdminOrder import AdOrderForm
 from AdminProduct import AdProductForm
 
-class AdMainForm(Tk):
-    def __init__(self):
-        Tk.__init__(self)
+class AdMainForm(Toplevel):
+    def __init__(self, parent):
+        Toplevel.__init__(self, parent)
         
         frame1 = Frame(self, style='taskbar.TFrame')
         frame1.grid(row=0, column=0, sticky='nsew', ipadx=4)
@@ -38,12 +38,12 @@ class AdMainForm(Tk):
         
     def initTaskbar(self, frame):        
         # header logo
-        self.logoImg = ImageTk.PhotoImage(Image.open('./Admin/AdminMain/img/shoes_logo.png'))
+        self.logoImg = ImageTk.PhotoImage(Image.open('./img/shoes_logo.png'))
         logo = Label(frame, image=self.logoImg, style='taskbar.TLabel')
         logo.grid(row=0, column=0, padx=12, pady=(12, 18), columnspan=2)
         
         # product manage
-        self.shoesIcon = ImageTk.PhotoImage(Image.open('./Admin/AdminMain/img/shoes_icon.png').resize((35, 35), Image.LANCZOS))
+        self.shoesIcon = ImageTk.PhotoImage(Image.open('./img/shoes_icon.png').resize((35, 35), Image.LANCZOS))
         shoesIconImg = Label(frame, image=self.shoesIcon, style='taskbar.TLabel')
         shoesIconImg.grid(row=1, column=0, padx=(12, 0), pady=12)
         
@@ -54,7 +54,7 @@ class AdMainForm(Tk):
         productManage.bind('<Leave>', self.outHover)
         
         # order manage
-        self.clipboard = ImageTk.PhotoImage(Image.open('./Admin/AdminMain/img/clipboard.png').resize((25, 25), Image.LANCZOS))
+        self.clipboard = ImageTk.PhotoImage(Image.open('./img/clipboard.png').resize((25, 25), Image.LANCZOS))
         clipboardImg = Label(frame, image=self.clipboard, style='taskbar.TLabel')
         clipboardImg.grid(row=2, column=0, padx=(12, 0), pady=12)
         
@@ -65,7 +65,7 @@ class AdMainForm(Tk):
         orderManage.bind('<Leave>', self.outHover)
         
         # user manage
-        self.user = ImageTk.PhotoImage(Image.open('./Admin/AdminMain/img/user.png').resize((30, 30), Image.LANCZOS))
+        self.user = ImageTk.PhotoImage(Image.open('./img/user.png').resize((30, 30), Image.LANCZOS))
         userImg = Label(frame, image=self.user, style='taskbar.TLabel')
         userImg.grid(row=3, column=0, padx=(12, 0), pady=12)
         
@@ -76,7 +76,7 @@ class AdMainForm(Tk):
         userManage.bind('<Leave>', self.outHover)
         
         # account manage
-        self.account = ImageTk.PhotoImage(Image.open('./Admin/AdminMain/img/user_account.png').resize((30, 30), Image.LANCZOS))
+        self.account = ImageTk.PhotoImage(Image.open('./img/user_account.png').resize((30, 30), Image.LANCZOS))
         accountImg = Label(frame, image=self.account, style='taskbar.TLabel')
         accountImg.grid(row=4, column=0, padx=(12, 0), pady=12)
         
