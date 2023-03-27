@@ -15,7 +15,8 @@ class AdAccountData():
                       'Server=LAPTOP-P91166MQ\\THEVU_SQL;'
                       'Database=py_ql;'
                       'Trusted_Connection=yes;')
-
+            
+    def getAccountList(self):
         data = self.conn.cursor()
         data.execute('select * from dbo.Account')
         
@@ -23,7 +24,6 @@ class AdAccountData():
             item = Convert(item)
             self.accountList.append(item)
             
-    def getAccountList(self):
         return self.accountList
     
     def addAccount(self, account):

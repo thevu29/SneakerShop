@@ -95,7 +95,7 @@ class AdAccountForm(Frame):
         self.access = Label(FrameGrid1, text='Quyền truy cập:')
         self.access.grid(row=1, column=2, sticky='w')
 
-        self.cbxAccess = Combobox(FrameGrid1, width=17, state='readonly', values=('Admin', 'Nhân viên'))
+        self.cbxAccess = Combobox(FrameGrid1, width=17, state='readonly', values=('Admin', 'Người dùng'))
         self.cbxAccess.grid(row=1, column=3, sticky='w', padx=(8, 16), pady=12)
 
     def initAccountTable(self):
@@ -137,16 +137,16 @@ class AdAccountForm(Frame):
         FrameGrid3.rowconfigure(0, weight=1)
         FrameGrid3.columnconfigure(0, weight=1)
 
-        btnAdd = Button(FrameGrid3, text='Thêm tài khoản', width=20, command=self.addAccount)
+        btnAdd = Button(FrameGrid3, text='Thêm tài khoản', width=20, cursor='hand2', command=self.addAccount)
         btnAdd.grid(column=0, row=0, padx=10, ipady=3)
 
-        btnSave = Button(FrameGrid3, text='Lưu thông tin', width=20, command=self.saveUserInfo)
+        btnSave = Button(FrameGrid3, text='Lưu thông tin', width=20, cursor='hand2', command=self.saveUserInfo)
         btnSave.grid(column=1, row=0, padx=10, ipady=3)
 
-        btnDelete = Button(FrameGrid3, text='Xóa tài khoản', width=20, command=self.deleteAccount)
+        btnDelete = Button(FrameGrid3, text='Xóa tài khoản', width=20, cursor='hand2', command=self.deleteAccount)
         btnDelete.grid(column=2, row=0, padx=10, ipady=3)
 
-        btnRefresh = Button(FrameGrid3, text='Reset', width=20, command=self.reset)
+        btnRefresh = Button(FrameGrid3, text='Reset', width=20, cursor='hand2', command=self.reset)
         btnRefresh.grid(column=5, row=0, padx=10, ipady=3)
         
     def initAccountData(self):

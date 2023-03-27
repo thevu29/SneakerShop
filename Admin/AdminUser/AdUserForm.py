@@ -133,16 +133,16 @@ class AdUserForm(Frame):
         self.function_frame.config(borderwidth=10, relief='solid')
 
         # Tạo button
-        self.btnAdd = Button(self.function_frame, text="Thêm khách hàng", width=20, command=self.addUser)
+        self.btnAdd = Button(self.function_frame, text="Thêm khách hàng", width=20, cursor='hand2', command=self.addUser)
         self.btnAdd.grid(row=0, column=0, pady=6, padx=10, ipady=3)
         
-        self.btnSave = Button(self.function_frame, text="Lưu thông tin", width=20, command=self.saveUserInfo)
+        self.btnSave = Button(self.function_frame, text="Lưu thông tin", width=20, cursor='hand2', command=self.saveUserInfo)
         self.btnSave.grid(row=0, column=1, pady=6, padx=10, ipady=3)
         
-        self.btnDelete = Button(self.function_frame, text="Xóa khách hàng", width=20, command=self.deleteUser)
+        self.btnDelete = Button(self.function_frame, text="Xóa khách hàng", width=20, cursor='hand2', command=self.deleteUser)
         self.btnDelete.grid(row=0, column=2, pady=6, padx=10, ipady=3)
 
-        self.btnresetValue = Button(self.function_frame, text="Reset", width=20, command=self.reset)
+        self.btnresetValue = Button(self.function_frame, text="Reset", width=20, cursor='hand2', command=self.reset)
         self.btnresetValue.grid(row=0, column=5, pady=6, padx=10, ipady=3)
         
     def initUserData(self):

@@ -104,6 +104,7 @@ INSERT INTO Customer VALUES
 ('CUS005', N'Đào Đức Thắng', N'Hồ Chí Minh', '0123456789', N'Nam', 20)
 
 INSERT INTO Account VALUES
+('ACC000', 'admin', 'admin', 'ACS001', 'CUS000'),
 ('ACC001', 'admin', 'admin', 'ACS001', 'CUS000'),
 ('ACC002', 'thevu', '123', 'ACS002', 'CUS001'),
 ('ACC003', 'huyhoang', '123', 'ACS002', 'CUS002'),

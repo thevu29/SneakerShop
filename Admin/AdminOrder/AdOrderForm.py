@@ -86,13 +86,13 @@ class AdOrderForm(Frame):
         # btnAdd = Button(frame4, text='Thêm đơn hàng', width=20)
         # btnAdd.grid(row=0, column=0, ipady=3, padx=10)
         
-        self.btnDelete = Button(frame4, text='Xóa đơn hàng', width=20, command=self.deleteOrder)
+        self.btnDelete = Button(frame4, text='Xóa đơn hàng', width=20, cursor='hand2', command=self.deleteOrder)
         self.btnDelete.grid(row=0, column=0, ipady=3, padx=10)
         
-        self.btnChangeStatus = Button(frame4, text='Xử lý đơn hàng', width=20, command=self.changeOrderStatus)
+        self.btnChangeStatus = Button(frame4, text='Xử lý đơn hàng', width=20, cursor='hand2', command=self.changeOrderStatus)
         self.btnChangeStatus.grid(row=0, column=1, ipady=3, padx=10)
         
-        self.btnReset = Button(frame4, text='Reset', width=20, command=self.reset)
+        self.btnReset = Button(frame4, text='Reset', width=20, cursor='hand2', command=self.reset)
         self.btnReset.grid(row=0, column=2, ipady=3, padx=10)
         
     def initOrderList(self, frame3):

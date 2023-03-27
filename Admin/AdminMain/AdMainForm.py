@@ -102,7 +102,8 @@ class AdMainForm(Toplevel):
         style.configure('taskbar.TLabel', background='#fff')
        
 if __name__ == '__main__':
-    root = AdMainForm()
+    root = Tk()
     root.geometry('1200x600+180+100')
     root.title('Trang quản trị')
+    app = AdMainForm(root)
     root.mainloop()

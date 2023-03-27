@@ -7,7 +7,7 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 from Admin.AdminMain import AdMainForm
 from Product import ProductForm
-from LoginForm import *
+from Login.LoginForm import *
 
 class MainForm(Tk):
     def __init__(self):
@@ -15,12 +15,12 @@ class MainForm(Tk):
         
         self.login = StartForm(self)
         
-        self.topLevels = {}
-        for toplevel in (ProductForm.ProductForm, AdMainForm.AdMainForm):
-            toplevel_name = toplevel.__name__
-            toplevel = toplevel(parent=self)
-            toplevel.geometry('1200x600+180+100')
-            self.topLevels[toplevel_name] = toplevel
+        # self.topLevels = {}
+        # for toplevel in (ProductForm.ProductForm, AdMainForm.AdMainForm):
+        #     toplevel_name = toplevel.__name__
+        #     toplevel = toplevel(parent=self)
+        #     toplevel.geometry('1200x600+180+100')
+        #     self.topLevels[toplevel_name] = toplevel
         
 if __name__ == '__main__':
     main = MainForm()
