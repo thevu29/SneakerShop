@@ -8,8 +8,10 @@ import os
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
+from Admin.AdminMain import AdMainForm
 from Admin.AdminAccount import AdAccount
 from Admin.AdminUser import AdUser
+from Product import ProductForm
 
 class StartForm(Frame):
     def __init__(self, parent):
@@ -17,6 +19,8 @@ class StartForm(Frame):
         self.parent = parent
         self.pack(fill=BOTH)
         self['style'] ='loginform.TFrame'
+        
+        self.isAdmin = False
                 
         self.initUI()
         
@@ -54,6 +58,9 @@ class StartForm(Frame):
         style.configure('loginform.TLabel', background='#fff')  
         style.configure('loginform.TEntry', lightcolor='#fff')         
 
+    def Admin(self):
+        return self.isAdmin
+    
 class LoginForm(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
@@ -133,9 +140,24 @@ class LoginForm(Frame):
                     
     def Login(self):
         if self.validatePassword() == True:
-            messagebox.showinfo('Success', 'Đăng nhập thành công')
-    
-            self.reset()
+            # messagebox.showinfo('Success', 'Đăng nhập thành công')
+            
+            username = self.txtUsername.get()
+            for account in self.accountList:
+                if account[1] == username:
+                    if account[3] == 'ACS001':
+                        self.controller.isAdmin = True
+                    else:
+                        self.controller.isAdmin = False
+            
+            if self.controller.isAdmin == True:
+                self.controller.parent.page = AdMainForm.AdMainForm(parent=self.controller.parent)
+                self.controller.parent.page.geometry('1200x600+180+100')
+                self.controller.parent.withdraw()
+            else:
+                self.controller.parent.page = ProductForm.ProductForm(parent=self.controller.parent)
+                self.controller.parent.page.geometry('1200x600+180+100')
+                self.controller.parent.withdraw()
             
     def reset(self):
         self.txtUsername.delete('0', 'end')

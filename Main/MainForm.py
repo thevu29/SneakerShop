@@ -14,16 +14,8 @@ class MainForm(Tk):
         Tk.__init__(self)
         
         self.login = StartForm(self)
-        
-        # self.topLevels = {}
-        # for toplevel in (ProductForm.ProductForm, AdMainForm.AdMainForm):
-        #     toplevel_name = toplevel.__name__
-        #     toplevel = toplevel(parent=self)
-        #     toplevel.geometry('1200x600+180+100')
-        #     self.topLevels[toplevel_name] = toplevel
-        
+     
 if __name__ == '__main__':
     main = MainForm()
     main.geometry('950x600+280+100')
-    main.resizable(False, False)
     main.mainloop()

@@ -15,6 +15,9 @@ from AdminProduct import AdProductForm
 class AdMainForm(Toplevel):
     def __init__(self, parent):
         Toplevel.__init__(self, parent)
+        self.parent = parent
+        
+        self.protocol('WM_DELETE_WINDOW', self.closeAll)
         
         frame1 = Frame(self, style='taskbar.TFrame')
         frame1.grid(row=0, column=0, sticky='nsew', ipadx=4)
@@ -100,7 +103,10 @@ class AdMainForm(Toplevel):
         style = Style()
         style.configure('taskbar.TFrame', background='#fff')
         style.configure('taskbar.TLabel', background='#fff')
-       
+    
+    def closeAll(self):
+        self.parent.destroy()
+      
 if __name__ == '__main__':
     root = Tk()
     root.geometry('1200x600+180+100')
