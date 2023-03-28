@@ -21,7 +21,7 @@ class AdMainForm(Toplevel):
         
         frame1 = Frame(self, style='taskbar.TFrame')
         frame1.grid(row=0, column=0, sticky='nsew', ipadx=4)
-        
+
         frame2 = Frame(self)
         frame2.grid(row=0, column=1, sticky='nsew', ipadx=4)
                 
@@ -48,7 +48,7 @@ class AdMainForm(Toplevel):
         # product manage
         self.shoesIcon = ImageTk.PhotoImage(Image.open('./img/shoes_icon.png').resize((35, 35), Image.LANCZOS))
         shoesIconImg = Label(frame, image=self.shoesIcon, style='taskbar.TLabel')
-        shoesIconImg.grid(row=1, column=0, padx=(12, 0), pady=12)
+        shoesIconImg.grid(row=1, column=0, padx=(12, 0), pady=12, sticky='w')
         
         productManage = Label(frame, text='Quản lý sản phẩm', font=('Helvetica 11'), style='taskbar.TLabel', cursor='hand2')
         productManage.grid(row=1, column=1, pady=12, sticky='w')
@@ -59,7 +59,7 @@ class AdMainForm(Toplevel):
         # order manage
         self.clipboard = ImageTk.PhotoImage(Image.open('./img/clipboard.png').resize((25, 25), Image.LANCZOS))
         clipboardImg = Label(frame, image=self.clipboard, style='taskbar.TLabel')
-        clipboardImg.grid(row=2, column=0, padx=(12, 0), pady=12)
+        clipboardImg.grid(row=2, column=0, padx=(12, 0), pady=12, sticky='w')
         
         orderManage = Label(frame, text='Quản lý đơn hàng', font=('Helvetica 11'), style='taskbar.TLabel', cursor='hand2')
         orderManage.grid(row=2, column=1, pady=12, sticky='w')
@@ -70,7 +70,7 @@ class AdMainForm(Toplevel):
         # user manage
         self.user = ImageTk.PhotoImage(Image.open('./img/user.png').resize((30, 30), Image.LANCZOS))
         userImg = Label(frame, image=self.user, style='taskbar.TLabel')
-        userImg.grid(row=3, column=0, padx=(12, 0), pady=12)
+        userImg.grid(row=3, column=0, padx=(12, 0), pady=12, sticky='w')
         
         userManage = Label(frame, text='Quản lý khách hàng', font=('Helvetica 11'), style='taskbar.TLabel', cursor='hand2')
         userManage.grid(row=3, column=1, pady=12, sticky='w')
@@ -81,14 +81,27 @@ class AdMainForm(Toplevel):
         # account manage
         self.account = ImageTk.PhotoImage(Image.open('./img/user_account.png').resize((30, 30), Image.LANCZOS))
         accountImg = Label(frame, image=self.account, style='taskbar.TLabel')
-        accountImg.grid(row=4, column=0, padx=(12, 0), pady=12)
+        accountImg.grid(row=4, column=0, padx=(12, 0), pady=12, sticky='w')
         
         accountManage = Label(frame, text='Quản lý tài khoản', font=('Helvetica 11'), style='taskbar.TLabel', cursor='hand2')
         accountManage.grid(row=4, column=1, pady=12, sticky='w')
         accountManage.bind('<Button-1>', lambda x: self.showContent('AdAccountForm'))
         accountManage.bind('<Enter>', self.onHover)
         accountManage.bind('<Leave>', self.outHover)
-    
+        
+        # logout  
+        frame.grid_rowconfigure(5, weight=1)
+        
+        self.logoutImage = ImageTk.PhotoImage(Image.open('./img/logout_icon.png').resize((30, 30)))
+        logoutImg = Label(frame, image=self.logoutImage, cursor='hand2', style='taskbar.TLabel')
+        logoutImg.grid(row=5, column=0, padx=(12, 0), pady=32, sticky='ws')
+        
+        lblLogout = Label(frame, text='Đăng xuất', font=('Arial 11'), cursor='hand2', style='taskbar.TLabel')
+        lblLogout.grid(row=5, column=1, pady=(12, 40), sticky='ws')
+        lblLogout.bind('<Button-1>', lambda x: self.Logout())
+        lblLogout.bind('<Enter>', self.onHover)
+        lblLogout.bind('<Leave>', self.outHover)
+
     def onHover(self, e):
         e.widget['foreground'] = '#fd6032'
     
@@ -106,10 +119,15 @@ class AdMainForm(Toplevel):
     
     def closeAll(self):
         self.parent.destroy()
-      
-if __name__ == '__main__':
-    root = Tk()
-    root.geometry('1200x600+180+100')
-    root.title('Trang quản trị')
-    app = AdMainForm(root)
-    root.mainloop()
+
+    def Logout(self):
+        self.parent.page.destroy()
+        self.parent.deiconify()
+    
+# if __name__ == '__main__':
+#     root = Tk()
+#     root.title('Trang quản trị')
+#     app = AdMainForm(root)
+#     app.geometry('1200x600+180+100')
+#     root.withdraw()
+#     root.mainloop()

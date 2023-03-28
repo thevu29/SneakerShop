@@ -139,9 +139,7 @@ class LoginForm(Frame):
         return False
                     
     def Login(self):
-        if self.validatePassword() == True:
-            # messagebox.showinfo('Success', 'Đăng nhập thành công')
-            
+        if self.validatePassword() == True:            
             username = self.txtUsername.get()
             for account in self.accountList:
                 if account[1] == username:
@@ -150,15 +148,17 @@ class LoginForm(Frame):
                     else:
                         self.controller.isAdmin = False
             
+            self.reset()
+            
             if self.controller.isAdmin == True:
                 self.controller.parent.page = AdMainForm.AdMainForm(parent=self.controller.parent)
-                self.controller.parent.page.geometry('1200x600+180+100')
-                self.controller.parent.withdraw()
             else:
                 self.controller.parent.page = ProductForm.ProductForm(parent=self.controller.parent)
-                self.controller.parent.page.geometry('1200x600+180+100')
-                self.controller.parent.withdraw()
-            
+
+            self.controller.parent.page.geometry('1200x600+180+100')
+            self.controller.parent.page.resizable(False, False)
+            self.controller.parent.withdraw()
+           
     def reset(self):
         self.txtUsername.delete('0', 'end')
         self.txtPassword.delete('0', 'end')
