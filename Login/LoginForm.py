@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Tk, PhotoImage, TOP, BOTH, LEFT, N, E, W, S, messagebox
+from tkinter import Tk, TOP, BOTH, LEFT, N, E, W, S, messagebox
 from tkinter.ttk import Frame, Label, Entry, Combobox, Treeview, Scrollbar, Labelframe, Style, Button
 from PIL import Image, ImageTk
 import sys
@@ -141,24 +141,30 @@ class LoginForm(Frame):
     def Login(self):
         if self.validatePassword() == True:            
             username = self.txtUsername.get()
+            userId = ''
+            
             for account in self.accountList:
                 if account[1] == username:
+                    userId = account[4]
+                    
                     if account[3] == 'ACS001':
                         self.controller.isAdmin = True
                     else:
                         self.controller.isAdmin = False
+                        
+                    break
             
             self.reset()
             
             if self.controller.isAdmin == True:
                 self.controller.parent.page = AdMainForm.AdMainForm(parent=self.controller.parent)
             else:
-                self.controller.parent.page = ProductForm.ProductForm(parent=self.controller.parent)
+                self.controller.parent.page = ProductForm.ProductForm(parent=self.controller.parent, userId=userId, username=username)
 
             self.controller.parent.page.geometry('1200x600+180+100')
             self.controller.parent.page.resizable(False, False)
             self.controller.parent.withdraw()
-           
+          
     def reset(self):
         self.txtUsername.delete('0', 'end')
         self.txtPassword.delete('0', 'end')

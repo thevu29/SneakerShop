@@ -138,7 +138,7 @@ class AdOrderForm(Frame):
                 orderDetailForm = AdOrderDetailForm(self, order[0])
                 orderDetailForm.title('Chi tiết đơn hàng')
                 orderDetailForm.geometry('1100x600+250+100')
-                break
+                return
             
     def searchOrderById(self):        
         self.initOrderData()
@@ -184,6 +184,10 @@ class AdOrderForm(Frame):
         
         for order in self.orderDataList:
             if orderId == order[0]:
+                if order[4] == 'Đã xử lí':
+                    messagebox.showerror('Error', 'Không được xóa đơn hàng đã xử lí')
+                    return
+                
                 self.order.deleteOrder(order)
                 messagebox.showinfo('Thành công', f'Xóa thành công đơn hàng có mã {orderId}')
                 self.reset()
@@ -211,4 +215,8 @@ class AdOrderForm(Frame):
         self.reset()
         
     def reset(self):
+        self.txtSearch.delete('0', 'end')
+        self.txtSearch.insert(0, 'Nhập mã/tên đơn hàng')
+        self.txtSearch.configure(foreground='gray')
+        
         self.initOrderData()

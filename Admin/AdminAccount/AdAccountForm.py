@@ -291,6 +291,10 @@ class AdAccountForm(Frame):
         self.cbxAccess.current(0)
         self.txtCustomerId.delete('0', 'end')
         
+        self.txtSearch.delete('0', 'end')
+        self.txtSearch.insert(0, 'Nhập mã/tên tài khoản')
+        self.txtSearch.configure(foreground='gray')
+        
     def reset(self):
         self.resetValue()
         self.initAccountData()

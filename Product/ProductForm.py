@@ -1,9 +1,16 @@
-from PIL import Image, ImageTk
 from tkinter import Tk, Text, TOP, BOTH, X, N, LEFT, RIGHT, SOLID, Listbox, END, Canvas, StringVar, Toplevel
 from tkinter.ttk import Frame, Label, Entry, Combobox, Treeview, Scrollbar, Button, Separator
+from PIL import Image, ImageTk
 import tkinter.messagebox as mbox
 import math
 from os import listdir
+import sys
+import os
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+
+from Order import OrderForm
 
 try:
     from Product import ProductData
@@ -11,9 +18,11 @@ except:
     from Product.Product import ProductData
 
 class ProductForm(Toplevel):
-    def __init__(self, parent):
+    def __init__(self, parent, userId, username):
         Toplevel.__init__(self, parent)
         self.parent = parent
+        self.userId = userId
+        self.username = username
         
         self.protocol('WM_DELETE_WINDOW', self.closeAll)
         
@@ -47,20 +56,30 @@ class ProductForm(Toplevel):
         self.imgSearch.image = self.photo
         self.imgSearch.grid(column=2, row=0)
 
+        # Right frame
         self.frame1Right = Frame(self.frame1)
         self.frame1Right.pack(side=RIGHT, fill=BOTH)
 
-        self.LinkImg = Image.open("./img/order_icon2.png")
-        self.resize_image = self.LinkImg.resize((40, 35))
-        self.photo = ImageTk.PhotoImage(self.resize_image)
+        # Username
+        self.usernameBox = Frame(self.frame1Right)
+        self.usernameBox.grid(row=0, column=0)
         
-        self.imgOrder = Label(self.frame1Right, image=self.photo, cursor='hand2')
-        self.imgOrder.image = self.photo
-        self.imgOrder.grid(row=0, column=0)
-
+        self.lblHello = Label(self.usernameBox, text='Xin chào, ')
+        self.lblHello.grid(row=0, column=0, sticky='s')
+        
+        self.lblUsername = Label(self.usernameBox, text=self.username, font=('Arial', 10, 'bold'))
+        self.lblUsername.grid(row=0, column=1, sticky='s')
+        
+        # Cart
         self.cartImage = ImageTk.PhotoImage(Image.open('./img/cart_icon.png').resize((40, 40)))
         self.cartImg = Label(self.frame1Right, image=self.cartImage, cursor='hand2')
-        self.cartImg.grid(row=0, column=1, padx=15)
+        self.cartImg.grid(row=0, column=1, padx=16)
+
+        # Order
+        self.orderImage = ImageTk.PhotoImage(Image.open("./img/order_icon2.png").resize((40, 35)))
+        self.orderImg = Label(self.frame1Right, image=self.orderImage, cursor='hand2')
+        self.orderImg.grid(row=0, column=2, padx=(0, 16))
+        self.orderImg.bind('<Button-1>', lambda x: self.toOrderPage())
         
         # Separator
         self.separatorSearch = Separator(self, orient='horizontal')
@@ -164,10 +183,13 @@ class ProductForm(Toplevel):
         self.logoutImage = ImageTk.PhotoImage(Image.open('./img/logout_icon.png').resize((30, 30)))
         self.logoutImg = Label(self.logoutBox, image=self.logoutImage, cursor='hand2')
         self.logoutImg.grid(row=0, column=0)
+        self.logoutImg.bind('<Button-1>', lambda x: self.Logout())
         
         self.lblLogout = Label(self.logoutBox, text='Đăng xuất', font=('Arial 11'), cursor='hand2')
         self.lblLogout.grid(row=0, column=1, padx=(8, 0))
         self.lblLogout.bind('<Button-1>', lambda x: self.Logout())
+        self.lblLogout.bind('<Enter>', self.onHover)
+        self.lblLogout.bind('<Leave>', self.outHover)
              
         # Separator
         self.separatorProduct = Separator(self.frameList, orient='vertical')
@@ -493,6 +515,13 @@ class ProductForm(Toplevel):
         self.parent.page.destroy()
         self.parent.deiconify()
 
+    def toOrderPage(self):
+        self.parent.page.orderPage = OrderForm.OrderForm(parent=self.parent.page, userId=self.userId)
+        self.parent.page.orderPage.geometry('1200x600+180+100')
+        self.parent.page.orderPage.title('Đơn hàng đã đặt')
+        self.parent.page.orderPage.resizable(False, False)
+        self.parent.page.withdraw()
+    
 # if __name__ == '__main__':
 #     root = Tk()
 #     app = ProductForm(root)

@@ -95,6 +95,7 @@ class AdMainForm(Toplevel):
         self.logoutImage = ImageTk.PhotoImage(Image.open('./img/logout_icon.png').resize((30, 30)))
         logoutImg = Label(frame, image=self.logoutImage, cursor='hand2', style='taskbar.TLabel')
         logoutImg.grid(row=5, column=0, padx=(12, 0), pady=32, sticky='ws')
+        logoutImg.bind('<Button-1>', lambda x: self.Logout())
         
         lblLogout = Label(frame, text='Đăng xuất', font=('Arial 11'), cursor='hand2', style='taskbar.TLabel')
         lblLogout.grid(row=5, column=1, pady=(12, 40), sticky='ws')

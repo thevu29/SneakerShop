@@ -344,10 +344,12 @@ class AdProductForm(Frame):
         self.txtProductCategory.delete('0', 'end')
         self.txtProductSupplier.delete('0', 'end')
         
+        self.txtSearch.delete('0', 'end')
+        self.txtSearch.insert(0, 'Nhập mã/tên sản phẩm')
+        self.txtSearch.configure(foreground='gray')
+        
     def reset(self):
         self.resetValue()
-        
-        self.imageBorder.grid_remove()
-        self.txtProductImage.grid_remove()
-        
         self.initProductData()
+        self.txtProductImage.grid_remove()
+        self.imageBorder.grid_remove()

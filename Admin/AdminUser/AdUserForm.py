@@ -282,6 +282,10 @@ class AdUserForm(Frame):
         self.cbxGender.current(0)
         self.txtPoint.delete('0', 'end')
         
+        self.txtSearch.delete('0', 'end')
+        self.txtSearch.insert(0, 'Nhập mã/tên khách hàng')
+        self.txtSearch.configure(foreground='gray')
+        
     def reset(self):
         self.resetValue()
         self.initUserData()
