@@ -1,102 +1,11 @@
-﻿create database py_ql
-use py_ql
-
-create table Access
-(
-	AccessID varchar(8) primary key,
-	AccesssName nvarchar(25),
-	AccesssDescription nvarchar(30)
-)
-
-create table Customer
-(
-	CustomerID varchar(8) primary key,
-	CustomerName nvarchar(50),
-	CustomerAddress nvarchar(12),
-	Phone varchar(12),
-	Gender nvarchar(5),
-	Point int
-)
-
-create table Account
-(
-	AccountID varchar(8) primary key,
-	Username varchar(12),
-	Password varchar(15),
-	AccessID varchar(8),
-	CustomerID varchar(8),
-	foreign key (AccessID) references Access(AccessID),
-	foreign key (CustomerID) references Customer(CustomerID)
-)
-
-create table CustomerOrder
-(
-	OrderID varchar(8) primary key,
-	CustomerID varchar(8),
-	OrderDate date, 
-	TotalPrice float, 
-	OrderStatus nvarchar(10),
-	foreign key (CustomerID) references Customer(CustomerID)
-)
-
-create table OrderDetail
-(
-	OrderID varchar(8),
-	ProductID varchar(8),
-	Quantity int, 
-    Price float, 
-	SizeNumber int,
-	primary key (OrderID,  ProductID),
-	foreign key (OrderID) references CustomerOrder(OrderID),
-	foreign key (ProductID) references Product(ProductID)
-)
-
-create table Supplier
-(
-	SupplierID varchar(8) primary key,
-	SupplierName nvarchar(50),
-	SupplierAddress nvarchar(20),
-	Phone varchar(12),
-	Email varchar(50)
-)
-create table Category
-(
-	CategoryID varchar(8) primary key,
-	CategoryName nvarchar(50),
-)
-
-create table Product
-(
-	ProductID varchar(8) primary key,
-	ProductName nvarchar(50),
-	Price float, 
-	Quantity int, 
-	SupplierID varchar(8),
-	CategoryID varchar(8),
-	foreign key (CategoryID) references Category(CategoryID),
-	foreign key (SupplierID) references Supplier(SupplierID)
-)
-
-create table Size
-(
-	SizeNumber int primary key,
-)
-
-create table Product_Size
-(
-	ProductID varchar(8),
-	SizeNumber int,
-	Quantity int,
-	primary key (ProductID,  SizeNumber),
-	foreign key (ProductID) references Product(ProductID),
-	foreign key (SizeNumber) references Size(SizeNumber)
-)
+﻿use py_ql
 
 INSERT INTO Access VALUES
 ('ACS001', 'Admin', N'Người quản trị'),
 ('ACS002', 'User', N'Người dùng')
 
 INSERT INTO Customer VALUES
+('CUS000', 'admin', 'admin',  N'Hồ Chí Minh', '0123456789', N'Nam', 0),
 ('CUS001', N'Nguyễn Thế Vũ', N'Hồ Chí Minh', '0123456789', N'Nam', 0),
 ('CUS002', N'Vương Huy Hoàng', N'Hà Nội', '0123456789', N'Nữ', 5),
 ('CUS003', N'Nguyễn Hoàng Hải Nam', N'Đồng Nai', '0123456789', N'Nữ', 15),
@@ -104,7 +13,6 @@ INSERT INTO Customer VALUES
 ('CUS005', N'Đào Đức Thắng', N'Hồ Chí Minh', '0123456789', N'Nam', 20)
 
 INSERT INTO Account VALUES
-('ACC000', 'admin', 'admin', 'ACS001', 'CUS000'),
 ('ACC001', 'admin', 'admin', 'ACS001', 'CUS000'),
 ('ACC002', 'thevu', '123', 'ACS002', 'CUS001'),
 ('ACC003', 'huyhoang', '123', 'ACS002', 'CUS002'),

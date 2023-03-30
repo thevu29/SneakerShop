@@ -87,7 +87,7 @@ class ProductForm(Toplevel):
         
         # Tạo frame2
         self.frame2 = Frame(self)
-        self.frame2.pack(fill=BOTH)
+        self.frame2.pack(fill=BOTH, expand=True)
 
         # Tạo frame pack() chứa BA label chung
         self.frameLabel = Frame(self.frame2)
@@ -97,7 +97,7 @@ class ProductForm(Toplevel):
         self.frameLabel1 = Frame(self.frameLabel)
         self.frameLabel1.pack(fill=BOTH, side=LEFT, padx=(3, 13), pady=(15, 0))
         self.lb1 = Label(self.frameLabel1, text="Hãng", font=("Times New Roman", 16, 'bold'), width=15, anchor='c')
-        self.lb1.pack(side=LEFT, padx=12)
+        self.lb1.pack(padx=12)
         
         # Separator
         self.separatorCate = Separator(self.frameLabel, orient='vertical')
@@ -105,19 +105,13 @@ class ProductForm(Toplevel):
         
         # Tạo frame label2
         self.frameLabel2 = Frame(self.frameLabel)
-        self.frameLabel2.pack(side=LEFT, padx=15, pady=(15, 0))
-        self.lb2 = Label(self.frameLabel2, text="Tất cả sản phẩm", font=("Times New Roman", 16, 'bold'), anchor="c", width=60)
+        self.frameLabel2.pack(fill=BOTH, expand=True, side=LEFT, padx=15, pady=(15, 0))
+        self.lb2 = Label(self.frameLabel2, text="Tất cả sản phẩm", font=("Times New Roman", 16, 'bold'), anchor="c")
         self.lb2.pack(fill=BOTH)
-        
-        # Tao frame Label3
-        self.frameLabel3 = Frame(self.frameLabel)
-        self.frameLabel3.pack(side=LEFT, padx=15, pady=(15, 0))
-        self.lb3 = Label(self.frameLabel3, text="Giỏ hàng", font=("Times New Roman", 16, 'bold'), anchor="c", width=100)
-        self.lb3.pack(fill=BOTH)
 
         # Tạo frame pack() chứa list box và phần sản phẩm và giỏ hàng
         self.frameList = Frame(self.frame2)
-        self.frameList.pack(fill=BOTH)
+        self.frameList.pack(fill=BOTH, expand=True)
 
         # Tạo frame list box
         self.frameListBox = Frame(self.frameList)
@@ -199,17 +193,12 @@ class ProductForm(Toplevel):
         self.frameListProduct = Frame(self.frameList)
         self.frameListProduct.pack(fill=BOTH, side=LEFT, pady=(15, 0), padx=15)
 
-        self.mainFrameGridProduct = Frame(self.frameListProduct)
-        self.mainFrameGridProduct.grid()
-
-        self.frame_main = Frame(self.mainFrameGridProduct)
-        self.frame_main.grid(sticky='news')
-
         # Create a frame for the canvas with non-zero row&column weights
-        self.frame_canvas = Frame(self.frame_main)
+        self.frame_canvas = Frame(self.frameListProduct)
         self.frame_canvas.grid(row=0, column=0, pady=(5, 0), sticky='nw')
         self.frame_canvas.grid_rowconfigure(0, weight=1)
         self.frame_canvas.grid_columnconfigure(0, weight=1)
+        
         # Set grid_propagate to False to allow 5-by-5 buttons resizing later
         self.frame_canvas.grid_propagate(False)
 
@@ -231,56 +220,12 @@ class ProductForm(Toplevel):
         # Update buttons frames idle tasks to let tkinter calculate buttons sizes
         self.frame_buttons.update_idletasks()
         
-        # chuẩn ban đầu
-        self.frame_canvas.config(width=652 + self.vsb.winfo_width(), height=400)
+        # set size for frame canvas
+        self.frame_canvas.config(width=972 + self.vsb.winfo_width(), height=410)
+        
         # Set the canvas scrolling region
         self.canvas.config(scrollregion=self.canvas.bbox("all"))
-
-        # Tạo frame list cart
-        self.frameListCart = Frame(self.frameList)
-        self.frameListCart.pack(fill=BOTH, side=LEFT)
-
-        # tạo frame grid chứa toàn bộ item sản phẩm khi thêm vào cart
-        self.frame_mainCart = Frame(self.frameListCart)
-        self.frame_mainCart.grid(sticky='news')
-
-        # Create a frame for the canvas with non-zero row&column weights
-        self.frame_canvasCart = Frame(self.frame_mainCart)
-        self.frame_canvasCart.grid(row=0, column=0, pady=(5, 0), sticky='nw')
-        self.frame_canvasCart.grid_rowconfigure(0, weight=1)
-        self.frame_canvasCart.grid_columnconfigure(0, weight=1)
-        self.frame_canvasCart.grid_propagate(False)
-
-        # Add a canvas in that frame
-        self.canvasCart = Canvas(self.frame_canvasCart)
-        self.canvasCart.grid(row=0, column=0, sticky="news", pady=(14, 0))
-
-        # Link a scrollbar to the canvas
-        self.vsbCart = Scrollbar(self.frame_canvasCart, orient="vertical", command=self.canvasCart.yview)
-        self.vsbCart.grid(row=0, column=1, sticky='ns', pady=14)
-        self.canvasCart.configure(yscrollcommand=self.vsbCart.set)
-
-        # Create a frame to contain the buttons
-        self.frame_buttonsCart = Frame(self.canvasCart)
-        self.canvasCart.create_window((0, 0), window=self.frame_buttonsCart, anchor='nw')
-
-        # xử lý cart
-        self.listCart = []
-
-        # self.frame_buttonsCart.update_idletasks()
-        self.frame_canvasCart.config(width=330 + self.vsbCart.winfo_width(), height=400)
-
-        # Tạo frame show tổng tiền và button đặt hàng
-        self.frameTotalGrid = Frame(self.frameListCart)
-        self.frameTotalGrid.grid()
-        self.lbTotal = Label(self.frameTotalGrid, text="Tổng tiền:", font=('TimesNewRoman 12 bold'))
-        self.lbTotal.grid(row=0, column=0)
         
-        self.lbTotalPrice = Label(self.frameTotalGrid, text="", font=("Times New Roman", 14))
-        self.lbTotalPrice.grid(row=0, column=1, padx=10)
-        self.btnBuy = Button(self.frameTotalGrid, text="Đặt hàng")
-        self.btnBuy.grid(row=0, column=2)
-
         # Tạo đối tượng để lấy hết dữ liệu về sản phẩm database lưu vào list để tái sử dụng
         objProduct = ProductData()
         self.listAllProduct = objProduct.getProductList("Tất cả")
@@ -298,7 +243,7 @@ class ProductForm(Toplevel):
         for widget in self.frame_buttons.winfo_children():
             widget.destroy()
             
-        columns = 3
+        columns = 5
         rows = math.ceil(len(filtered_list) / columns)
         count = 0
         for i in range(0, rows):
@@ -306,7 +251,7 @@ class ProductForm(Toplevel):
                 if (count < len(filtered_list)):
                     # tạo item
                     item = Frame(self.frame_buttons)
-                    item.grid(column=j, row=i, padx=(5, 40), pady=(0, 25))
+                    item.grid(column=j, row=i, padx=(5, 24), pady=(0, 25))
                     
                     # xử lý image
                     for f in listdir("img/product"):
@@ -345,21 +290,21 @@ class ProductForm(Toplevel):
                     count = count + 1
                 else:
                     break
-
+         
     # Hàm render các sản phẩm dựa vào điều kiện là hãng nào, hay tất cả luôn
     def renderProductList(self, condition):
         objProduct = ProductData()
         listProduct = objProduct.getProductList(condition)
 
-        columns = 3
+        columns = 5
         rows = math.ceil(len(listProduct) / columns)
         count = 0
         for i in range(0, rows):
             for j in range(0, columns):
                 if (count < len(listProduct)):
-                    # # tạo item
+                    # tạo item
                     item = Frame(self.frame_buttons)
-                    item.grid(column=j, row=i, padx=(5, 40), pady=(0, 25))
+                    item.grid(column=j, row=i, padx=(5, 24), pady=(0, 25))
                     
                     # xử lý image
                     for f in listdir("img/product"):
@@ -402,7 +347,7 @@ class ProductForm(Toplevel):
                     count = count + 1
                 else:
                     break
-
+            
     # Hàm xử lý logic lấy tất cả thông tin sản phẩm khi click button add
     def getValueClicked(self, img, name, price, size_var):
         def handle_event():
