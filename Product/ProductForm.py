@@ -150,7 +150,7 @@ class ProductForm(Toplevel):
         self.frame_canvas.grid_propagate(False)
 
         # Add a canvas in that frame
-        self.canvas = Canvas(self.frame_canvas)
+        self.canvas = Canvas(self.frame_canvas, highlightthickness=0)
         self.canvas.grid(row=0, column=0, sticky="news")
         
         # Link a scrollbar to the canvas
@@ -426,3 +426,6 @@ class ProductForm(Toplevel):
         self.parent.page.cartPage.title('Đơn đặt hàng')
         self.parent.page.cartPage.resizable(False, False)
         self.parent.page.withdraw()
+        
+    def onBackProductPage(self):
+        self.canvas.bind_all('<MouseWheel>', self.canvasScroll)

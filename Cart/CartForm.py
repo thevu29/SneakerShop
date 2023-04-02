@@ -258,6 +258,7 @@ class CartForm(Toplevel):
         self.cartProductCanvas.unbind_all("<MouseWheel>")
         self.parent.cartPage.destroy()
         self.parent.deiconify()
+        self.parent.onBackProductPage()
     
     def onHover(self, e):
         e.widget.config(font=self.underlineFont)
