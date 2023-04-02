@@ -57,10 +57,7 @@ class StartForm(Frame):
         style.configure('loginform.TFrame', background='#fff')
         style.configure('loginform.TLabel', background='#fff')  
         style.configure('loginform.TEntry', lightcolor='#fff')         
-
-    def Admin(self):
-        return self.isAdmin
-    
+        
 class LoginForm(Frame):
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)
@@ -167,8 +164,8 @@ class LoginForm(Frame):
           
     def reset(self):
         self.txtUsername.delete('0', 'end')
-        self.txtPassword.delete('0', 'end')
-    
+        self.txtPassword.delete('0', 'end')        
+        
 class SignUpForm(Frame):  
     def __init__(self, parent, controller):
         Frame.__init__(self, parent)

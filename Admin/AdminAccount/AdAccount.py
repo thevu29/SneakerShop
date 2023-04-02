@@ -59,3 +59,14 @@ class AdAccountData():
                        """)
         
         self.conn.commit()
+        
+    def getAccountId(self, username):        
+        data = self.conn.cursor()
+        data.execute(f"select AccountId from dbo.Account where Username = '{username}'")
+        
+        accountId = ''
+        for item in data:
+            accountId = item[0]
+            break
+        
+        return accountId

@@ -90,3 +90,12 @@ create table Product_Size
 	foreign key (ProductID) references Product(ProductID),
 	foreign key (SizeNumber) references Size(SizeNumber)
 )
+
+Create table Cart
+(
+	AccountID varchar(8) NOT NULL foreign key (AccountID) references Account(AccountID),
+	ProductID varchar(8) NOT NULL foreign key (ProductID) references Product(ProductID),
+	Quantity int,
+	SizeNumber int,
+	Primary key(AccountID, ProductID)
+)

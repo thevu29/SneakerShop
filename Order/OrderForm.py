@@ -34,6 +34,7 @@ class OrderForm(Toplevel):
     
     def closeAll(self):
         self.parent.destroy()
+        exit()
       
     def initUI(self):
         # header
@@ -122,12 +123,3 @@ class OrderForm(Toplevel):
         
     def outHover(self, e):
         e.widget.config(font=self.normalFont)
-         
-# if __name__ == '__main__':
-#     root = Tk()
-#     mainFrame = OrderForm(root, 'CUS001')
-#     mainFrame.geometry('1200x600+180+100')
-#     mainFrame.title('Đơn hàng đã đặt')
-#     mainFrame.resizable(False, False)
-#     root.withdraw()
-#     root.mainloop()

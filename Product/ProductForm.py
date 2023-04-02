@@ -1,9 +1,9 @@
 from tkinter import Tk, Text, TOP, BOTH, X, N, LEFT, RIGHT, SOLID, Listbox, END, Canvas, StringVar, Toplevel
 from tkinter.ttk import Frame, Label, Entry, Combobox, Treeview, Scrollbar, Button, Separator
 from PIL import Image, ImageTk
+from os import listdir
 import tkinter.messagebox as mbox
 import math
-from os import listdir
 import sys
 import os
 
@@ -11,11 +11,13 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 from Order import OrderForm
+from Cart import Cart, CartForm
+from Admin.AdminAccount import AdAccount
 
 try:
-    from Product import ProductData
+    from .Product import *
 except:
-    from Product.Product import ProductData
+    from Product import *
 
 class ProductForm(Toplevel):
     def __init__(self, parent, userId, username):
@@ -24,13 +26,23 @@ class ProductForm(Toplevel):
         self.userId = userId
         self.username = username
         
+        objProduct = ProductData()
+        self.listAllProduct = objProduct.getProductList("Tất cả")
+        
+        self.account = AdAccount.AdAccountData()
+        self.accountId = self.account.getAccountId(self.username)
+        
         self.protocol('WM_DELETE_WINDOW', self.closeAll)
         
         self.initUI()
     
     def closeAll(self):
         self.parent.destroy()
-       
+        exit()
+    
+    def canvasScroll(self, e):
+        self.canvas.yview_scroll(int(-1*(e.delta/120)), "units")
+    
     def initUI(self):
         # Tạo frame1 chứa thanh tìm kiếm
         self.frame1 = Frame(self, padding=15)
@@ -74,6 +86,7 @@ class ProductForm(Toplevel):
         self.cartImage = ImageTk.PhotoImage(Image.open('./img/cart_icon.png').resize((40, 40)))
         self.cartImg = Label(self.frame1Right, image=self.cartImage, cursor='hand2')
         self.cartImg.grid(row=0, column=1, padx=16)
+        self.cartImg.bind('<Button-1>', lambda x: self.toCartPage())
 
         # Order
         self.orderImage = ImageTk.PhotoImage(Image.open("./img/order_icon2.png").resize((40, 35)))
@@ -117,6 +130,48 @@ class ProductForm(Toplevel):
         self.frameListBox = Frame(self.frameList)
         self.frameListBox.pack(fill=BOTH, side=LEFT, pady=(20, 0), padx=(15, 82))
 
+        self.initFilter()
+        
+        # Separator
+        self.separatorProduct = Separator(self.frameList, orient='vertical')
+        self.separatorProduct.pack(side=LEFT, fill=BOTH)
+        
+        # Tạo frame list sản phẩm
+        self.frameListProduct = Frame(self.frameList)
+        self.frameListProduct.pack(fill=BOTH, side=LEFT, pady=(15, 0), padx=15)
+
+        # Create a frame for the canvas with non-zero row&column weights
+        self.frame_canvas = Frame(self.frameListProduct)
+        self.frame_canvas.grid(row=0, column=0, pady=(5, 0), sticky='nw')
+        self.frame_canvas.grid_rowconfigure(0, weight=1)
+        self.frame_canvas.grid_columnconfigure(0, weight=1)
+        
+        # Set grid_propagate to False to allow 5-by-5 buttons resizing later
+        self.frame_canvas.grid_propagate(False)
+
+        # Add a canvas in that frame
+        self.canvas = Canvas(self.frame_canvas)
+        self.canvas.grid(row=0, column=0, sticky="news")
+        
+        # Link a scrollbar to the canvas
+        self.vsb = Scrollbar(self.frame_canvas, orient="vertical", command=self.canvas.yview)
+        self.vsb.grid(row=0, column=1, sticky='ns')
+        self.canvas.configure(yscrollcommand=self.vsb.set)
+
+        # Create a frame to contain the buttons
+        self.frame_buttons = Frame(self.canvas)
+        self.canvas.create_window((0, 0), window=self.frame_buttons, anchor='nw')
+
+        self.renderProductList("Tất cả")
+
+        self.frame_buttons.update_idletasks()
+        self.frame_canvas.config(width=930 + self.vsb.winfo_width(), height=410)
+        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        
+        self.canvas.bind_all('<MouseWheel>', self.canvasScroll)
+        self.canvas.focus_set()
+
+    def initFilter(self):
         self.lblAll = Label(self.frameListBox, text='Tất cả', font=('Arial 12'), cursor='hand2')
         self.lblAll.grid(row=0, column=0, sticky='w', pady=(4, 12))
         self.lblAll.bind('<Button-1>', lambda x: self.on_select('Tất cả'))
@@ -184,52 +239,7 @@ class ProductForm(Toplevel):
         self.lblLogout.bind('<Button-1>', lambda x: self.Logout())
         self.lblLogout.bind('<Enter>', self.onHover)
         self.lblLogout.bind('<Leave>', self.outHover)
-             
-        # Separator
-        self.separatorProduct = Separator(self.frameList, orient='vertical')
-        self.separatorProduct.pack(side=LEFT, fill=BOTH)
         
-        # Tạo frame list sản phẩm
-        self.frameListProduct = Frame(self.frameList)
-        self.frameListProduct.pack(fill=BOTH, side=LEFT, pady=(15, 0), padx=15)
-
-        # Create a frame for the canvas with non-zero row&column weights
-        self.frame_canvas = Frame(self.frameListProduct)
-        self.frame_canvas.grid(row=0, column=0, pady=(5, 0), sticky='nw')
-        self.frame_canvas.grid_rowconfigure(0, weight=1)
-        self.frame_canvas.grid_columnconfigure(0, weight=1)
-        
-        # Set grid_propagate to False to allow 5-by-5 buttons resizing later
-        self.frame_canvas.grid_propagate(False)
-
-        # Add a canvas in that frame
-        self.canvas = Canvas(self.frame_canvas)
-        self.canvas.grid(row=0, column=0, sticky="news")
-
-        # Link a scrollbar to the canvas
-        self.vsb = Scrollbar(self.frame_canvas, orient="vertical", command=self.canvas.yview)
-        self.vsb.grid(row=0, column=1, sticky='ns')
-        self.canvas.configure(yscrollcommand=self.vsb.set)
-
-        # Create a frame to contain the buttons
-        self.frame_buttons = Frame(self.canvas)
-        self.canvas.create_window((0, 0), window=self.frame_buttons, anchor='nw')
-
-        self.renderProductList("Tất cả")
-
-        # Update buttons frames idle tasks to let tkinter calculate buttons sizes
-        self.frame_buttons.update_idletasks()
-        
-        # set size for frame canvas
-        self.frame_canvas.config(width=972 + self.vsb.winfo_width(), height=410)
-        
-        # Set the canvas scrolling region
-        self.canvas.config(scrollregion=self.canvas.bbox("all"))
-        
-        # Tạo đối tượng để lấy hết dữ liệu về sản phẩm database lưu vào list để tái sử dụng
-        objProduct = ProductData()
-        self.listAllProduct = objProduct.getProductList("Tất cả")
-
     # Xử lý logic tìm kiếm sản phẩm trên thanh search và render theo giá trị nhập từ text field
     def handleSearchProduct(self, event):
         objProduct = ProductData()
@@ -251,7 +261,7 @@ class ProductForm(Toplevel):
                 if (count < len(filtered_list)):
                     # tạo item
                     item = Frame(self.frame_buttons)
-                    item.grid(column=j, row=i, padx=(5, 24), pady=(0, 25))
+                    item.grid(column=j, row=i, padx=(5, 24), pady=(25, 0))
                     
                     # xử lý image
                     for f in listdir("img/product"):
@@ -284,7 +294,7 @@ class ProductForm(Toplevel):
                     productCombobox.grid(row=3, column=0, pady=(0, 8))
 
                     btn = Button(item, text="Add cart", command=self.getValueClicked(
-                        f"./img/product/{filtered_list[count][0]}.png", filtered_list[count][1], filtered_list[count][2], n), cursor='hand2')
+                        filtered_list[count][0], filtered_list[count][1], n), cursor='hand2')
 
                     btn.grid(row=4, column=0, pady=(0, 10))
                     count = count + 1
@@ -315,13 +325,16 @@ class ProductForm(Toplevel):
                             img = Label(item, image=photo, borderwidth=1, relief="solid")
                             img.image = photo
                             img.grid(column=0, row=0)
+                    
+                    name = listProduct[count][1]
+                    name = name[:20] + "..." if len(name) > 20 else name
                             
-                    productName = Label(item, text=f'{listProduct[count][1]}', font=("Times New Roman", 12))
+                    productName = Label(item, text=name, font=("Times New Roman", 12))
                     productName.grid(row=1, column=0)
 
                     productPrice = Label(item, text=f'Giá: {listProduct[count][2]}', font=("Times New Roman", 12))
                     productPrice.grid(row=2, column=0)
-
+    
                     n = StringVar()
                     productCombobox = Combobox(item, textvariable=n, state='readonly')
 
@@ -341,7 +354,7 @@ class ProductForm(Toplevel):
                     productCombobox.current(0)
                     
                     btn = Button(item, text="Add cart", command=self.getValueClicked(
-                        f"./img/product/{listProduct[count][0]}.png", listProduct[count][1], listProduct[count][2], n), cursor='hand2')
+                        listProduct[count][0], listProduct[count][1], n), cursor='hand2')
 
                     btn.grid(row=4, column=0, pady=(0, 10))
                     count = count + 1
@@ -349,10 +362,10 @@ class ProductForm(Toplevel):
                     break
             
     # Hàm xử lý logic lấy tất cả thông tin sản phẩm khi click button add
-    def getValueClicked(self, img, name, price, size_var):
+    def getValueClicked(self, productID, name, size_var):
         def handle_event():
             size = size_var.get()
-            self.handleEventCart(img, name, price, size)
+            self.handleEventCart(productID, name, size)
         return handle_event
 
     # Hàm xử lý logic lấy giá trị khi selected combobox hãng sản xuất và render theo hãng tương ứng
@@ -362,94 +375,34 @@ class ProductForm(Toplevel):
             
         self.renderProductList(name)
 
-    # hàm này để xử lý click button add cart để thêm sản phẩm  vào list cart
-    def handleEventCart(self, produtImg, name, price, size):
-        flag = False
-        if (size == "" or size == "Size"):
+    # hàm này để xử lý click button add cart để thêm sản phẩm vào list cart
+    def handleEventCart(self, productID, name, size):
+        objCart = Cart.CartData()
+        cartList = objCart.getCartList(self.accountId)
+        
+        if size == "" or size == "Size":
             mbox.showerror("Error", "Vui lòng chọn size")
             return
-        if (len(self.listCart) <= 0):
-            product = []
-            count = 1
-            product.append(produtImg)
-            product.append(name)
-            product.append(price)
-            product.append(size)
-            product.append(count)
-            self.listCart.append(product)
+        
+        if len(cartList) == 0:
+            quantity = 1
+            objCart.addCart(quantity, size, self.accountId, productID)
         else:
-            for i in self.listCart:
-                if (i[1] == name and i[3] == size):
-                    i[4] = i[4] + 1
+            flag = False
+            for cart in cartList:
+                if cart[1] == name and cart[3] == size:
+                    cart[4] = int(cart[4]) + 1
+                    objCart.deleteCart(cart[0])
+                    objCart.addCart(cart[4], cart[3], self.accountId, cart[0])
                     flag = True
                     break
-            if (flag == False):
-                product = []
+                
+            if flag == False:
                 count = 1
-                product.append(produtImg)
-                product.append(name)
-                product.append(price)
-                product.append(size)
-                product.append(count)
-                self.listCart.append(product)
-
-        self.renderListCart()
-
-    # Xử lý render giỏ hàng lấy từ list cart
-    def renderListCart(self):
-        for widget in self.frame_buttonsCart.winfo_children():
-            widget.destroy()
-
-        for index, value in enumerate(self.listCart):
-            itemCart = Frame(self.frame_buttonsCart)
-            itemCart.grid(row=index, column=0, pady=(0, 30))
-            itemDetail = Frame(self.frame_buttonsCart)
-            itemDetail.grid(row=index, column=1, padx=(10, 0))
-            LinkImg = Image.open(value[0])
-
-            resize_image = LinkImg.resize((140, 140))
-            photo = ImageTk.PhotoImage(resize_image)
-            img = Label(itemCart, image=photo, borderwidth=1, relief="solid")
-            img.image = photo
-            img.grid(column=0, row=0, rowspan=3)
-
-            btnDelete = Button(itemCart, text="Xóa", command=self.getValueDel(value[1], value[3]), cursor='hand2')
-            btnDelete.grid(column=0, row=3, pady=(8, 0))
-
-            productName = Label(itemDetail, text=value[1], font=("Times New Roman", 12))
-            productName.grid(row=0, column=0)
-            
-            productPrice = Label(itemDetail, text=f'Giá: {value[2]}', font=("Times New Roman", 12))
-            productPrice.grid(row=1, column=0)
-            
-            productSize = Label(itemDetail, text=f'Size: {value[3]}', font=("Times New Roman", 12))
-            productSize.grid(row=2, column=0)
-            
-            productAmount = Label(itemDetail, text=f'Số lượng: X{value[4]}', font=("Times New Roman", 12))
-            productAmount.grid(row=3, column=0)
-            
-            self.frame_buttonsCart.update_idletasks()
-            self.canvasCart.config(scrollregion=self.canvasCart.bbox("all"))
-
-        total = 0
-        for index, value in enumerate(self.listCart):
-            total = total + (float(value[2])*float(value[4]))
-
-        self.lbTotalPrice['text'] = str(total)
-
-    # Hàm lấy thông tin của sp cần xóa
-    def getValueDel(self, name, size):
-        def handle_event():
-            self.handleDelProduct(name, size)
-        return handle_event
-    
-    # Hàm xóa sp khỏi list cart
-    def handleDelProduct(self, name, size):
-        for item in self.listCart:
-            if (name in item[1] and size in item[3]):
-                self.listCart.remove(item)
-        self.renderListCart()
-    
+                objCart.addCart(count, size, self.accountId, productID)          
+        
+        mbox.showinfo('Success', 'Đã thêm sản phẩm này vào giỏ hàng')
+        
     def onHover(self, e):
         e.widget['foreground'] = '#fd6032'
     
@@ -466,10 +419,10 @@ class ProductForm(Toplevel):
         self.parent.page.orderPage.title('Đơn hàng đã đặt')
         self.parent.page.orderPage.resizable(False, False)
         self.parent.page.withdraw()
-    
-# if __name__ == '__main__':
-#     root = Tk()
-#     app = ProductForm(root)
-#     app.geometry('1200x600+180+100')
-#     root.withdraw()
-#     root.mainloop()
+        
+    def toCartPage(self):
+        self.parent.page.cartPage = CartForm.CartForm(parent=self.parent.page, accountId=self.accountId)
+        self.parent.page.cartPage.geometry('1200x600+180+100')
+        self.parent.page.cartPage.title('Đơn đặt hàng')
+        self.parent.page.cartPage.resizable(False, False)
+        self.parent.page.withdraw()
