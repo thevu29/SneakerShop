@@ -41,9 +41,8 @@ class OrderForm(Toplevel):
         frame1 = Frame(self)
         frame1.pack(fill=BOTH, padx=24, pady=(12, 24))
         
-        header = Label(frame1, text='Đơn hàng đã đặt', font=('Times New Roman', 20, 'bold'))
+        header = Label(frame1, text='Đơn hàng đã đặt', font=('Times New Roman', 20, 'bold'), foreground='#0071e3')
         header.pack()
-        header.config(foreground='#EE4D2D')
         
         # order table
         frame2 = Frame(self)

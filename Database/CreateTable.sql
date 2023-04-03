@@ -95,7 +95,7 @@ Create table Cart
 (
 	AccountID varchar(8) NOT NULL foreign key (AccountID) references Account(AccountID),
 	ProductID varchar(8) NOT NULL foreign key (ProductID) references Product(ProductID),
+	SizeNumber int NOT NULL foreign key (SizeNumber) references Size(SizeNumber),
 	Quantity int,
-	SizeNumber int,
 	Primary key(AccountID, ProductID)
 )

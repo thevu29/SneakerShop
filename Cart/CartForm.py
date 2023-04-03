@@ -17,7 +17,7 @@ class CartForm(Toplevel):
         
         self.cart = CartData()
         self.cartList = self.cart.getCartList(self.accountId)
-        
+
         self.protocol('WM_DELETE_WINDOW', self.closeAll)
         
         self.initUI()
@@ -91,7 +91,7 @@ class CartForm(Toplevel):
         self.userInfoForm.grid_rowconfigure(5, weight=1)
         
         self.backBox = Frame(self.userInfoForm)
-        self.backBox.grid(row=5, column=0, sticky='s')
+        self.backBox.grid(row=5, column=0, sticky='ws', columnspan=2)
         
         self.leftArrowImg = ImageTk.PhotoImage(Image.open('./img/left_arrow.png').resize((35, 20)))
         self.leftArrow = Label(self.backBox, image=self.leftArrowImg, cursor='hand2')
@@ -157,11 +157,10 @@ class CartForm(Toplevel):
         self.cartProductCanvas.configure(scrollregion=self.cartProductCanvas.bbox('all'))
         
         self.cartProductCanvas.bind_all("<MouseWheel>", self.cartCanvasScroll)
-        # self.backProductPage()
         
     def renderCartProduct(self):
-        # for widget in self.cartProductForm.winfo_children():
-        #     widget.destroy()
+        for widget in self.cartProductForm.winfo_children():
+            widget.destroy()
 
         for i in range(0, len(self.cartList)):
             self.productBox = Frame(self.cartProductForm)
@@ -228,7 +227,7 @@ class CartForm(Toplevel):
         for cart in self.cartList:
             if name == cart[1] and size == cart[3]:
                 self.cartList.remove(cart)
-                self.cart.deleteCart(cart[0])
+                self.cart.deleteCart(cart[0], self.accountId, cart[3])
                 break
             
         self.renderCartProduct()
@@ -237,7 +236,7 @@ class CartForm(Toplevel):
         for cart in self.cartList:
             if name == cart[1] and size == cart[3]:
                 cart[4] = int(cart[4]) + 1
-                self.cart.deleteCart(cart[0])
+                self.cart.deleteCart(cart[0], self.accountId, cart[3])
                 self.cart.addCart(cart[4], cart[3], self.accountId, cart[0])
                 break
             
@@ -248,7 +247,7 @@ class CartForm(Toplevel):
             if name == cart[1] and size == cart[3]:
                 if int(cart[4]) > 1:
                     cart[4] = int(cart[4]) - 1
-                    self.cart.deleteCart(cart[0])
+                    self.cart.deleteCart(cart[0], self.accountId, cart[3])
                     self.cart.addCart(cart[4], cart[3], self.accountId, cart[0])
                     break
                 
@@ -266,9 +265,9 @@ class CartForm(Toplevel):
     def outHover(self, e):
         e.widget.config(font=self.normalFont)
     
-if __name__ == '__main__':
-    root = Tk()
-    app = CartForm(root, 'ACC002')
-    app.geometry('1200x600+180+100')
-    root.withdraw()
-    root.mainloop()
+# if __name__ == '__main__':
+#     root = Tk()
+#     app = CartForm(root, 'ACC003')
+#     app.geometry('1200x600+180+100')
+#     root.withdraw()
+#     root.mainloop()

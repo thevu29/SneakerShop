@@ -224,10 +224,10 @@ class AdUserForm(Frame):
         self.reset()
     
     def deleteUser(self):
-        if (self.validate() == False):
-            return
-
         userId = self.txtUserId.get()
+        if (userId == ''):
+            messagebox.showwarning('Warning', 'Mã khách hàng không được để trống \n')
+            return
         
         for user in self.userDataList:
             if userId == user[0]:
