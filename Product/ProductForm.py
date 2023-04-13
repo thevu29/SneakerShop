@@ -89,7 +89,7 @@ class ProductForm(Toplevel):
         self.cartImg.bind('<Button-1>', lambda x: self.toCartPage())
 
         # Order
-        self.orderImage = ImageTk.PhotoImage(Image.open("./img/order_icon2.png").resize((40, 35)))
+        self.orderImage = ImageTk.PhotoImage(Image.open("./img/order_icon.png").resize((40, 35)))
         self.orderImg = Label(self.frame1Right, image=self.orderImage, cursor='hand2')
         self.orderImg.grid(row=0, column=2, padx=(0, 16))
         self.orderImg.bind('<Button-1>', lambda x: self.toOrderPage())
