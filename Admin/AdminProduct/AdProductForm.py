@@ -207,7 +207,7 @@ class AdProductForm(Frame):
                     self.imageBorder = Frame(self.frameGrid2, borderwidth=2, relief='solid')
                     self.imageBorder.grid(row=0, column=6, padx=10, rowspan=3)
                     
-                    self.productImage = ImageTk.PhotoImage(Image.open(product[6]).resize((100, 100)))
+                    self.productImage = ImageTk.PhotoImage(Image.open(product[7]).resize((100, 100)))
                     self.txtProductImage = Label(self.imageBorder, image=self.productImage)
                     self.txtProductImage.grid(row=0, column=0)
                 except:
@@ -270,7 +270,7 @@ class AdProductForm(Frame):
         except:
             productImagePath = ''
         
-        newProduct = [productId, productName, productPrice, productQuantity, productSupplier, productCategory, productImagePath]
+        newProduct = [productId, productName, productPrice, productQuantity, productSupplier, productCategory, 1, productImagePath]
         
         self.product.addProduct(newProduct)
         messagebox.showinfo('Thành công', 'Thêm sản phẩm thành công')

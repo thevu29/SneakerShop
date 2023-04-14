@@ -13,7 +13,7 @@ class AdProductData():
         self.imagePaths = []
         
         self.conn = pyodbc.connect('Driver={SQL Server};'
-                      'Server=LAPTOP-P91166MQ\\THEVU_SQL;'
+                      'Server=localhost;'
                       'Database=py_ql;'
                       'Trusted_Connection=yes;')
 
@@ -28,9 +28,9 @@ class AdProductData():
             id += 1
             
             item = Convert(item)
-            item.append(imagePath)
             
-            if int(item[len(item) - 2]) == 1:
+            if int(item[len(item) - 1]) == 1:
+                item.append(imagePath)
                 self.productList.append(item)
             
     def getProductList(self):
@@ -41,7 +41,7 @@ class AdProductData():
         
         add = self.conn.cursor()
         add.execute(f"""insert into dbo.Product values
-                        ('{product[0]}', '{product[1]}', {product[2]}, {product[3]}, '{product[4]}', '{product[5]}')
+                        ('{product[0]}', '{product[1]}', {product[2]}, {product[3]}, '{product[4]}', '{product[5]}', '{product[6]}')
                     """)
         
         self.conn.commit()

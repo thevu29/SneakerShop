@@ -19,7 +19,7 @@ class AdOrderData():
         self.orderList = []
         
         self.conn = pyodbc.connect('Driver={SQL Server};'
-                      'Server=LAPTOP-P91166MQ\\THEVU_SQL;'
+                      'Server=localhost;'
                       'Database=py_ql;'
                       'Trusted_Connection=yes;')
 
@@ -80,7 +80,7 @@ class AdOrderDetailData():
         self.orderDetailList = []
         
         self.conn = pyodbc.connect('Driver={SQL Server};'
-                      'Server=LAPTOP-P91166MQ\\THEVU_SQL;'
+                      'Server=localhost;'
                       'Database=py_ql;'
                       'Trusted_Connection=yes;')
 

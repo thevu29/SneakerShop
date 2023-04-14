@@ -125,10 +125,10 @@ class AdMainForm(Toplevel):
         self.parent.page.destroy()
         self.parent.deiconify()
     
-# if __name__ == '__main__':
-#     root = Tk()
-#     root.title('Trang quản trị')
-#     app = AdMainForm(root)
-#     app.geometry('1200x600+180+100')
-#     root.withdraw()
-#     root.mainloop()
+if __name__ == '__main__':
+    root = Tk()
+    root.title('Trang quản trị')
+    app = AdMainForm(root)
+    app.geometry('1200x600+180+100')
+    root.withdraw()
+    root.mainloop()

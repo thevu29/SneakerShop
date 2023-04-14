@@ -217,7 +217,7 @@ class AdUserForm(Frame):
                 messagebox.showwarning('Warning', 'Mã khách hàng đã tồn tại')
                 return
             
-        newUser = [userId, userName, address, phone, gender, point]
+        newUser = [userId, userName, address, phone, gender, point, 1]
         
         self.user.addUser(newUser)
         messagebox.showinfo('Thành công', 'Thêm khách hàng thành công')

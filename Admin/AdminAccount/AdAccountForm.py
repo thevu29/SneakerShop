@@ -222,7 +222,7 @@ class AdAccountForm(Frame):
         else:
             accessId = 'ACS002'    
             
-        newAccount = [accountId, username, password, accessId, customerId]
+        newAccount = [accountId, username, password, accessId, customerId, 1]
         
         self.account.addAccount(newAccount)
         messagebox.showinfo('Thành công', 'Thêm tài khoản thành công')

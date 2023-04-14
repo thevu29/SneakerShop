@@ -12,7 +12,7 @@ class AdAccountData():
         self.accountList = []
         
         self.conn = pyodbc.connect('Driver={SQL Server};'
-                      'Server=LAPTOP-P91166MQ\\THEVU_SQL;'
+                      'Server=localhost;'
                       'Database=py_ql;'
                       'Trusted_Connection=yes;')
             
@@ -37,7 +37,7 @@ class AdAccountData():
         
         add = self.conn.cursor()
         add.execute(f""" insert into dbo.Account values
-                        ('{account[0]}', N'{account[1]}', N'{account[2]}', '{account[3]}', N'{account[4]}')
+                        ('{account[0]}', N'{account[1]}', N'{account[2]}', '{account[3]}', N'{account[4]}', {account[5]})
                     """)
         
         self.conn.commit()

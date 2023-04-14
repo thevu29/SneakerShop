@@ -12,7 +12,7 @@ class AdUserData():
         self.userList = []
         
         self.conn = pyodbc.connect('Driver={SQL Server};'
-                      'Server=LAPTOP-P91166MQ\\THEVU_SQL;'
+                      'Server=localhost;'
                       'Database=py_ql;'
                       'Trusted_Connection=yes;')
         
@@ -32,7 +32,7 @@ class AdUserData():
         
         add = self.conn.cursor()
         add.execute(f""" insert into dbo.Customer values
-                        ('{user[0]}', N'{user[1]}', N'{user[2]}', '{user[3]}', N'{user[4]}', {user[5]})
+                        ('{user[0]}', N'{user[1]}', N'{user[2]}', '{user[3]}', N'{user[4]}', {user[5]}, {user[6]})
                     """)
         
         self.conn.commit()
