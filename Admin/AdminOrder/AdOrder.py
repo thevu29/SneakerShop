@@ -36,6 +36,14 @@ class AdOrderData():
     def getOrderList(self):
         return self.orderList
     
+    def addOrder(self, order):
+        self.orderList.append(order)
+        
+        add = self.conn.cursor()
+        add.execute(f"insert into dbo.CustomerOrder values ('{order[0]}', '{order[1]}', '{order[2]}', {order[3]}, N'{order[4]}')")
+        
+        self.conn.commit()
+    
     def deleteOrder(self, order):
         self.orderList.remove(order)
         
@@ -64,12 +72,12 @@ class AdOrderDetailData():
     def __init__(self):
         self.orderDetailList = []
         
-        conn = pyodbc.connect('Driver={SQL Server};'
+        self.conn = pyodbc.connect('Driver={SQL Server};'
                       'Server=LAPTOP-P91166MQ\\THEVU_SQL;'
                       'Database=py_ql;'
                       'Trusted_Connection=yes;')
 
-        data = conn.cursor()
+        data = self.conn.cursor()
         data.execute('select * from dbo.OrderDetail')
         
         for item in data:
@@ -77,6 +85,14 @@ class AdOrderDetailData():
             item = Convert(item)
             
             self.orderDetailList.append(item)
+    
+    def addOrderDetail(self, orderDetail):
+        self.orderDetailList.append(orderDetail)
+        
+        add = self.conn.cursor()
+        add.execute(f"insert into dbo.OrderDetail values ('{orderDetail[0]}', '{orderDetail[1]}', {orderDetail[2]}, {orderDetail[3]}, {orderDetail[4]})")
+        
+        self.conn.commit()
     
     def getOrderDetailList(self):
         return self.orderDetailList

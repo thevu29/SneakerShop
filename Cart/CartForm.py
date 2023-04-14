@@ -3,6 +3,15 @@ from tkinter import Tk, Text, TOP, BOTH, X, N, LEFT, RIGHT, SOLID, Listbox, END,
 from tkinter.font import Font
 from tkinter.ttk import Frame, Label, Entry, Combobox, Entry, Treeview, Scrollbar, Button, Separator, Style
 from PIL import Image, ImageTk
+import datetime
+import sys
+import os
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+
+from Admin.AdminOrder import AdOrder
+from Admin.AdminAccount import AdAccount
 
 try:
     from .Cart import *
@@ -21,6 +30,10 @@ class CartForm(Toplevel):
         self.cartList = self.cart.getCartList(self.accountId)
 
         self.fr = FaceRecognition()
+        
+        self.order = AdOrder.AdOrderData()
+        self.orderDetail = AdOrder.AdOrderDetailData()
+        self.account = AdAccount.AdAccountData()
         
         self.protocol('WM_DELETE_WINDOW', self.closeAll)
         
@@ -87,16 +100,21 @@ class CartForm(Toplevel):
         self.txtAddress = Entry(self.userInfoForm, width=50)
         self.txtAddress.grid(row=3, column=1, padx=10, pady=12, ipady=3, sticky='w')
         
+        # Recognize Button
+        self.btnRecognize = tk.Button(self.userInfoForm, text='Nhận diện khách hàng thành viên', bg='#0071e3', fg='#fff', cursor='hand2', font=('Arial', 10, 'bold'), borderwidth=0, 
+                                  command=self.recognition)
+        self.btnRecognize.grid(row=4, column=0, columnspan=2, pady=(32, 12), ipady=6, sticky='we')
+        
         # Order Button
         self.btnOrder = tk.Button(self.userInfoForm, text='Đặt hàng', bg='#0071e3', fg='#fff', cursor='hand2', font=('Arial', 10, 'bold'), borderwidth=0, 
-                                  command=self.recognition)
-        self.btnOrder.grid(row=4, column=0, columnspan=2, pady=(32, 12), ipady=6, sticky='we')
+                                  command=self.orderProduct)
+        self.btnOrder.grid(row=5, column=0, columnspan=2, pady=(0, 12), ipady=6, sticky='we')
         
         # back product page
-        self.userInfoForm.grid_rowconfigure(5, weight=1)
+        self.userInfoForm.grid_rowconfigure(6, weight=1)
         
         self.backBox = Frame(self.userInfoForm)
-        self.backBox.grid(row=5, column=0, sticky='ws', columnspan=2)
+        self.backBox.grid(row=6, column=0, sticky='ws', columnspan=2)
         
         self.leftArrowImg = ImageTk.PhotoImage(Image.open('./img/left_arrow.png').resize((35, 20)))
         self.leftArrow = Label(self.backBox, image=self.leftArrowImg, cursor='hand2')
@@ -117,7 +135,53 @@ class CartForm(Toplevel):
             self.txtDiscount['text'] = 15
         else:
             self.txtDiscount['text'] = 0
+            
+        self.getTotalPrice()
     
+    def validate(self, name, phone, address):        
+        s = ''
+        if name == '':
+            s += 'Họ và tên không được để trống \n'
+        if phone == '':
+            s += 'Số điện thoại không được để trống \n'
+        else:
+            if phone.isdigit():
+                if len(phone) != 10:
+                    s += 'Số điện thoại phải có 10 chữ số'
+            else:
+                s += 'Số điện thoại phải là chữ số'
+        if address == '':
+            s += 'Địa chỉ không được để trống \n'
+
+        if len(s) > 0:
+            messagebox.showerror('Warning', s)
+            return False
+        return True
+    
+    def orderProduct(self):
+        orderList = self.order.getOrderList()
+        
+        orderId = 'HD' + str(len(orderList) + 1).zfill(3)
+        print(self.accountId)
+        customerId = self.account.getCustomerIdOfAccount(self.accountId)
+        orderDate = datetime.date.today()
+        name = self.txtUserName.get()
+        gender = self.cbxGender.get()
+        phone = self.txtPhone.get()
+        address = self.txtAddress.get()
+        
+        if not self.validate(name, phone, address):
+            return
+        
+        # add order
+        newOrder = [orderId, customerId, orderDate, self.txtTotal.cget('text'), 'Chưa xử lí']
+        self.order.addOrder(newOrder)
+        
+        # add order detail
+        for item in self.cartList:
+            newOrderDetail = [orderId, item[0], item[4], item[2], item[3]]
+            self.orderDetail.addOrderDetail(newOrderDetail)
+     
     def initCartForm(self):
         self.cartForm = Frame(self.contentForm)
         self.cartForm.pack(fill=BOTH, expand=True, pady=12)
@@ -166,7 +230,7 @@ class CartForm(Toplevel):
         self.lblDiscount = Label(self.totalBox, text='Giảm giá(%): ', font=('Arial', 10, 'bold'))
         self.lblDiscount.grid(row=1, column=0, sticky='w', padx=24)
         
-        self.txtDiscount = Label(self.totalBox, text='15', font=('Arial', 10, 'bold'))
+        self.txtDiscount = Label(self.totalBox, text='0', font=('Arial', 10, 'bold'))
         self.txtDiscount.grid(row=1, column=1, sticky='e', padx=24)
         
         self.totalSeparator = Separator(self.totalBox)
@@ -238,11 +302,14 @@ class CartForm(Toplevel):
             total += (float(value[2]) * float(value[4]))
             
         self.totalPrice['text'] = '{0:.2f}'.format(total).rstrip('0').rstrip('.')
+        self.getTotalPrice()
         
+    def getTotalPrice(self):
+        total = float(self.totalPrice.cget('text'))
         discount = float(self.txtDiscount.cget('text')) / 100
         discountTotal = total - total * discount
         self.txtTotal['text'] = '{0:.2f}'.format(discountTotal).rstrip('0').rstrip('.')
-        
+      
     def getValueClicked(self, name, size, option):
         def handle_event():
             if option == 'x':
@@ -257,7 +324,7 @@ class CartForm(Toplevel):
         for cart in self.cartList:
             if name == cart[1] and size == cart[3]:
                 self.cartList.remove(cart)
-                self.cart.deleteCart(cart[0], self.accountId, cart[3])
+                self.cart.deleteProductCart(cart[0], self.accountId, cart[3])
                 break
             
         self.renderCartProduct()
@@ -266,7 +333,7 @@ class CartForm(Toplevel):
         for cart in self.cartList:
             if name == cart[1] and size == cart[3]:
                 cart[4] = int(cart[4]) + 1
-                self.cart.deleteCart(cart[0], self.accountId, cart[3])
+                self.cart.deleteProductCart(cart[0], self.accountId, cart[3])
                 self.cart.addCart(cart[4], cart[3], self.accountId, cart[0])
                 break
             
@@ -277,7 +344,7 @@ class CartForm(Toplevel):
             if name == cart[1] and size == cart[3]:
                 if int(cart[4]) > 1:
                     cart[4] = int(cart[4]) - 1
-                    self.cart.deleteCart(cart[0], self.accountId, cart[3])
+                    self.cart.deleteProductCart(cart[0], self.accountId, cart[3])
                     self.cart.addCart(cart[4], cart[3], self.accountId, cart[0])
                     break
                 
@@ -295,9 +362,9 @@ class CartForm(Toplevel):
     def outHover(self, e):
         e.widget.config(font=self.normalFont)
     
-# if __name__ == '__main__':
-#     root = Tk()
-#     app = CartForm(root, 'ACC002')
-#     app.geometry('1200x600+180+100')
-#     root.withdraw()
-#     root.mainloop()
+if __name__ == '__main__':
+    root = Tk()
+    app = CartForm(root, 'ACC002')
+    app.geometry('1200x600+180+100')
+    root.withdraw()
+    root.mainloop()

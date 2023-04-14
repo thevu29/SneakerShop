@@ -26,6 +26,11 @@ class AdAccountData():
             
         return self.accountList
     
+    def getCustomerIdOfAccount(self, accountId):
+        customerID = self.conn.cursor()
+        customerID.execute(f"select CustomerID from dbo.Account where AccountID = '{accountId}'")
+        return customerID.fetchone()[0]
+    
     def addAccount(self, account):
         self.accountList.append(account)
         

@@ -392,7 +392,7 @@ class ProductForm(Toplevel):
             for cart in cartList:
                 if cart[1] == name and cart[3] == size:
                     cart[4] = int(cart[4]) + 1
-                    objCart.deleteCart(cart[0], self.accountId, cart[3])
+                    objCart.deleteProductCart(cart[0], self.accountId, cart[3])
                     objCart.addCart(cart[4], cart[3], self.accountId, cart[0])
                     flag = True
                     break
