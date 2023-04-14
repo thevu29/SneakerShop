@@ -5,20 +5,20 @@ INSERT INTO Access VALUES
 ('ACS002', 'User', N'Người dùng')
 
 INSERT INTO Customer VALUES
-('CUS000', 'admin',  N'Hồ Chí Minh', '0123456789', N'Nam', 0),
-('CUS001', N'Nguyễn Thế Vũ', N'Hồ Chí Minh', '0123456789', N'Nam', 0),
-('CUS002', N'Vương Huy Hoàng', N'Hà Nội', '0123456789', N'Nữ', 5),
-('CUS003', N'Nguyễn Hoàng Hải Nam', N'Đồng Nai', '0123456789', N'Nữ', 15),
-('CUS004', N'Trần Kim Phú', N'Quảng Bình ', '0123456789', N'Nam', 100),
-('CUS005', N'Đào Đức Thắng', N'Hồ Chí Minh', '0123456789', N'Nam', 20)
+('CUS000', 'admin',  N'Hồ Chí Minh', '0123456789', N'Nam', 0, 1),
+('CUS001', N'Nguyễn Thế Vũ', N'Hồ Chí Minh', '0123456789', N'Nam', 0, 1),
+('CUS002', N'Vương Huy Hoàng', N'Hà Nội', '0123456789', N'Nữ', 5, 1),
+('CUS003', N'Nguyễn Hoàng Hải Nam', N'Đồng Nai', '0123456789', N'Nữ', 15, 1),
+('CUS004', N'Trần Kim Phú', N'Quảng Bình ', '0123456789', N'Nam', 100, 1),
+('CUS005', N'Đào Đức Thắng', N'Hồ Chí Minh', '0123456789', N'Nam', 20, 1)
 
 INSERT INTO Account VALUES
-('ACC001', 'admin', 'admin', 'ACS001', 'CUS000'),
-('ACC002', 'thevu', '123', 'ACS002', 'CUS001'),
-('ACC003', 'huyhoang', '123', 'ACS002', 'CUS002'),
-('ACC004', 'kimphu', '123', 'ACS002', 'CUS004'),
-('ACC005', 'hainam', '123', 'ACS002', 'CUS003'),
-('ACC006', 'ducthang', '123', 'ACS002', 'CUS005')
+('ACC001', 'admin', 'admin', 'ACS001', 'CUS000', 1),
+('ACC002', 'thevu', '123', 'ACS002', 'CUS001', 1),
+('ACC003', 'huyhoang', '123', 'ACS002', 'CUS002', 1),
+('ACC004', 'kimphu', '123', 'ACS002', 'CUS004', 1),
+('ACC005', 'hainam', '123', 'ACS002', 'CUS003', 1),
+('ACC006', 'ducthang', '123', 'ACS002', 'CUS005', 1)
 
 INSERT INTO CustomerOrder VALUES
 ('HD001', 'CUS001', '2023-1-1', 2000000, N'Đã xử lí'),
@@ -98,36 +98,36 @@ INSERT INTO Category VALUES
 ('CAT008', 'Asics')
 
 INSERT INTO Product VALUES
-('SP001', 'Vans Vault', 1100000, 50, 'SPL005', 'CAT005'),
-('SP002', 'Converse Chuck', 1200000, 50, 'SPL006', 'CAT006'),
-('SP003', 'Air Jordan 1 Retro', 1300000, 50, 'SPL007', 'CAT007'),
-('SP004', 'Nike Air Force 1', 1400000, 50, 'SPL001', 'CAT001'),
-('SP005', 'Ultra Addidas 4D', 1500000, 50, 'SPL002', 'CAT002'),
-('SP006', 'Nike Air Max', 1600000, 50, 'SPL001', 'CAT001'),
-('SP007', 'Balenciaga Stan Smith', 1700000, 50, 'SPL003', 'CAT003'),
-('SP008', 'Adidas X90000L4', 7900000, 65, 'SPL002', 'CAT002'),
-('SP009', 'Asics III', 1700000, 45, 'SPL008', 'CAT008'),
-('SP010', 'Nike Air Max 90 Paris', 5500000, 100, 'SPL001', 'CAT001'),
-('SP011', 'Puma RS Z LTH Trainers', 3700000, 120, 'SPL004', 'CAT004'),
-('SP012', 'Asics III Grey', 1650000, 55, 'SPL008', 'CAT008'),
-('SP013', 'Vans Black Ball SF', 2900000, 130, 'SPL005', 'CAT005'),
-('SP014', 'Jordan 1 High Tokyo Hack', 7200000, 60, 'SPL007', 'CAT007'),
-('SP015', 'Fila White Ice', 2050000, 50, 'SPL003', 'CAT003'),
-('SP016', 'Adidas Pod S3.1', 7900000, 40, 'SPL002', 'CAT002'),
-('SP017', 'Nike Air Force 1', 2690000, 30, 'SPL001', 'CAT001'),
-('SP018', 'Converse Dark Burgundy', 2600000, 20, 'SPL006', 'CAT006'),
-('SP019', 'Jordan 1 Mid Carbon Fiber', 6500000, 95, 'SPL007', 'CAT007'),
-('SP020', 'Adidas Edge Xt Black', 3850000, 25, 'SPL002', 'CAT002'),
-('SP021', 'Puma Cell Venom Ader', 5500000, 35, 'SPL004', 'CAT004'),
-('SP022', 'Jordan 33 Blackout', 1250000, 45, 'SPL007', 'CAT007'),
-('SP023', 'Adidas Superstar', 3900000, 75, 'SPL002', 'CAT002'),
-('SP024', 'Jordan Air CMFT', 6400000, 85, 'SPL007', 'CAT007'),
-('SP025', 'Puma RS-X Toys While', 3800000, 90, 'SPL004', 'CAT004'),
-('SP026', 'Nike Air Force 1', 3450000, 80, 'SPL001', 'CAT001'),
-('SP027', 'Asics III Birch', 1500000, 75, 'SPL008', 'CAT008'),
-('SP028', 'Fila All White', 2000000, 100, 'SPL003', 'CAT003'),
-('SP029', 'Nike Why not zer 0.3', 5500000, 150, 'SPL001', 'CAT001'),
-('SP030', 'Jordan 1 Zoom Air', 7000000, 50, 'SPL007', 'CAT007')
+('SP001', 'Vans Vault', 1100000, 50, 'SPL005', 'CAT005', 1),
+('SP002', 'Converse Chuck', 1200000, 50, 'SPL006', 'CAT006', 1),
+('SP003', 'Air Jordan 1 Retro', 1300000, 50, 'SPL007', 'CAT007', 1),
+('SP004', 'Nike Air Force 1', 1400000, 50, 'SPL001', 'CAT001', 1),
+('SP005', 'Ultra Addidas 4D', 1500000, 50, 'SPL002', 'CAT002', 1),
+('SP006', 'Nike Air Max', 1600000, 50, 'SPL001', 'CAT001', 1),
+('SP007', 'Balenciaga Stan Smith', 1700000, 50, 'SPL003', 'CAT003', 1),
+('SP008', 'Adidas X90000L4', 7900000, 65, 'SPL002', 'CAT002', 1),
+('SP009', 'Asics III', 1700000, 45, 'SPL008', 'CAT008', 1),
+('SP010', 'Nike Air Max 90 Paris', 5500000, 100, 'SPL001', 'CAT001', 1),
+('SP011', 'Puma RS Z LTH Trainers', 3700000, 120, 'SPL004', 'CAT004', 1),
+('SP012', 'Asics III Grey', 1650000, 55, 'SPL008', 'CAT008', 1),
+('SP013', 'Vans Black Ball SF', 2900000, 130, 'SPL005', 'CAT005', 1),
+('SP014', 'Jordan 1 High Tokyo Hack', 7200000, 60, 'SPL007', 'CAT007', 1),
+('SP015', 'Fila White Ice', 2050000, 50, 'SPL003', 'CAT003', 1),
+('SP016', 'Adidas Pod S3.1', 7900000, 40, 'SPL002', 'CAT002', 1),
+('SP017', 'Nike Air Force 1', 2690000, 30, 'SPL001', 'CAT001', 1),
+('SP018', 'Converse Dark Burgundy', 2600000, 20, 'SPL006', 'CAT006', 1),
+('SP019', 'Jordan 1 Mid Carbon Fiber', 6500000, 95, 'SPL007', 'CAT007', 1),
+('SP020', 'Adidas Edge Xt Black', 3850000, 25, 'SPL002', 'CAT002', 1),
+('SP021', 'Puma Cell Venom Ader', 5500000, 35, 'SPL004', 'CAT004', 1),
+('SP022', 'Jordan 33 Blackout', 1250000, 45, 'SPL007', 'CAT007', 1),
+('SP023', 'Adidas Superstar', 3900000, 75, 'SPL002', 'CAT002', 1),
+('SP024', 'Jordan Air CMFT', 6400000, 85, 'SPL007', 'CAT007', 1),
+('SP025', 'Puma RS-X Toys While', 3800000, 90, 'SPL004', 'CAT004', 1),
+('SP026', 'Nike Air Force 1', 3450000, 80, 'SPL001', 'CAT001', 1),
+('SP027', 'Asics III Birch', 1500000, 75, 'SPL008', 'CAT008', 1),
+('SP028', 'Fila All White', 2000000, 100, 'SPL003', 'CAT003', 1),
+('SP029', 'Nike Why not zer 0.3', 5500000, 150, 'SPL001', 'CAT001', 1),
+('SP030', 'Jordan 1 Zoom Air', 7000000, 50, 'SPL007', 'CAT007', 1)
 
 INSERT INTO Size VALUES (39), (40), (41), (42), (43)
 

@@ -14,7 +14,8 @@ create table Customer
 	CustomerAddress nvarchar(12),
 	Phone varchar(12),
 	Gender nvarchar(5),
-	Point int
+	Point int,
+	deleteStatus int
 )
 
 create table Account
@@ -25,7 +26,8 @@ create table Account
 	AccessID varchar(8),
 	CustomerID varchar(8),
 	foreign key (AccessID) references Access(AccessID),
-	foreign key (CustomerID) references Customer(CustomerID)
+	foreign key (CustomerID) references Customer(CustomerID),
+	deleteStatus int
 )
 
 create table CustomerOrder
@@ -75,7 +77,8 @@ create table Product
 	SupplierID varchar(8),
 	CategoryID varchar(8),
 	foreign key (CategoryID) references Category(CategoryID),
-	foreign key (SupplierID) references Supplier(SupplierID)
+	foreign key (SupplierID) references Supplier(SupplierID),
+	deleteStatus int
 )
 
 create table Size
