@@ -17,13 +17,14 @@ class AdAccountData():
                       'Trusted_Connection=yes;')
             
     def getAccountList(self):
+        self.accountList.clear()
+        
         data = self.conn.cursor()
         data.execute('select * from dbo.Account')
         
         for item in data:
             item = Convert(item)
-            if int(item[len(item) - 1]) == 1:
-                self.accountList.append(item)
+            self.accountList.append(item)
             
         return self.accountList
     
@@ -43,11 +44,10 @@ class AdAccountData():
         self.conn.commit()
         
     def deleteAccount(self, account):
-        self.accountList.remove(account)
-        
         delete = self.conn.cursor()
         delete.execute(f"update dbo.Account set deleteStatus=0 where AccountID = '{account[0]}'")
         
+        self.getAccountList()
         self.conn.commit()
         
     def updateAccountInfo(self, newAccount):

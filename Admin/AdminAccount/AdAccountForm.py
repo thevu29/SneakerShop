@@ -42,8 +42,7 @@ class AdAccountForm(Frame):
         self.lblSeatch.grid(row=0, column=0)
         
         def FocIn():   
-            print(self.txtSearch['foreground'])
-            if self.txtSearch['foreground'] == 'gray':
+            if str(self.txtSearch['foreground']) == 'gray':
                 self.txtSearch.configure(foreground='black')
                 self.txtSearch.delete(0, 'end')
 
@@ -154,7 +153,8 @@ class AdAccountForm(Frame):
             self.tblAccount.delete(row)
         
         for data in self.accountDataList:
-            self.tblAccount.insert('', 'end', values=data)
+            if int(data[len(data) - 1]) == 1:
+                self.tblAccount.insert('', 'end', values=data)
             
     def showUserInfo(self):
         try:

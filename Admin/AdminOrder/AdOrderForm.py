@@ -46,8 +46,7 @@ class AdOrderForm(Frame):
         search.grid(row=0, column=0)
         
         def FocIn():   
-            print(self.txtSearch['foreground'])
-            if self.txtSearch['foreground'] == 'gray':
+            if str(self.txtSearch['foreground']) == 'gray':
                 self.txtSearch.configure(foreground='black')
                 self.txtSearch.delete(0, 'end')
 

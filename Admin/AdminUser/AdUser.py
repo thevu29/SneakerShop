@@ -16,13 +16,17 @@ class AdUserData():
                       'Database=py_ql;'
                       'Trusted_Connection=yes;')
         
+        self.loadDatabase()
+        
+    def loadDatabase(self):
+        self.userList.clear()
+           
         data = self.conn.cursor()
         data.execute('select * from dbo.Customer')
         
         for item in data:
             item = Convert(item)
-            if int(item[len(item) - 1]) == 1:
-                self.userList.append(item)
+            self.userList.append(item)
             
     def getUserList(self):
         return self.userList
@@ -37,12 +41,11 @@ class AdUserData():
         
         self.conn.commit()
         
-    def deleteUser(self, user):
-        self.userList.remove(user)
-        
+    def deleteUser(self, user):        
         delete = self.conn.cursor()
         delete.execute(f"update dbo.Customer set deleteStatus=0 where CustomerID = '{user[0]}'")
         
+        self.loadDatabase()
         self.conn.commit()
         
     def updateUserInfo(self, newUser):

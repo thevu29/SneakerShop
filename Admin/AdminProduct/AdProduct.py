@@ -17,9 +17,14 @@ class AdProductData():
                       'Database=py_ql;'
                       'Trusted_Connection=yes;')
 
+        self.loadDatabase()
+        
+    def loadDatabase(self):
+        self.productList.clear()
+        
         data = self.conn.cursor()
         data.execute('select * from dbo.Product')
-        
+       
         id = 1
         for item in data:
             item[2] = '{0:.2f}'.format(item[2]).rstrip('0').rstrip('.')
@@ -29,9 +34,8 @@ class AdProductData():
             
             item = Convert(item)
             
-            if int(item[len(item) - 1]) == 1:
-                item.append(imagePath)
-                self.productList.append(item)
+            item.append(imagePath)
+            self.productList.append(item)
             
     def getProductList(self):
         return self.productList
@@ -47,11 +51,10 @@ class AdProductData():
         self.conn.commit()
         
     def deleteProduct(self, product):
-        self.productList.remove(product)
-        
         delete = self.conn.cursor()
         delete.execute(f"update dbo.Product set deleteStatus=0 where ProductID = '{product[0]}'")
         
+        self.loadDatabase()
         self.conn.commit()
         
     def updateProductInfo(self, newProduct):

@@ -46,8 +46,7 @@ class AdProductForm(Frame):
         self.lblSeatch.grid(row=0, column=0)
         
         def FocIn():   
-            print(self.txtSearch['foreground'])
-            if self.txtSearch['foreground'] == 'gray':
+            if str(self.txtSearch['foreground']) == 'gray':
                 self.txtSearch.configure(foreground='black')
                 self.txtSearch.delete(0, 'end')
 
@@ -164,7 +163,8 @@ class AdProductForm(Frame):
             self.tblProduct.delete(row)
           
         for data in self.productDataList:
-            self.tblProduct.insert('', 'end', values=data)
+            if int(data[len(data) - 2]) == 1:
+                self.tblProduct.insert('', 'end', values=data)
     
     def uploadImage(self):
         filetypes = (
@@ -351,5 +351,8 @@ class AdProductForm(Frame):
     def reset(self):
         self.resetValue()
         self.initProductData()
-        self.txtProductImage.grid_remove()
-        self.imageBorder.grid_remove()
+        try:
+            self.txtProductImage.grid_remove()
+            self.imageBorder.grid_remove()
+        except:
+            pass
