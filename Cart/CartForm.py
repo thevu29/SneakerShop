@@ -6,8 +6,10 @@ from PIL import Image, ImageTk
 
 try:
     from .Cart import *
+    from .FaceRecognition import *
 except:
     from Cart import *
+    from FaceRecognition import *
 
 class CartForm(Toplevel):
     def __init__(self, parent, accountId):
@@ -18,6 +20,8 @@ class CartForm(Toplevel):
         self.cart = CartData()
         self.cartList = self.cart.getCartList(self.accountId)
 
+        self.fr = FaceRecognition()
+        
         self.protocol('WM_DELETE_WINDOW', self.closeAll)
         
         self.initUI()
@@ -84,7 +88,8 @@ class CartForm(Toplevel):
         self.txtAddress.grid(row=3, column=1, padx=10, pady=12, ipady=3, sticky='w')
         
         # Order Button
-        self.btnOrder = tk.Button(self.userInfoForm, text='Đặt hàng', bg='#0071e3', fg='#fff', cursor='hand2', font=('Arial', 10, 'bold'), borderwidth=0)
+        self.btnOrder = tk.Button(self.userInfoForm, text='Đặt hàng', bg='#0071e3', fg='#fff', cursor='hand2', font=('Arial', 10, 'bold'), borderwidth=0, 
+                                  command=self.recognition)
         self.btnOrder.grid(row=4, column=0, columnspan=2, pady=(32, 12), ipady=6, sticky='we')
         
         # back product page
@@ -106,9 +111,16 @@ class CartForm(Toplevel):
         self.lblproductPage.bind("<Enter>", self.onHover)
         self.lblproductPage.bind("<Leave>", self.outHover)
     
+    def recognition(self):
+        self.fr.recognition()
+        if self.fr.faceDetect == True:
+            self.txtDiscount['text'] = 15
+        else:
+            self.txtDiscount['text'] = 0
+    
     def initCartForm(self):
         self.cartForm = Frame(self.contentForm)
-        self.cartForm.pack(fill=BOTH, expand=True, pady=24)
+        self.cartForm.pack(fill=BOTH, expand=True, pady=12)
         
         self.cartForm.grid_columnconfigure(0, weight=1)
         
@@ -117,7 +129,7 @@ class CartForm(Toplevel):
         
         self.cartHeaderSeparator = Separator(self.cartForm, orient='horizontal')
         self.cartHeaderSeparator.grid(row=1, column=0, columnspan=2, pady=16, sticky='we')
-        
+
         # Cart product
         self.initCartProductForm()
     
@@ -131,7 +143,7 @@ class CartForm(Toplevel):
         self.scrollbar = Scrollbar(self.cartForm, command=self.cartProductCanvas.yview, orient='vertical')
         self.scrollbar.grid(row=2, column=1, sticky='ns')
         
-        self.cartProductCanvas.config(height=350)
+        self.cartProductCanvas.config(height=300)
         self.cartProductCanvas.configure(yscrollcommand=self.scrollbar.set)
         
         self.cartProductForm = Frame(self.cartProductCanvas)
@@ -148,8 +160,23 @@ class CartForm(Toplevel):
         self.lblTotal = Label(self.totalBox, text='Tổng tiền:', font=('Arial', 10, 'bold'))
         self.lblTotal.grid(row=0, column=0, sticky='w', padx=24)
         
-        self.totalPrice = Label(self.totalBox, text='3000000', font=('Arial', 10))
+        self.totalPrice = Label(self.totalBox, text='', font=('Arial', 10, 'bold'))
         self.totalPrice.grid(row=0, column=1, sticky='e', padx=24)
+        
+        self.lblDiscount = Label(self.totalBox, text='Giảm giá(%): ', font=('Arial', 10, 'bold'))
+        self.lblDiscount.grid(row=1, column=0, sticky='w', padx=24)
+        
+        self.txtDiscount = Label(self.totalBox, text='15', font=('Arial', 10, 'bold'))
+        self.txtDiscount.grid(row=1, column=1, sticky='e', padx=24)
+        
+        self.totalSeparator = Separator(self.totalBox)
+        self.totalSeparator.grid(row=2, column=0, columnspan=2, sticky='we', padx=24, pady=10)
+        
+        self.total = Label(self.totalBox, text='Tổng cộng:', font=('Arial', 10, 'bold'))
+        self.total.grid(row=3, column=0, sticky='w', padx=24)
+        
+        self.txtTotal = Label(self.totalBox, text='', font=('Arial', 10, 'bold'))
+        self.txtTotal.grid(row=3, column=1, sticky='e', padx=24)
         
         self.renderCartProduct()
                 
@@ -194,7 +221,7 @@ class CartForm(Toplevel):
                 
             self.btnDecrease = Button(self.quantityBox, text='-', width=5, cursor='hand2', command=self.getValueClicked(self.cartList[i][1], self.cartList[i][3], '-'))
             self.btnDecrease.grid(row=0, column=0)
-                
+            
             self.quantity = Entry(self.quantityBox, width=5, justify='center')
             self.quantity.grid(row=0, column=1, padx=12)
             self.quantity.insert(0, self.cartList[i][4])
@@ -211,7 +238,10 @@ class CartForm(Toplevel):
             total += (float(value[2]) * float(value[4]))
             
         self.totalPrice['text'] = '{0:.2f}'.format(total).rstrip('0').rstrip('.')
-        self.totalPrice['font'] = ('Arial', 11, 'bold')
+        
+        discount = float(self.txtDiscount.cget('text')) / 100
+        discountTotal = total - total * discount
+        self.txtTotal['text'] = '{0:.2f}'.format(discountTotal).rstrip('0').rstrip('.')
         
     def getValueClicked(self, name, size, option):
         def handle_event():
@@ -267,7 +297,7 @@ class CartForm(Toplevel):
     
 # if __name__ == '__main__':
 #     root = Tk()
-#     app = CartForm(root, 'ACC003')
+#     app = CartForm(root, 'ACC002')
 #     app.geometry('1200x600+180+100')
 #     root.withdraw()
 #     root.mainloop()

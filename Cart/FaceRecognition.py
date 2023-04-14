@@ -11,16 +11,17 @@ class FaceRecognition:
     faceNames = []
     knownFaceEncodings = []
     knownFacenames = []
+    faceDetect = False
 
     def __init__(self):
+        pass
+
+    def loadData(self):
         for item in os.listdir('./img/vip_customer'):
             currentImg = cv2.imread(f'./img/vip_customer/{item}')
             self.images.append(currentImg)
             self.knownFacenames.append(os.path.splitext(item)[0])
-
-        self.encodeFaces()
-
-    def encodeFaces(self):
+        
         for image in self.images:
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
@@ -56,9 +57,11 @@ class FaceRecognition:
                 matchesIndex = np.argmin(faceDis)
                 
                 if faceDis[matchesIndex] < 0.35:
-                    faceDetect = True
+                    self.faceDetect = True
+                    timeOut = False
                     name = self.knownFacenames[matchesIndex]
                 else:
+                    self.faceDetect = False
                     timeOut = True
             
             for faceLocation in currentFaceFrame:
@@ -78,7 +81,7 @@ class FaceRecognition:
         cv2.destroyAllWindows()
 
         if timeOut == False:
-            if faceDetect == True:
+            if self.faceDetect == True:
                 messagebox.showinfo('Information', 'Bạn là khách hàng thành viên và được áp dụng giảm giá!')
             else:
                 messagebox.showinfo('Information', 'Bạn không là khách hàng thành viên')
@@ -86,6 +89,6 @@ class FaceRecognition:
             messagebox.showinfo('Erorr', 'Không thể nhận diện! Vui lòng điều chỉnh mặt vào giữa khung hình')
 
 
-if __name__ == '__main__':
-    rg = FaceRecognition()
-    rg.recognition()
+# if __name__ == '__main__':
+#     rg = FaceRecognition()
+#     rg.recognition()

@@ -6,12 +6,16 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 from Login.LoginForm import *
+from Cart import FaceRecognition
 
 class MainForm(Tk):
     def __init__(self):
         Tk.__init__(self)
         
         self.login = StartForm(self)
+        
+        self.startEncoding = FaceRecognition.FaceRecognition()
+        self.startEncoding.loadData()
      
 if __name__ == '__main__':
     main = MainForm()
