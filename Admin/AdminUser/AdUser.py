@@ -21,7 +21,8 @@ class AdUserData():
         
         for item in data:
             item = Convert(item)
-            self.userList.append(item)
+            if int(item[len(item) - 1]) == 1:
+                self.userList.append(item)
             
     def getUserList(self):
         return self.userList
@@ -40,7 +41,7 @@ class AdUserData():
         self.userList.remove(user)
         
         delete = self.conn.cursor()
-        delete.execute(f"delete from dbo.Customer where CustomerID = '{user[0]}'")
+        delete.execute(f"update dbo.Customer set deleteStatus=0 where CustomerID = '{user[0]}'")
         
         self.conn.commit()
         

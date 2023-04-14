@@ -30,7 +30,8 @@ class AdProductData():
             item = Convert(item)
             item.append(imagePath)
             
-            self.productList.append(item)
+            if int(item[len(item) - 2]) == 1:
+                self.productList.append(item)
             
     def getProductList(self):
         return self.productList
@@ -49,7 +50,7 @@ class AdProductData():
         self.productList.remove(product)
         
         delete = self.conn.cursor()
-        delete.execute(f"delete from dbo.Product where ProductID = '{product[0]}'")
+        delete.execute(f"update dbo.Product set deleteStatus=0 where ProductID = '{product[0]}'")
         
         self.conn.commit()
         

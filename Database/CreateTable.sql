@@ -32,7 +32,9 @@ create table CustomerOrder
 (
 	OrderID varchar(8) primary key,
 	CustomerID varchar(8),
-	OrderDate date, 
+	OrderDate date,
+	OrderAddress nvarchar(100),
+	Phone varchar(10),
 	TotalPrice float, 
 	OrderStatus nvarchar(10),
 	foreign key (CustomerID) references Customer(CustomerID)

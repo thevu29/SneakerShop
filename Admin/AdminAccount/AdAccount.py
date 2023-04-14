@@ -22,7 +22,8 @@ class AdAccountData():
         
         for item in data:
             item = Convert(item)
-            self.accountList.append(item)
+            if int(item[len(item) - 1]) == 1:
+                self.accountList.append(item)
             
         return self.accountList
     
@@ -45,7 +46,7 @@ class AdAccountData():
         self.accountList.remove(account)
         
         delete = self.conn.cursor()
-        delete.execute(f"delete from dbo.Account where AccountID = '{account[0]}'")
+        delete.execute(f"update dbo.Account set deleteStatus=0 where AccountID = '{account[0]}'")
         
         self.conn.commit()
         

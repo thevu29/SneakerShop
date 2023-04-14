@@ -24,7 +24,6 @@ class AdOrderDetailForm(Toplevel):
         self.customerPhone = ''
         
         self.getDataFromOrder()
-        self.getDataFromUser()
         self.initUI()    
        
     def initUI(self):   
@@ -191,16 +190,11 @@ class AdOrderDetailForm(Toplevel):
         order = AdOrderData()
         orderList = order.getOrderList()
         
-        for order in orderList:
-            if self.orderID == order[0]:
-                self.customerID = str(order[1])
-                self.orderDate = str(order[2])
-                
-    def getDataFromUser(self):
-        userList = self.orderDetail.getUserData()
-        
-        for user in userList:
-            if self.customerID == user[0]:
-                self.customerName = str(user[1])
-                self.customerAddress = str(user[2])
-                self.customerPhone = str(user[3])
+        for item in orderList:
+            if self.orderID == item[0]:
+                self.customerID = str(item[1])
+                self.orderDate = str(item[2])
+                self.customerName = order.getCustomerName(item[0])
+                self.customerAddress = item[5]
+                self.customerPhone = item[6]
+                break

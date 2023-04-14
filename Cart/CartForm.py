@@ -174,7 +174,8 @@ class CartForm(Toplevel):
             return
         
         # add order
-        newOrder = [orderId, customerId, orderDate, self.txtTotal.cget('text'), 'Chưa xử lí']
+        newOrder = [orderId, customerId, orderDate, self.txtTotal.cget('text'), 'Chưa xử lí', address, phone]
+        print(newOrder)
         self.order.addOrder(newOrder)
         
         # add order detail

@@ -6,7 +6,6 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 from AdminProduct import AdProduct
-from AdminUser import AdUser
 
 def Convert(item):
     array = []
@@ -35,17 +34,25 @@ class AdOrderData():
         
     def getOrderList(self):
         return self.orderList
+      
+    def getCustomerName(self, orderID):
+        query = self.conn.cursor()
+        query.execute(f"select CustomerName from dbo.CustomerOrder CO join dbo.Customer C on CO.OrderID = '{orderID}' and CO.CustomerID = C.CustomerID")
+        return query.fetchone()[0]
     
     def addOrder(self, order):
         self.orderList.append(order)
         
         add = self.conn.cursor()
-        add.execute(f"insert into dbo.CustomerOrder values ('{order[0]}', '{order[1]}', '{order[2]}', {order[3]}, N'{order[4]}')")
+        add.execute(f"insert into dbo.CustomerOrder values ('{order[0]}', '{order[1]}', '{order[2]}', {order[3]}, N'{order[4]}', N'{order[5]}', '{order[6]}')")
         
         self.conn.commit()
     
     def deleteOrder(self, order):
         self.orderList.remove(order)
+        
+        detail = AdOrderDetailData()
+        detail.deleteOrderDetail(order[0])
         
         delete = self.conn.cursor()
         delete.execute(f"delete from dbo.CustomerOrder where OrderID = '{order[0]}'")
@@ -94,15 +101,16 @@ class AdOrderDetailData():
         
         self.conn.commit()
     
+    def deleteOrderDetail(self, orderID):
+        delete = self.conn.cursor()
+        delete.execute(f"delete from dbo.OrderDetail where OrderID = '{orderID}'")
+        
+        self.conn.commit()
+    
     def getOrderDetailList(self):
         return self.orderDetailList
     
     def getProductData(self):
         product = AdProduct.AdProductData()
         productList = product.getProductList()
-        return productList        
-    
-    def getUserData(self):
-        user = AdUser.AdUserData()
-        userList = user.getUserList()
-        return userList
+        return productList

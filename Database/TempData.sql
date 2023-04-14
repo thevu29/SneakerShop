@@ -5,7 +5,7 @@ INSERT INTO Access VALUES
 ('ACS002', 'User', N'Người dùng')
 
 INSERT INTO Customer VALUES
-('CUS000', 'admin', 'admin',  N'Hồ Chí Minh', '0123456789', N'Nam', 0),
+('CUS000', 'admin',  N'Hồ Chí Minh', '0123456789', N'Nam', 0),
 ('CUS001', N'Nguyễn Thế Vũ', N'Hồ Chí Minh', '0123456789', N'Nam', 0),
 ('CUS002', N'Vương Huy Hoàng', N'Hà Nội', '0123456789', N'Nữ', 5),
 ('CUS003', N'Nguyễn Hoàng Hải Nam', N'Đồng Nai', '0123456789', N'Nữ', 15),
