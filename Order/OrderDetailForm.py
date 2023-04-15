@@ -13,7 +13,7 @@ class OrderDetailForm(Toplevel):
         Toplevel.__init__(self, parent)
         self.parent = parent
         
-        self.orderDetail =AdOrder.AdOrderDetailData()
+        self.orderDetail = AdOrder.AdOrderDetailData()
         self.orderDetailDataList = self.orderDetail.getOrderDetailList()
         
         self.orderID = str(orderID)
@@ -146,7 +146,6 @@ class OrderDetailForm(Toplevel):
                         break
                 
                 total = quantity * price
-                self.totalPrice += total
                 
                 newData.insert(1, productName)
                 newData.append('{0:.2f}'.format(total).rstrip('0').rstrip('.'))
@@ -164,4 +163,5 @@ class OrderDetailForm(Toplevel):
                 self.customerName = order.getCustomerName(item[0])
                 self.customerAddress = item[5]
                 self.customerPhone = item[6]
+                self.totalPrice = float(item[3])
                 break

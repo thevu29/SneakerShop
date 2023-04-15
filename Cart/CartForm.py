@@ -225,6 +225,7 @@ class CartForm(Toplevel):
         self.cbxGender.current(0)
         self.txtPhone.delete(0, 'end')
         self.txtAddress.delete(0, 'end')
+        self.txtDiscount['text'] = 0
     
     def initCartForm(self):
         self.cartForm = Frame(self.contentForm)

@@ -274,7 +274,10 @@ class ProductForm(Toplevel):
                             img.image = photo
                             img.grid(column=0, row=0)
 
-                    productName = Label(item, text=f'{filtered_list[count][1]}', font=("Times New Roman", 12))
+                    name = filtered_list[count][1]
+                    name = name[:20] + "..." if len(name) > 20 else name
+                    
+                    productName = Label(item, text=name, font=("Times New Roman", 12))
                     productName.grid(row=1, column=0)
 
                     productPrice = Label(item, text=f'Giá: {filtered_list[count][2]}', font=("Times New Roman", 12))
@@ -289,9 +292,14 @@ class ProductForm(Toplevel):
                     for index, value in enumerate(arrSizeOfProduct):
                         if (int(value[1]) > 0):
                             tupleSize = tupleSize + (value[0],)
+                            
+                    tupleSize = list(tupleSize)
+                    tupleSize.insert(0, 'Size')
+                    tupleSize = tuple(tupleSize)
+                    
                     productCombobox['values'] = tupleSize
-
                     productCombobox.grid(row=3, column=0, pady=(0, 8))
+                    productCombobox.current(0)
 
                     btn = Button(item, text="Add cart", command=self.getValueClicked(
                         filtered_list[count][0], filtered_list[count][1], n), cursor='hand2')

@@ -77,7 +77,7 @@ class FaceRecognition:
         if self.faceDetect == True:
             messagebox.showinfo('Information', 'Bạn là khách hàng thành viên và được áp dụng giảm giá!')
         else:
-            res = messagebox.askquestion('Question', 'Bạn không là khách hàng thành viên \n Bạn có muốn trở thành khách hàng thành viên để được áp dụng giảm giá cho lần đặt mua tiếp theo?')
+            res = messagebox.askyesno('Question', 'Bạn không là khách hàng thành viên \n Bạn có muốn trở thành khách hàng thành viên để được áp dụng giảm giá cho lần đặt mua tiếp theo ?')
             
             if res:
                 if newName == '':
@@ -105,7 +105,7 @@ class FaceRecognition:
                 continue
             max_cnt = 0
                 
-            filename = f'./img/{newName} ({cnt}).png'
+            filename = f'./img/vip_customer/{newName} ({cnt}).png'
             cv2.imwrite(filename, frame)
             
             cnt += 1
@@ -132,4 +132,4 @@ class FaceRecognition:
 # if __name__ == '__main__':
 #     f = FaceRecognition()
 #     f.loadData()
-#     f.recognition()
+#     f.recognition('Temp')
