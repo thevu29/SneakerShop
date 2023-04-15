@@ -39,7 +39,13 @@ class CartData():
             self.conn.commit()
         except Exception as e:
             print(f"Error inserting values to database: {e}")
-         
+    
+    def deleteCart(self, accountId):
+        delete = self.conn.cursor()
+        delete.execute(f"delete from Cart where AccountID = '{accountId}'")
+        
+        self.conn.commit()
+        
     def deleteProductCart(self, productID, accountId, size):
         delete = self.conn.cursor()
         delete.execute(f"DELETE FROM Cart WHERE ProductID ='{productID}' and AccountId = '{accountId}' and SizeNumber = '{size}'")

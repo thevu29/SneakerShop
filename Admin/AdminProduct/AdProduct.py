@@ -73,3 +73,11 @@ class AdProductData():
                        """)
         
         self.conn.commit()
+        
+    def decreaseQuantity(self, productId, quantity, size):
+        query = self.conn.cursor()
+        query.execute(f"update dbo.Product set Quantity = Quantity - {quantity} where ProductID = '{productId}'")
+        query.execute(f"update dbo.Product_Size set Quantity = Quantity - {quantity} where ProductID = '{productId}' and SizeNumber = {size}")
+        
+        self.loadDatabase()
+        self.conn.commit()

@@ -12,6 +12,7 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 
 from Admin.AdminOrder import AdOrder
 from Admin.AdminAccount import AdAccount
+from Admin.AdminProduct import AdProduct
 
 try:
     from .Cart import *
@@ -27,13 +28,12 @@ class CartForm(Toplevel):
         self.accountId = accountId
         
         self.cart = CartData()
-        self.cartList = self.cart.getCartList(self.accountId)
-
+        # self.cartList = self.cart.getCartList(self.accountId)
         self.fr = FaceRecognition()
-        
         self.order = AdOrder.AdOrderData()
         self.orderDetail = AdOrder.AdOrderDetailData()
         self.account = AdAccount.AdAccountData()
+        self.product = AdProduct.AdProductData()
         
         self.protocol('WM_DELETE_WINDOW', self.closeAll)
         
@@ -162,7 +162,6 @@ class CartForm(Toplevel):
         orderList = self.order.getOrderList()
         
         orderId = 'HD' + str(len(orderList) + 1).zfill(3)
-        print(self.accountId)
         customerId = self.account.getCustomerIdOfAccount(self.accountId)
         orderDate = datetime.date.today()
         name = self.txtUserName.get()
@@ -175,14 +174,43 @@ class CartForm(Toplevel):
         
         # add order
         newOrder = [orderId, customerId, orderDate, self.txtTotal.cget('text'), 'Chưa xử lí', address, phone]
-        print(newOrder)
         self.order.addOrder(newOrder)
         
         # add order detail
         for item in self.cartList:
             newOrderDetail = [orderId, item[0], item[4], item[2], item[3]]
             self.orderDetail.addOrderDetail(newOrderDetail)
-     
+        
+        # decrease quantity
+        self.decreaseProductQuantity()
+        
+        # delete cart
+        self.deleteCart()
+        
+        messagebox.showinfo('Success', 'Đặt hàng thành công')
+        self.resetValue()
+    
+    def deleteCart(self):
+        self.cart.deleteCart(self.accountId)
+        self.renderCartProduct()
+    
+    def decreaseProductQuantity(self):
+        productList = self.product.getProductList()
+        for cart in self.cartList:
+            size = cart[3]
+            quantity = cart[4]
+            
+            for product in productList:
+                if cart[0] == product[0]:
+                    self.product.decreaseQuantity(product[0], quantity, size)
+                    break
+    
+    def resetValue(self):
+        self.txtUserName.delete(0, 'end')
+        self.cbxGender.current(0)
+        self.txtPhone.delete(0, 'end')
+        self.txtAddress.delete(0, 'end')
+    
     def initCartForm(self):
         self.cartForm = Frame(self.contentForm)
         self.cartForm.pack(fill=BOTH, expand=True, pady=12)
@@ -251,6 +279,8 @@ class CartForm(Toplevel):
         self.cartProductCanvas.bind_all("<MouseWheel>", self.cartCanvasScroll)
         
     def renderCartProduct(self):
+        self.cartList = self.cart.getCartList(self.accountId)
+        
         for widget in self.cartProductForm.winfo_children():
             widget.destroy()
 
