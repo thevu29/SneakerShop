@@ -131,9 +131,7 @@ class CartForm(Toplevel):
         self.lblproductPage.bind("<Leave>", self.outHover)
     
     def recognition(self):
-        customerName = self.account.getCustomerName(self.accountId)
-        if customerName == '':
-            customerName = self.txtUserName.get()
+        customerName = self.txtUserName.get()
             
         self.fr.recognition(customerName)
         
