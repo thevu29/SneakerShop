@@ -172,6 +172,10 @@ class CartForm(Toplevel):
         if not self.validate(name, phone, address):
             return
         
+        if len(self.cartList) == 0:
+            messagebox.showwarning('Warning', 'Vui lòng chọn mua sản phẩm để đặt hàng')
+            return
+        
         # add order
         newOrder = [orderId, customerId, orderDate, self.txtTotal.cget('text'), 'Chưa xử lí', address, phone]
         self.order.addOrder(newOrder)
