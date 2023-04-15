@@ -255,13 +255,13 @@ class SignUpForm(Frame):
     def signUp(self):
         if self.validateUsername() == True: 
             userId = 'CUS' + str(len(self.userList) + 1).zfill(3)
-            newUser = [userId, '', '', '', '', 0]
+            newUser = [userId, '', '', '', '', 0, 1]
             self.user.addUser(newUser)
   
             accountId = 'ACC' + str(len(self.accountList) + 1).zfill(3)
             username = self.txtUsername.get()
             password = self.txtPassword.get()
-            newAccount = [accountId, username, password, 'ACS002', userId]
+            newAccount = [accountId, username, password, 'ACS002', userId, 1]
             self.account.addAccount(newAccount)
             
             self.reset()

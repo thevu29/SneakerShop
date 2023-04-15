@@ -6,10 +6,8 @@ from tkinter import messagebox
 
 class FaceRecognition:
     images = []
-    faceLocations = []
     faceEncodings = []
     faceNames = []
-    knownFaceEncodings = []
     knownFacenames = []
     faceDetect = False
 
@@ -31,15 +29,13 @@ class FaceRecognition:
             except:
                 pass
 
-    def recognition(self):
+    def recognition(self, newName):
         cap = cv2.VideoCapture(0)
 
         if not cap.isOpened():
             messagebox.showerror('Error', 'Không thể truy cập camera')
 
         cnt = 0
-        timeOut = False
-        faceDetect = False
         face_encodings = []
         
         while cnt <= 35:
@@ -58,11 +54,9 @@ class FaceRecognition:
                 
                 if faceDis[matchesIndex] < 0.35:
                     self.faceDetect = True
-                    timeOut = False
-                    name = self.knownFacenames[matchesIndex]
+                    name = self.reName(self.knownFacenames[matchesIndex])
                 else:
                     self.faceDetect = False
-                    timeOut = True
             
             for faceLocation in currentFaceFrame:
                 y1, x2, y2, x1 = faceLocation
@@ -73,22 +67,69 @@ class FaceRecognition:
                 cv2.putText(frame, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_DUPLEX, 1.0, (255, 255, 255), 1)
         
             cnt += 1
-            cv2.imshow('Video', frame)
+            cv2.imshow('Quá trình nhận diện', frame)
             if cv2.waitKey(1) == ord('q'):
                 break
 
         cap.release()
         cv2.destroyAllWindows()
 
-        if timeOut == False:
-            if self.faceDetect == True:
-                messagebox.showinfo('Information', 'Bạn là khách hàng thành viên và được áp dụng giảm giá!')
-            else:
-                messagebox.showinfo('Information', 'Bạn không là khách hàng thành viên')
+        if self.faceDetect == True:
+            messagebox.showinfo('Information', 'Bạn là khách hàng thành viên và được áp dụng giảm giá!')
         else:
-            messagebox.showinfo('Erorr', 'Không thể nhận diện! Vui lòng điều chỉnh mặt vào giữa khung hình')
+            res = messagebox.askquestion('Question', 'Bạn không là khách hàng thành viên \n Bạn có muốn trở thành khách hàng thành viên để được áp dụng giảm giá cho lần đặt mua tiếp theo?')
+            
+            if res:
+                if newName == '':
+                    messagebox.showerror('Error', 'Vui lòng nhập tên để dùng làm tên lưu ảnh')
+                else:
+                    self.saveNewVipCustomer(newName)
+    
+    def saveNewVipCustomer(self, newName):        
+        cap = cv2.VideoCapture(0)
 
+        fps = cap.get(cv2.CAP_PROP_FPS)
 
+        cnt = 0
+        max = 20
+        max_cnt = 0
+
+        while cnt <= 10:
+            ret, frame = cap.read()
+
+            if not ret:
+                break
+            
+            if max_cnt < max:
+                max_cnt += 1
+                continue
+            max_cnt = 0
+                
+            filename = f'./img/{newName} ({cnt}).png'
+            cv2.imwrite(filename, frame)
+            
+            cnt += 1
+            
+            cv2.imshow('Quá trình lưu ảnh', frame)
+            cv2.waitKey(int(1000/fps))
+            
+            if cv2.waitKey(1) == ord('q'):
+                break
+            
+        cap.release()
+        cv2.destroyAllWindows()
+    
+    def reName(self, name):
+        newName = ''
+        for item in self.knownFacenames:
+            if name in item:
+                s = str(item).split(' ')
+                newName = ' '.join([newName + s[i] for i in range(0, len(s) - 1)])
+                break
+    
+        return newName
+         
 # if __name__ == '__main__':
-#     rg = FaceRecognition()
-#     rg.recognition()
+#     f = FaceRecognition()
+#     f.loadData()
+#     f.recognition()

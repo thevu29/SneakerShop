@@ -59,7 +59,24 @@ class AdUserData():
         update = self.conn.cursor()
         update.execute(f""" update dbo.Customer
                             set CustomerName = N'{newUser[1]}', CustomerAddress = N'{newUser[2]}', Phone = '{newUser[3]}', Gender = N'{newUser[4]}',
-                                            Point = '{newUser[5]}'
+                                            Point = {newUser[5]}
+                            where CustomerID = '{newUser[0]}'
+                       """)
+        
+        self.conn.commit()
+        
+    def updateNullInfo(self, newUser):
+        for user in self.userList:
+            if user[0] == newUser[0]:
+                self.userList.remove(user)
+                self.userList.append(newUser)
+        
+        self.userList.sort(key=lambda x: x[0])
+        
+        update = self.conn.cursor()
+        update.execute(f""" update dbo.Customer
+                            set CustomerName = N'{newUser[1]}', CustomerAddress = N'{newUser[2]}', Phone = '{newUser[3]}', Gender = N'{newUser[4]}',
+                                            Point = Point + {newUser[5]}
                             where CustomerID = '{newUser[0]}'
                        """)
         

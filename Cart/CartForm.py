@@ -13,6 +13,7 @@ sys.path.append(os.path.dirname(SCRIPT_DIR))
 from Admin.AdminOrder import AdOrder
 from Admin.AdminAccount import AdAccount
 from Admin.AdminProduct import AdProduct
+from Admin.AdminUser import AdUser
 
 try:
     from .Cart import *
@@ -28,12 +29,12 @@ class CartForm(Toplevel):
         self.accountId = accountId
         
         self.cart = CartData()
-        # self.cartList = self.cart.getCartList(self.accountId)
         self.fr = FaceRecognition()
         self.order = AdOrder.AdOrderData()
         self.orderDetail = AdOrder.AdOrderDetailData()
-        self.account = AdAccount.AdAccountData()
         self.product = AdProduct.AdProductData()
+        self.account = AdAccount.AdAccountData()
+        self.user = AdUser.AdUserData()
         
         self.protocol('WM_DELETE_WINDOW', self.closeAll)
         
@@ -130,7 +131,12 @@ class CartForm(Toplevel):
         self.lblproductPage.bind("<Leave>", self.outHover)
     
     def recognition(self):
-        self.fr.recognition()
+        customerName = self.account.getCustomerName(self.accountId)
+        if customerName == '':
+            customerName = self.txtUserName.get()
+            
+        self.fr.recognition(customerName)
+        
         if self.fr.faceDetect == True:
             self.txtDiscount['text'] = 15
         else:
@@ -161,8 +167,9 @@ class CartForm(Toplevel):
     def orderProduct(self):
         orderList = self.order.getOrderList()
         
+        customerId = self.account.getCustomerId(self.accountId)
+        customerName = self.account.getCustomerName(self.accountId)
         orderId = 'HD' + str(len(orderList) + 1).zfill(3)
-        customerId = self.account.getCustomerIdOfAccount(self.accountId)
         orderDate = datetime.date.today()
         name = self.txtUserName.get()
         gender = self.cbxGender.get()
@@ -184,6 +191,12 @@ class CartForm(Toplevel):
         for item in self.cartList:
             newOrderDetail = [orderId, item[0], item[4], item[2], item[3]]
             self.orderDetail.addOrderDetail(newOrderDetail)
+        
+        #update customer info
+        if customerName == '':
+            customerName = name
+            newUser = [customerId, customerName, address, phone, gender, 5, 1]
+            self.user.updateNullInfo(newUser)
         
         # decrease quantity
         self.decreaseProductQuantity()
@@ -397,9 +410,9 @@ class CartForm(Toplevel):
     def outHover(self, e):
         e.widget.config(font=self.normalFont)
     
-if __name__ == '__main__':
-    root = Tk()
-    app = CartForm(root, 'ACC002')
-    app.geometry('1200x600+180+100')
-    root.withdraw()
-    root.mainloop()
+# if __name__ == '__main__':
+#     root = Tk()
+#     app = CartForm(root, 'ACC002')
+#     app.geometry('1200x600+180+100')
+#     root.withdraw()
+#     root.mainloop()

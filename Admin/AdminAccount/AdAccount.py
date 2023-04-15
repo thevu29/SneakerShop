@@ -28,10 +28,15 @@ class AdAccountData():
             
         return self.accountList
     
-    def getCustomerIdOfAccount(self, accountId):
+    def getCustomerId(self, accountId):
         customerID = self.conn.cursor()
         customerID.execute(f"select CustomerID from dbo.Account where AccountID = '{accountId}'")
         return customerID.fetchone()[0]
+    
+    def getCustomerName(self, accountId):
+        customerName = self.conn.cursor()
+        customerName.execute(f"select CustomerName from dbo.Account A join dbo.Customer C on A.AccountID = '{accountId}' and A.CustomerID=C.CustomerID")
+        return customerName.fetchone()[0]
     
     def addAccount(self, account):
         self.accountList.append(account)
@@ -65,7 +70,7 @@ class AdAccountData():
                        """)
         
         self.conn.commit()
-        
+           
     def getAccountId(self, username):        
         data = self.conn.cursor()
         data.execute(f"select AccountId from dbo.Account where Username = '{username}'")
