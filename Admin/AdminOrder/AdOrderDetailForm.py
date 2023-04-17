@@ -166,7 +166,6 @@ class AdOrderDetailForm(Toplevel):
                         break
                 
                 total = quantity * price
-                self.totalPrice += total
                 
                 newData.insert(1, productName)
                 newData.append('{0:.2f}'.format(total).rstrip('0').rstrip('.'))
@@ -197,4 +196,5 @@ class AdOrderDetailForm(Toplevel):
                 self.customerName = order.getCustomerName(item[0])
                 self.customerAddress = item[5]
                 self.customerPhone = item[6]
+                self.totalPrice = float(item[3])
                 break
