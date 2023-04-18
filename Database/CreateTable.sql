@@ -102,5 +102,5 @@ Create table Cart
 	ProductID varchar(8) NOT NULL foreign key (ProductID) references Product(ProductID),
 	SizeNumber int NOT NULL foreign key (SizeNumber) references Size(SizeNumber),
 	Quantity int,
-	Primary key(AccountID, ProductID)
+	Primary key(AccountID, ProductID, SizeNumber)
 )
