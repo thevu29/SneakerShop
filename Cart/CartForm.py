@@ -14,13 +14,12 @@ from Admin.AdminOrder import AdOrder
 from Admin.AdminAccount import AdAccount
 from Admin.AdminProduct import AdProduct
 from Admin.AdminUser import AdUser
+from FaceRecogniton.Recognition import FaceRecognition
 
 try:
     from .Cart import *
-    from .FaceRecognition import *
 except:
     from Cart import *
-    from FaceRecognition import *
 
 class CartForm(Toplevel):
     def __init__(self, parent, accountId):
@@ -131,9 +130,14 @@ class CartForm(Toplevel):
         self.lblproductPage.bind("<Leave>", self.outHover)
     
     def recognition(self):
-        customerName = self.txtUserName.get()
+        name = self.txtUserName.get()
+        phone = self.txtPhone.get()
+        address = self.txtAddress.get()
+        
+        if not self.validate(name, phone, address):
+            return
             
-        self.fr.recognition(customerName)
+        self.fr.recognizing(name)
         
         if self.fr.faceDetect == True:
             self.txtDiscount['text'] = 15
@@ -409,9 +413,9 @@ class CartForm(Toplevel):
     def outHover(self, e):
         e.widget.config(font=self.normalFont)
     
-# if __name__ == '__main__':
-#     root = Tk()
-#     app = CartForm(root, 'ACC002')
-#     app.geometry('1200x600+180+100')
-#     root.withdraw()
-#     root.mainloop()
+if __name__ == '__main__':
+    root = Tk()
+    app = CartForm(root, 'ACC002')
+    app.geometry('1200x600+180+100')
+    root.withdraw()
+    root.mainloop()
