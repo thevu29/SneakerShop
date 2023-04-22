@@ -84,9 +84,3 @@ class FaceRecognition:
                 newName = ' '.join([newName + item[i] for i in range(0, len(item) - 1)])
                 break
         return newName
-            
-         
-if __name__ == '__main__':
-    f = FaceRecognition()
-    f.recognizing('Temp')
-    # print(f.reName('hainam'))

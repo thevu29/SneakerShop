@@ -14,7 +14,7 @@ from Admin.AdminOrder import AdOrder
 from Admin.AdminAccount import AdAccount
 from Admin.AdminProduct import AdProduct
 from Admin.AdminUser import AdUser
-from FaceRecogniton.Recognition import FaceRecognition
+from FaceRecognition.Recognition import FaceRecognition
 
 try:
     from .Cart import *
@@ -412,10 +412,3 @@ class CartForm(Toplevel):
         
     def outHover(self, e):
         e.widget.config(font=self.normalFont)
-    
-if __name__ == '__main__':
-    root = Tk()
-    app = CartForm(root, 'ACC002')
-    app.geometry('1200x600+180+100')
-    root.withdraw()
-    root.mainloop()
