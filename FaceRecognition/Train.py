@@ -14,17 +14,20 @@ class Train:
         faceSamples = []
         ids = []
         
-        for i in range(1, 31):
-            PIL_img = Image.open(f'{imagePath} ({i}).png').convert('L')
-            img_numpy = np.array(PIL_img, 'uint8')
+        for i in range(1, 46):
+            try:
+                PIL_img = Image.open(f'{imagePath} ({i}).png').convert('L')
+                img_numpy = np.array(PIL_img, 'uint8')
 
-            path = os.path.split(f'{imagePath} ({i}).png')[-1].split('.')[0].split(' ')
-            id = int(path[len(path) - 1].lstrip('(').rstrip(')'))
-            faces = self.detector.detectMultiScale(img_numpy)
-            
-            for (x, y, w, h) in faces:
-                faceSamples.append(img_numpy[y:y+h, x:x+w])
-                ids.append(id)
+                path = os.path.split(f'{imagePath} ({i}).png')[-1].split('.')[0].split(' ')
+                id = int(path[len(path) - 1].lstrip('(').rstrip(')'))
+                faces = self.detector.detectMultiScale(img_numpy)
+                
+                for (x, y, w, h) in faces:
+                    faceSamples.append(img_numpy[y:y+h, x:x+w])
+                    ids.append(id)
+            except:
+                pass
         
         self.recognizer.train(faceSamples, np.array(ids))
         self.recognizer.write(f'./Classifiers/{name}.xml')
