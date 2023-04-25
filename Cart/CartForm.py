@@ -26,6 +26,7 @@ class CartForm(Toplevel):
         Toplevel.__init__(self, parent)
         self.parent = parent
         self.accountId = accountId
+        self.isRecognized = True
         
         self.cart = CartData()
         self.fr = FaceRecognition()
@@ -130,6 +131,10 @@ class CartForm(Toplevel):
         self.lblproductPage.bind("<Leave>", self.outHover)
     
     def recognition(self):
+        if self.isRecognized == False:
+            messagebox.showerror('Error', 'Bạn đã nhận diện rồi \nVui lòng đặt hàng')
+            return
+        
         name = self.txtUserName.get()
         phone = self.txtPhone.get()
         address = self.txtAddress.get()
@@ -145,6 +150,7 @@ class CartForm(Toplevel):
             self.txtDiscount['text'] = 0
             
         self.getTotalPrice()
+        self.isRecognized = False
     
     def validate(self, name, phone, address):        
         s = ''
@@ -207,6 +213,7 @@ class CartForm(Toplevel):
         self.deleteCart()
         
         messagebox.showinfo('Success', 'Đặt hàng thành công')
+        self.isRecognized = True
         self.resetValue()
     
     def deleteCart(self):

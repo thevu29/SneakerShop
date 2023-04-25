@@ -1,9 +1,8 @@
 import cv2
-import face_recognition as fr
-import numpy as np
 import os
 import time
 from tkinter import messagebox
+from unidecode import unidecode
 
 try:
     from .Record import *
@@ -79,8 +78,8 @@ class FaceRecognition:
         for item in os.listdir('./img/vip_customer'):
             item = item.split('.')[0]
             tmp = item.replace(' ', '')
-            if name.lower().replace(' ', '') in tmp.lower().replace(' ', ''):
+            if name.lower().replace(' ', '') in tmp.lower():
                 item = item.split(' ')
                 newName = ' '.join([newName + item[i] for i in range(0, len(item) - 1)])
                 break
-        return newName
+        return unidecode(newName)
