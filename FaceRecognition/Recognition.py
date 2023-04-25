@@ -31,7 +31,7 @@ class FaceRecognition:
 
         cnt = 0
         start_time = time.time()
-        while time.time() - start_time < 20:
+        while time.time() - start_time < 15:
             ret, frame = cap.read()
             gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
             faces = self.face_cascade.detectMultiScale(gray, 1.3, 5)
