@@ -79,7 +79,7 @@ class FaceRecognition:
         for item in os.listdir('./img/vip_customer'):
             item = item.split('.')[0]
             tmp = item.replace(' ', '')
-            if name.lower() in tmp.lower():
+            if name.lower().replace(' ', '') in tmp.lower().replace(' ', ''):
                 item = item.split(' ')
                 newName = ' '.join([newName + item[i] for i in range(0, len(item) - 1)])
                 break
